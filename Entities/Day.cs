@@ -1,0 +1,23 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace healthy_lifestyle_web_app.Entities
+{
+    public class Day
+    {
+        [Key]
+        [Column(Order = 0)]
+        public int ProfileId { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public DateTime Date { get; set; }
+
+        [JsonIgnore]
+        public Profile Profile { get; set; }
+
+        public ICollection<Food> Foods { get; set; }
+        public ICollection<PhysicalActivity> PhysicalActivities { get; set; }
+    }
+}

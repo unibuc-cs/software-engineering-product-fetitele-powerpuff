@@ -1,0 +1,6 @@
+@healthy_lifestyle_web_app_HostAddress = http://localhost:5090
+
+GET {{healthy_lifestyle_web_app_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
