@@ -16,5 +16,6 @@ namespace healthy_lifestyle_web_app.Entities
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ICollection<Muscle> Muscles { get; set; }
+        public ICollection<Day>? Days { get; set; }
     }
 }

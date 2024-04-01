@@ -12,12 +12,12 @@ namespace healthy_lifestyle_web_app.Entities
 
         [Key]
         [Column(Order = 1)]
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
 
         [JsonIgnore]
         public Profile Profile { get; set; }
 
-        public ICollection<Food> Foods { get; set; }
-        public ICollection<PhysicalActivity> PhysicalActivities { get; set; }
+        public ICollection<Food>? Foods { get; set; }
+        public ICollection<PhysicalActivity>? PhysicalActivities { get; set; }
     }
 }

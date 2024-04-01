@@ -9,5 +9,9 @@
         public double Proteins { get; set; }
         public double Fats { get; set; }
         public bool Public { get; set; }
+        public string? ApplicationUserId { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
+        public ICollection<Day>? Days { get; set; }
+        public Request? Request { get; set; }
     }
 }

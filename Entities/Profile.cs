@@ -19,5 +19,9 @@ namespace healthy_lifestyle_web_app.Entities
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ICollection<Goal> Goals { get; set; }
+
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+        public ICollection<Day>? Days { get; set;}
     }
 }
