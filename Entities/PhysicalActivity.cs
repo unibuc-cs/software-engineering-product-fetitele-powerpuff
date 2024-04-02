@@ -13,9 +13,7 @@ namespace healthy_lifestyle_web_app.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public double Calories { get; set; }
-
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public ICollection<Muscle> Muscles { get; set; }
+        public ICollection<string> Muscles { get; set; }
         public ICollection<Day>? Days { get; set; }
     }
 }

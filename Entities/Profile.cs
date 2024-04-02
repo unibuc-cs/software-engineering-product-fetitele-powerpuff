@@ -18,8 +18,7 @@ namespace healthy_lifestyle_web_app.Entities
         public double Height { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public ICollection<Goal> Goals { get; set; }
-
+        public Goal Goals { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public ICollection<Day>? Days { get; set;}
