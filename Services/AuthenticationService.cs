@@ -34,14 +34,18 @@ namespace healthy_lifestyle_web_app.Services
         {
             ApplicationUser user = new()
             {
+                UserName = model.Email,
                 Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = Guid.NewGuid().ToString(),
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
+                System.Diagnostics.Debug.WriteLine("---------------------------------------------------------------------------------------");
+                foreach (IdentityError error in result.Errors)
+                    System.Diagnostics.Debug.WriteLine($"{error.Description} ({error.Code})");
                 return null;
             }
 

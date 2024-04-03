@@ -1,7 +1,5 @@
 ﻿using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,12 +13,12 @@ namespace healthy_lifestyle_web_app.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly Services.IAuthenticationService _authenticationService;
+
         public AuthenticationController(UserManager<ApplicationUser> userManager, Services.IAuthenticationService authenticationService)
         {
             _userManager = userManager;
             _authenticationService = authenticationService;
         }
-
 
         [HttpPost]
         [Route("register-user")]
@@ -31,16 +29,20 @@ namespace healthy_lifestyle_web_app.Controllers
             }
 
             // Verificam daca exista deja utilizatorul cu acest email
-            if(await _userManager.FindByEmailAsync(model.Email) != null)
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "This email is already used" });
+                return StatusCode(StatusCodes.Status500InternalServerError, 
+                    new Response { Status = "Error", Message = "This email is already used" });
             }
 
-            var user = await _authenticationService.CreateUser(model);
+            ApplicationUser user = await _authenticationService.CreateUser(model);
 
             // Verifica daca a fost creat
             if (user == null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "Register failed" });
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Response { Status = "Error", Message = "Register failed" });
+            }
 
             // Creaza rolurile daca nu exista
             await _authenticationService.CreateRoles();
