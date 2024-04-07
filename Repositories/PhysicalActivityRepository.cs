@@ -23,6 +23,26 @@ namespace healthy_lifestyle_web_app.Repositories
                 .Include(p => p.Muscles).ToListAsync());
         }
 
+        public async Task<PhysicalActivity?> GetByNameAsync(string name)
+        {
+            return await _context.PhysicalActivities
+                        .Include(p => p.Muscles)
+                        .FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower());
+        }
+
+        public async Task<List<PhysicalActivity>?> GetByMuscleAsync(string muscleName)
+        {
+            muscleName = char.ToUpper(muscleName[0]) + muscleName.Substring(1).ToLower();
+            Muscle? muscle = await _context.Muscles.FirstOrDefaultAsync(m => m.Name == muscleName);
+            if (muscle == null)
+                return null;
+
+            List<PhysicalActivity> physicalActivities = await _context.PhysicalActivities
+                                            .Include(p => p.Muscles).ToListAsync();
+
+            return physicalActivities.FindAll(p => p.Muscles.Contains(muscle));
+        }
+
         public async Task<bool> PostAsync(PhysicalActivity physicalActivity)
         {
             try

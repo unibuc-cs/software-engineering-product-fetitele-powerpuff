@@ -35,7 +35,6 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         // This is the information the admin will see (+ id and calories)
-
         [HttpGet("for-admin")]
         public async Task<IActionResult> GetPhysicalActivitesAdmin()
         {
@@ -49,6 +48,41 @@ namespace healthy_lifestyle_web_app.Controllers
 
             return Ok(physicalActivitesDTO);
         }
+
+        [HttpGet("{name}")]
+        public async Task<IActionResult> GetByName(string name)
+        {
+            PhysicalActivity? physicalActivity = await _physicalActivityRepository.GetByNameAsync(name);
+            if (physicalActivity == null)
+            {
+                return NotFound("No activity with this name");
+            }
+            return Ok(_mapper.Map<GetPhysicalActivityDTO>(physicalActivity));
+        }
+
+        [HttpGet("target-{muscleName}")]
+        public async Task<IActionResult> GetByMuscle(string muscleName)
+        {
+            List<PhysicalActivity>? physicalActivities = await _physicalActivityRepository.GetByMuscleAsync(muscleName);
+            if (physicalActivities == null)
+            {
+                return NotFound("No muscle with this name");
+            }
+
+            if(physicalActivities.Count == 0)
+            {
+                return NotFound("No exercises found");
+            }
+
+            List<GetPhysicalActivityDTO> getPhysicalActivitiesDTO = new List<GetPhysicalActivityDTO>();
+            foreach(var p in physicalActivities)
+            {
+                getPhysicalActivitiesDTO.Add(_mapper.Map<GetPhysicalActivityDTO>(p));
+            }
+
+            return Ok(getPhysicalActivitiesDTO);
+        } 
+
 
         [HttpPost]
         public async Task<IActionResult> PostPhysicalActivity(PostPhysicalActivityDTO physicalActivity)
