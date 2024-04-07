@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using healthy_lifestyle_web_app.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -14,6 +15,8 @@ ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("App")));
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationContext>()
@@ -71,6 +74,9 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IPhysicalActivityRepository, PhysicalActivityRepository>();
+builder.Services.AddScoped<IPhysicalActivityMuscleRepository,  PhysicalActivityMuscleRepository>();
+builder.Services.AddScoped<IMuscleRepository, MuscleRepository>();
 
 var app = builder.Build();
 
