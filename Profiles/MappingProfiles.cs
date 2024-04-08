@@ -8,6 +8,8 @@ namespace Proiect.Profiles
     {
         public MappingProfiles()
         {
+            CreateMap<healthy_lifestyle_web_app.Entities.Profile, ProfileDTO>().ReverseMap();
+
             CreateMap<Muscle, GetMuscleDTO>();
             CreateMap<PostDeleteMuscleDTO, Muscle>();
 
