@@ -35,11 +35,11 @@ namespace healthy_lifestyle_web_app.Controllers
             {
                 return NotFound("No profile with this application user id");
             }
-            return Ok(_mapper.Map<ProfileDTO>(profile));
+            return Ok(_mapper.Map<GetProfileDTO>(profile));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(ProfileDTO profileDTO)
+        public async Task<IActionResult> Post(PostProfileDTO profileDTO)
         {
             if (await _profileRepository.PostAsync(_mapper.Map<Entities.Profile>(profileDTO)))
             {

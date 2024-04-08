@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace healthy_lifestyle_web_app.Models
 {
-    public class ProfileDTO
+    public class PostProfileDTO
     {
         public string Name { get; set; }
         public DateOnly Birthdate { get; set; }
@@ -12,5 +12,6 @@ namespace healthy_lifestyle_web_app.Models
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Goal Goal { get; set; }
+        public string ApplicationUserId { get; set; }
     }
 }
