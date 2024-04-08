@@ -74,6 +74,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IPhysicalActivityRepository, PhysicalActivityRepository>();
 builder.Services.AddScoped<IPhysicalActivityMuscleRepository,  PhysicalActivityMuscleRepository>();
 builder.Services.AddScoped<IMuscleRepository, MuscleRepository>();
