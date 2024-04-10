@@ -7,5 +7,6 @@
         public double Carbohydrates { get; set; }
         public double Proteins { get; set; }
         public double Fats { get; set; }
+        public bool Public { get; internal set; }
     }
 }
