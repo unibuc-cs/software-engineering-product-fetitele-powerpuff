@@ -91,6 +91,7 @@ builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IPhysicalActivityRepository, PhysicalActivityRepository>();
 builder.Services.AddScoped<IPhysicalActivityMuscleRepository,  PhysicalActivityMuscleRepository>();
 builder.Services.AddScoped<IMuscleRepository, MuscleRepository>();
+builder.Services.AddScoped<IFoodRepository, FoodRepository>();
 
 var app = builder.Build();
 
