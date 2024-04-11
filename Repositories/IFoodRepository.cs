@@ -5,7 +5,8 @@ namespace healthy_lifestyle_web_app.Repositories
 {
     public interface IFoodRepository
     {
-        public Task<Food> AddFood(Food food);
-        public Task<Food> AddFoodAsAdmin(Food food);
+        public Task<List<Food>> GetAllAsync();
+        public Task<Food?> GetByNameAsync(string name);
+        public Task<bool> PostAsync(Food food);
     }
 }
