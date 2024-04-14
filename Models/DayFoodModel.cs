@@ -2,7 +2,8 @@
 {
     public class DayFoodModel
     {
-        public string foodName {  get; set; }
-        public int grams { get; set; }
+        public DateOnly Date {  get; set; }
+        public string FoodName { get; set; }
+        public int Grams { get; set; }
     }
 }

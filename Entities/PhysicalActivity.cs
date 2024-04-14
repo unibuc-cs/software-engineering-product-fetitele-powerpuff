@@ -6,6 +6,6 @@
         public string Name { get; set; }
         public double Calories { get; set; }
         public ICollection<Muscle> Muscles { get; set; } = new List<Muscle>();
-        public ICollection<Day>? Days { get; set; }
+        public ICollection<DayPhysicalActivity>? DayPhysicalActivities { get; set; }
     }
 }

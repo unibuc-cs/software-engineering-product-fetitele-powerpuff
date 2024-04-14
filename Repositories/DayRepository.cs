@@ -16,7 +16,7 @@ namespace healthy_lifestyle_web_app.Repositories
 
         public async Task<List<Day>> GetAllAsync()
         {
-            return await _context.Days.Include(d => d.PhysicalActivities)
+            return await _context.Days.Include(d => d.DayPhysicalActivities)
                 .Include(d => d.DayFoods).ToListAsync();
         }
 
@@ -24,14 +24,14 @@ namespace healthy_lifestyle_web_app.Repositories
         public async Task<List<Day>> GetByUserAsync(int id)
         { 
             return await _context.Days.Where(d => d.ProfileId == id)
-                .Include(d => d.PhysicalActivities)
+                .Include(d => d.DayPhysicalActivities)
                 .Include(d => d.DayFoods).ToListAsync();
         }
 
         public async Task<Day?> GetCurrentDayAsync(int id)
         {
             List<Day> days =  await _context.Days.Where(d => d.ProfileId == id)
-                .Include(d => d.PhysicalActivities).Include(d => d.DayFoods).ToListAsync();
+                .Include(d => d.DayPhysicalActivities).Include(d => d.DayFoods).ToListAsync();
 
             DateOnly currentDay = DateOnly.FromDateTime(DateTime.Today);
 
@@ -40,7 +40,9 @@ namespace healthy_lifestyle_web_app.Repositories
 
         public async Task<Day?> GetByDateAsync(int id, DateOnly date)
         {
-            return await _context.Days.Include(d => d.DayFoods).FirstOrDefaultAsync(d => d.ProfileId == id && d.Date == date);
+            return await _context.Days
+                .Include(d => d.DayFoods).Include(d => d.DayPhysicalActivities)
+                .FirstOrDefaultAsync(d => d.ProfileId == id && d.Date == date);
         }
 
         public async Task<bool> PostDayAsync(int id)
@@ -74,6 +76,20 @@ namespace healthy_lifestyle_web_app.Repositories
             return true;
         }
 
+        public async Task<bool> PutPhysicalActivityAsync(Day day, PhysicalActivity activity, int minutes)
+        {
+            try
+            {
+                _context.DayPhysicalActivities.Add(new(day.ProfileId, day.Date, activity.Id, minutes));
+                await _context.SaveChangesAsync();
+            }
+            catch (DbException)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<bool> UpdateGramsAsync(Day day, int foodId, int grams)
         {
             DayFood? dayfood = day.DayFoods.FirstOrDefault(f => f.FoodId == foodId);
@@ -92,6 +108,69 @@ namespace healthy_lifestyle_web_app.Repositories
                 return false;
             }
             
+            return true;
+        }
+
+        public async Task<bool> UpdateMinutesAsync(Day day, int activityId, int minutes)
+        {
+            DayPhysicalActivity? activity = day.DayPhysicalActivities
+                                .FirstOrDefault(f => f.PhysicalActivityId == activityId);
+            if (activity == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                activity.Minutes = minutes;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbException)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> DeleteFoodAsync(Day day, int foodId)
+        {
+            DayFood? dayFood = day.DayFoods.FirstOrDefault(d => d.FoodId == foodId);
+            if(dayFood == null)
+            {  
+                return false; 
+            }
+
+            try
+            {
+                day.DayFoods.Remove(dayFood);
+                await _context.SaveChangesAsync();
+            }
+            catch(DbException)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> DeletePhysicalActivityAsync(Day day, int activityId)
+        {
+            DayPhysicalActivity? dayPhysicalActivity = day.DayPhysicalActivities
+                                .FirstOrDefault(d => d.PhysicalActivityId == activityId);
+            if (dayPhysicalActivity == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                day.DayPhysicalActivities.Remove(dayPhysicalActivity);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbException)
+            {
+                return false;
+            }
             return true;
         }
     }

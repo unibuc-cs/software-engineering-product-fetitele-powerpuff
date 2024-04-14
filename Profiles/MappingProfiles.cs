@@ -21,6 +21,7 @@ namespace Proiect.Profiles
 
             CreateMap<Day, GetDayDTO>();
             CreateMap<DayFood, DayFoodDTO>();
+            CreateMap<DayPhysicalActivity, DayPhysicalActivityDTO>();
         }
     }
 }

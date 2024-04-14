@@ -14,17 +14,19 @@ namespace healthy_lifestyle_web_app.Controllers
     {
         private readonly IDayRepository _dayRepository;
         private readonly IFoodRepository _foodRepository;
+        private readonly IPhysicalActivityRepository _physicalActivityRepository;
         private readonly IApplicationUserService _userService;
         private readonly IMapper _mapper;
 
         public DaysController(IDayRepository dayRepository, IMapper mapper,
-                           IFoodRepository foodRepository,
-                            IApplicationUserService userService)
+                           IFoodRepository foodRepository, IApplicationUserService userService, 
+                           IPhysicalActivityRepository physicalActivityRepository)
         {
             _dayRepository = dayRepository;
             _mapper = mapper;
             _foodRepository = foodRepository;
             _userService = userService;
+            _physicalActivityRepository = physicalActivityRepository;
         }
 
         [HttpGet]
@@ -60,7 +62,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet("current-day")]
-        public async Task<IActionResult> GetCurrent()
+        public async Task<IActionResult> GetCurrentDay()
         {
             string? email = User.Identity.Name;
 
@@ -71,6 +73,26 @@ namespace healthy_lifestyle_web_app.Controllers
             }
 
             Day? day = await _dayRepository.GetCurrentDayAsync(profile.Id);
+            return Ok(_mapper.Map<GetDayDTO>(day));
+        }
+
+        [HttpGet("by-date")]
+        public async Task<IActionResult> GetByDate(DateOnly date)
+        {
+            string? email = User.Identity.Name;
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, date);
+            if(day == null)
+            {
+                return NotFound("Day doesn't exist");
+            }
+
             return Ok(_mapper.Map<GetDayDTO>(day));
         }
 
@@ -114,25 +136,25 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("Profile not found");
             }
 
-            Day? currentDay = await _dayRepository.GetCurrentDayAsync(profile.Id);
-            if (currentDay == null)
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, model.Date);
+            if (day == null)
             {
                 return NotFound("Day doesn't exit");
             }
 
-            Food? food = await _foodRepository.GetByNameAsync(model.foodName);
+            Food? food = await _foodRepository.GetByNameAsync(model.FoodName);
             if(food == null)
             {
                 return NotFound("Food doesn't exist");
             }
 
-            await _dayRepository.PutFoodAsync(currentDay, food, model.grams);
+            await _dayRepository.PutFoodAsync(day, food, model.Grams);
 
             return Ok();
         }
 
         [HttpPut("change-grams")]
-        public async Task<IActionResult> PutGrams([FromBody] DayFoodGrams model)
+        public async Task<IActionResult> PutGrams([FromBody] DayFoodModel model)
         {
             string? email = User.Identity.Name;
             if (email == null)
@@ -165,8 +187,138 @@ namespace healthy_lifestyle_web_app.Controllers
             return BadRequest("Couldn't update grams");
         }
 
+        [HttpPut("add-activity")]
+        public async Task<IActionResult> PutPhysicalActivity([FromBody] DayPhysicalActivityModel model)
+        {
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return BadRequest("No user logged in");
+            }
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, model.Date);
+            if (day == null)
+            {
+                return NotFound("Day doesn't exit");
+            }
+
+            PhysicalActivity? activity = await _physicalActivityRepository.GetByNameAsync(model.ActivityName);
+            if (activity == null)
+            {
+                return NotFound("Activity doesn't exist");
+            }
+
+            await _dayRepository.PutPhysicalActivityAsync(day, activity, model.Minutes);
+
+            return Ok();
+        }
+
+        [HttpPut("change-minutes")]
+        public async Task<IActionResult> PutMinutes([FromBody] DayPhysicalActivityModel model)
+        {
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return BadRequest("No user logged in");
+            }
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, model.Date);
+            if (day == null)
+            {
+                return NotFound("Day doesn't exist");
+            }
+
+            PhysicalActivity? activity = await _physicalActivityRepository.GetByNameAsync(model.ActivityName);
+            if (activity == null)
+            {
+                return NotFound("Activity doesn't exist");
+            }
+
+            if (await _dayRepository.UpdateMinutesAsync(day, activity.Id, model.Minutes))
+            {
+                return Ok();
+            }
+            return BadRequest("Couldn't update grams");
+        }
+
         [HttpDelete("delete-food")]
-        public async Task<IActionResult> DeleteFood()
-        
+        public async Task<IActionResult> DeleteFood(DateOnly date, string foodName)
+        {
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return BadRequest("No user logged in");
+            }
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, date);
+            if (day == null)
+            {
+                return NotFound("Day doesn't exist");
+            }
+
+            Food? food = await _foodRepository.GetByNameAsync(foodName);
+            if (food == null)
+            {
+                return NotFound("Activity doesn't exist");
+            }
+
+            if (await _dayRepository.DeleteFoodAsync(day, food.Id))
+            {
+                return Ok();
+            }
+            return BadRequest("Couldn't remove food");
+        }
+
+        [HttpDelete("delete-activity")]
+        public async Task<IActionResult> DeletePhysicalActivity(DateOnly date, string activityName)
+        {
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return BadRequest("No user logged in");
+            }
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, date);
+            if (day == null)
+            {
+                return NotFound("Day doesn't exist");
+            }
+
+            PhysicalActivity? activity = await _physicalActivityRepository.GetByNameAsync(activityName);
+            if (activity == null)
+            {
+                return NotFound("Activity doesn't exist");
+            }
+
+            if (await _dayRepository.DeletePhysicalActivityAsync(day, activity.Id))
+            {
+                return Ok();
+            }
+            return BadRequest("Couldn't remove physical activity");
+        }
     }
 }

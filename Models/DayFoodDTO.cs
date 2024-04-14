@@ -2,7 +2,7 @@
 {
     public class DayFoodDTO
     {
-        public int foodId { get; set; }
-        public int grams { get; set; }
+        public int FoodId { get; set; }
+        public int Grams { get; set; }
     }
 }
