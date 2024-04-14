@@ -1,5 +1,6 @@
 ﻿using healthy_lifestyle_web_app.ContextModels;
 using healthy_lifestyle_web_app.Entities;
+using healthy_lifestyle_web_app.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,19 +12,17 @@ namespace healthy_lifestyle_web_app.Controllers
     [ApiController]
     public class ApplicationUserController : ControllerBase
     {
-        private readonly ApplicationContext _applicationContext;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IApplicationUserRepository _applicationUserRepository;
 
-        public ApplicationUserController(ApplicationContext applicationContext, UserManager<ApplicationUser> userManager)
+        public ApplicationUserController(IApplicationUserRepository applicationUserRepository)
         {
-            _applicationContext = applicationContext;
-            _userManager = userManager;
+            _applicationUserRepository = applicationUserRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetApplicationUsers()
         {
-            return Ok(await _userManager.Users.ToListAsync());
+            return Ok(await _applicationUserRepository.GetAllAsync());
         }
     }
 }

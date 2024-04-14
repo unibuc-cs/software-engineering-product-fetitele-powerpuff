@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using healthy_lifestyle_web_app.ContextModels;
 
@@ -11,9 +12,11 @@ using healthy_lifestyle_web_app.ContextModels;
 namespace healthy_lifestyle_web_app.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240414182406_AddedGrams")]
+    partial class AddedGrams
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -279,24 +282,28 @@ namespace healthy_lifestyle_web_app.Migrations
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.DayFood", b =>
                 {
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("DayId")
                         .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date")
                         .HasColumnOrder(1);
 
                     b.Property<int>("FoodId")
                         .HasColumnType("int")
                         .HasColumnOrder(2);
 
+                    b.Property<DateOnly>("DayDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("DayProfileId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Grams")
                         .HasColumnType("int");
 
-                    b.HasKey("ProfileId", "Date", "FoodId");
+                    b.HasKey("DayId", "FoodId");
 
                     b.HasIndex("FoodId");
+
+                    b.HasIndex("DayProfileId", "DayDate");
 
                     b.ToTable("DayFoods");
                 });
@@ -543,11 +550,13 @@ namespace healthy_lifestyle_web_app.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("healthy_lifestyle_web_app.Entities.Day", null)
+                    b.HasOne("healthy_lifestyle_web_app.Entities.Day", "Day")
                         .WithMany("DayFoods")
-                        .HasForeignKey("ProfileId", "Date")
+                        .HasForeignKey("DayProfileId", "DayDate")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Day");
 
                     b.Navigation("Food");
                 });

@@ -18,6 +18,9 @@ namespace Proiect.Profiles
             CreateMap<PhysicalActivity, GetPhysicalActivitesAdminDTO>();
             CreateMap<PostPhysicalActivityDTO, PhysicalActivity>();
             CreateMap<DeletePhysicalActivity, PhysicalActivity>();
+
+            CreateMap<Day, GetDayDTO>();
+            CreateMap<DayFood, DayFoodDTO>();
         }
     }
 }
