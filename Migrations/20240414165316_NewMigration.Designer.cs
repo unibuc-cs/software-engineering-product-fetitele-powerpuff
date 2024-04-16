@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using healthy_lifestyle_web_app.ContextModels;
 
@@ -11,9 +12,11 @@ using healthy_lifestyle_web_app.ContextModels;
 namespace healthy_lifestyle_web_app.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240414165316_NewMigration")]
+    partial class NewMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,42 @@ namespace healthy_lifestyle_web_app.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DayFood", b =>
+                {
+                    b.Property<int>("FoodsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DaysProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("DaysDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("FoodsId", "DaysProfileId", "DaysDate");
+
+                    b.HasIndex("DaysProfileId", "DaysDate");
+
+                    b.ToTable("DayFood");
+                });
+
+            modelBuilder.Entity("DayPhysicalActivity", b =>
+                {
+                    b.Property<int>("PhysicalActivitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DaysProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("DaysDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("PhysicalActivitiesId", "DaysProfileId", "DaysDate");
+
+                    b.HasIndex("DaysProfileId", "DaysDate");
+
+                    b.ToTable("DayPhysicalActivity");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -259,54 +298,6 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.ToTable("Days");
                 });
 
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.DayFood", b =>
-                {
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date")
-                        .HasColumnOrder(1);
-
-                    b.Property<int>("FoodId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(2);
-
-                    b.Property<int>("Grams")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProfileId", "Date", "FoodId");
-
-                    b.HasIndex("FoodId");
-
-                    b.ToTable("DayFoods");
-                });
-
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.DayPhysicalActivity", b =>
-                {
-                    b.Property<int>("ProfileId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date")
-                        .HasColumnOrder(1);
-
-                    b.Property<int>("PhysicalActivityId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(2);
-
-                    b.Property<int>("Minutes")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProfileId", "Date", "PhysicalActivityId");
-
-                    b.HasIndex("PhysicalActivityId");
-
-                    b.ToTable("DayPhysicalActivities");
-                });
-
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Food", b =>
                 {
                     b.Property<int>("Id")
@@ -449,6 +440,36 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("DayFood", b =>
+                {
+                    b.HasOne("healthy_lifestyle_web_app.Entities.Food", null)
+                        .WithMany()
+                        .HasForeignKey("FoodsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("healthy_lifestyle_web_app.Entities.Day", null)
+                        .WithMany()
+                        .HasForeignKey("DaysProfileId", "DaysDate")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DayPhysicalActivity", b =>
+                {
+                    b.HasOne("healthy_lifestyle_web_app.Entities.PhysicalActivity", null)
+                        .WithMany()
+                        .HasForeignKey("PhysicalActivitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("healthy_lifestyle_web_app.Entities.Day", null)
+                        .WithMany()
+                        .HasForeignKey("DaysProfileId", "DaysDate")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -526,40 +547,6 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.DayFood", b =>
-                {
-                    b.HasOne("healthy_lifestyle_web_app.Entities.Food", "Food")
-                        .WithMany("DayFoods")
-                        .HasForeignKey("FoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("healthy_lifestyle_web_app.Entities.Day", null)
-                        .WithMany("DayFoods")
-                        .HasForeignKey("ProfileId", "Date")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Food");
-                });
-
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.DayPhysicalActivity", b =>
-                {
-                    b.HasOne("healthy_lifestyle_web_app.Entities.PhysicalActivity", "PhysicalActivity")
-                        .WithMany("DayPhysicalActivities")
-                        .HasForeignKey("PhysicalActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("healthy_lifestyle_web_app.Entities.Day", null)
-                        .WithMany("DayPhysicalActivities")
-                        .HasForeignKey("ProfileId", "Date")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PhysicalActivity");
-                });
-
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Food", b =>
                 {
                     b.HasOne("healthy_lifestyle_web_app.Entities.ApplicationUser", "ApplicationUser")
@@ -591,23 +578,9 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.Navigation("Food");
                 });
 
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Day", b =>
-                {
-                    b.Navigation("DayFoods");
-
-                    b.Navigation("DayPhysicalActivities");
-                });
-
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Food", b =>
                 {
-                    b.Navigation("DayFoods");
-
                     b.Navigation("Request");
-                });
-
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.PhysicalActivity", b =>
-                {
-                    b.Navigation("DayPhysicalActivities");
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Profile", b =>

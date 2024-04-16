@@ -60,6 +60,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(_mapper.Map<GetPhysicalActivityDTO>(physicalActivity));
         }
 
+        // Returns all activities that target the given muscle
         [HttpGet("target-{muscleName}")]
         public async Task<IActionResult> GetByMuscle(string muscleName)
         {
@@ -83,7 +84,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(getPhysicalActivitiesDTO);
         } 
 
-
+        // An admin can add a new activity
         [HttpPost]
         public async Task<IActionResult> PostPhysicalActivity(PostPhysicalActivityDTO physicalActivity)
         {
@@ -94,6 +95,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return BadRequest("Physical activity already in the database");
         }
 
+        // Or delete one
         [HttpDelete]
         public async Task<IActionResult> DeletePhysicalActivity(DeletePhysicalActivity physicalActivity)
         {

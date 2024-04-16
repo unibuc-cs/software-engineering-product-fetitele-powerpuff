@@ -12,6 +12,5 @@ namespace healthy_lifestyle_web_app.Models
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public Goal Goal { get; set; }
-        public string ApplicationUserId { get; set; }
     }
 }

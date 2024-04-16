@@ -15,9 +15,17 @@ namespace healthy_lifestyle_web_app.Entities
         public DateOnly Date { get; set; }
 
         [JsonIgnore]
-        public Profile Profile { get; set; }
+        public Profile? Profile { get; set; }
 
-        public ICollection<Food>? Foods { get; set; }
-        public ICollection<PhysicalActivity>? PhysicalActivities { get; set; }
+        public ICollection<DayFood> DayFoods { get; set; }
+        public ICollection<DayPhysicalActivity> DayPhysicalActivities { get; set; }
+
+        public Day(int profileId, DateOnly date)
+        {
+            ProfileId = profileId;
+            Date = date;
+            DayFoods = new List<DayFood>();
+            DayPhysicalActivities = new List<DayPhysicalActivity>();
+        }
     }
 }

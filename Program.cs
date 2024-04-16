@@ -87,10 +87,13 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
+builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IPhysicalActivityRepository, PhysicalActivityRepository>();
 builder.Services.AddScoped<IPhysicalActivityMuscleRepository,  PhysicalActivityMuscleRepository>();
 builder.Services.AddScoped<IMuscleRepository, MuscleRepository>();
+builder.Services.AddScoped<IDayRepository, DayRepository>();
 builder.Services.AddScoped<IFoodRepository, FoodRepository>();
 
 var app = builder.Build();

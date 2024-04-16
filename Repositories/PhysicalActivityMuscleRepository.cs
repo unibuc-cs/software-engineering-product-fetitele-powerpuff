@@ -35,6 +35,7 @@ namespace healthy_lifestyle_web_app.Repositories
         }
         public async Task<bool> DeleteMuscleFromPhysicalActivity(string muscleName, string activityName)
         {
+            // Includes the list of associated entities
             Muscle? muscle = await _context.Muscles.Include(x => x.PhysicalActivities)
                                             .FirstOrDefaultAsync(x => x.Name == muscleName);
 
