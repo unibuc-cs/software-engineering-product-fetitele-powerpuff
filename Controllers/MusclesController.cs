@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using healthy_lifestyle_web_app.ContextModels;
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
+// Only an admin can use the methods in this controller
 
 namespace healthy_lifestyle_web_app.Controllers
 {

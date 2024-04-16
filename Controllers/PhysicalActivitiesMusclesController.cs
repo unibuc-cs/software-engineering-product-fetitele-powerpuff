@@ -1,7 +1,7 @@
 ﻿using healthy_lifestyle_web_app.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
+
+// Only an admin can use this methods, used to associate muscles with physical activities
 
 namespace healthy_lifestyle_web_app.Controllers
 {

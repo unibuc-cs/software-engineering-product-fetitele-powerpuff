@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Repositories;
 using AutoMapper;

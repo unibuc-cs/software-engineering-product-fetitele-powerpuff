@@ -1,10 +1,5 @@
-﻿using healthy_lifestyle_web_app.ContextModels;
-using healthy_lifestyle_web_app.Entities;
-using healthy_lifestyle_web_app.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using healthy_lifestyle_web_app.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace healthy_lifestyle_web_app.Controllers
 {

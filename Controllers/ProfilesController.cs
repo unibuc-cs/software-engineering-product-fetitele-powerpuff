@@ -2,7 +2,6 @@
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace healthy_lifestyle_web_app.Controllers
@@ -12,11 +11,14 @@ namespace healthy_lifestyle_web_app.Controllers
     public class ProfilesController : ControllerBase
     {
         private readonly IProfileRepository _profileRepository;
+        private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly IMapper _mapper;
 
-        public ProfilesController(IProfileRepository profileRepository, IMapper mapper)
+        public ProfilesController(IProfileRepository profileRepository, 
+                IApplicationUserRepository applicationUserRepository, IMapper mapper)
         {
             _profileRepository = profileRepository;
+            _applicationUserRepository = applicationUserRepository;
             _mapper = mapper;
         }
 
@@ -27,10 +29,22 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         // What the user will see when they look at their profile
-        [HttpGet("{applicationUserId}")]
-        public async Task<IActionResult> GetByApplicationUserId(string applicationUserId)
+        [HttpGet("user-profile")]
+        public async Task<IActionResult> GetByApplicationUserId()
         {
-            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(applicationUserId);
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if(user == null)
+            {
+                return NotFound("No used found");
+            }
+
+            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
             if (profile == null)
             {
                 return NotFound("No profile with this application user id");
@@ -41,62 +55,198 @@ namespace healthy_lifestyle_web_app.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(PostProfileDTO profileDTO)
         {
-            if (await _profileRepository.PostAsync(_mapper.Map<Entities.Profile>(profileDTO)))
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No used found");
+            }
+
+            Entities.Profile profile = _mapper.Map<Entities.Profile>(profileDTO);
+            profile.ApplicationUserId = user.Id;
+
+            if (await _profileRepository.PostAsync(profile))
+            {
+                return Ok();
+            }
+            return BadRequest("Profile already exists");
+        }
+
+        [HttpPut("change-name/{newName}")]
+        public async Task<IActionResult> PutName(string newName)
+        {
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? user =  await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No used found");
+            }
+
+            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
+            if (profile == null)
+            {
+                return NotFound("No profile with this application user id");
+            }
+
+            if (await _profileRepository.PutNameAsync(profile.Id, newName))
             {
                 return Ok();
             }
             return BadRequest();
         }
 
-        [HttpPut("name{id}/{newName}")]
-        public async Task<IActionResult> PutName(int id, string newName)
+        [HttpPut("change-birthday/{newBirthdate}")]
+        public async Task<IActionResult> PutBirthdate(DateOnly newBirthdate)
         {
-            if (await _profileRepository.PutNameAsync(id, newName))
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No used found");
+            }
+
+            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
+            if (profile == null)
+            {
+                return NotFound("No profile with this application user id");
+            }
+
+            if (await _profileRepository.PutBirthdateAsync(profile.Id, newBirthdate))
             {
                 return Ok();
             }
             return BadRequest();
         }
 
-        [HttpPut("birthdate{id}/{newBirthdate}")]
-        public async Task<IActionResult> PutBirthdate(int id, DateOnly newBirthdate)
+        [HttpPut("change-weight/{newWeight}")]
+        public async Task<IActionResult> PutWeight(double newWeight)
         {
-            if (await _profileRepository.PutBirthdateAsync(id, newBirthdate))
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No used found");
+            }
+
+            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
+            if (profile == null)
+            {
+                return NotFound("No profile with this application user id");
+            }
+
+            if (await _profileRepository.PutWeightAsync(profile.Id, newWeight))
             {
                 return Ok();
             }
             return BadRequest();
         }
 
-        [HttpPut("weight{id}/{newWeight}")]
-        public async Task<IActionResult> PutWeight(int id, double newWeight)
+        [HttpPut("change-height/{newHeight}")]
+        public async Task<IActionResult> PutHeight(double newHeight)
         {
-            if (await _profileRepository.PutWeightAsync(id, newWeight))
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No used found");
+            }
+
+            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
+            if (profile == null)
+            {
+                return NotFound("No profile with this application user id");
+            }
+
+            if (await _profileRepository.PutHeightAsync(profile.Id, newHeight))
             {
                 return Ok();
             }
             return BadRequest();
         }
 
-        [HttpPut("height{id}/{newHeight}")]
-        public async Task<IActionResult> PutHeight(int id, double newHeight)
+        [HttpPut("change-goal/{newGoal}")]
+        public async Task<IActionResult> PutGoal(Goal newGoal)
         {
-            if (await _profileRepository.PutHeightAsync(id, newHeight))
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No used found");
+            }
+
+            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
+            if (profile == null)
+            {
+                return NotFound("No profile with this application user id");
+            }
+
+            if (await _profileRepository.PutGoalAsync(profile.Id, newGoal))
             {
                 return Ok();
             }
             return BadRequest();
         }
 
-        [HttpPut("goal{id}/{newGoal}")]
-        public async Task<IActionResult> PutGoal(int id, Goal newGoal)
+        // A user can delete their own profile
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUserProfile()
         {
-            if (await _profileRepository.PutGoalAsync(id, newGoal))
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return null;
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No used found");
+            }
+
+            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
+            if (profile == null)
+            {
+                return NotFound("No profile with this application user id");
+            }
+
+            if (await _profileRepository.DeleteAsync(profile.Id))
             {
                 return Ok();
             }
-            return BadRequest();
+            return NotFound("No profile found");
         }
+
+        // An admin can delete any profile by id
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -105,7 +255,7 @@ namespace healthy_lifestyle_web_app.Controllers
             {
                 return Ok();
             }
-            return NotFound();
+            return NotFound("No profile found");
         }
     }
 }

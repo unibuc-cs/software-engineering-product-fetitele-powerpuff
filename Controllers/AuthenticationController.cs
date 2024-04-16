@@ -28,31 +28,32 @@ namespace healthy_lifestyle_web_app.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Verificam daca exista deja utilizatorul cu acest email
+            // Verifies if there is already a user with this email
             if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new Response { Status = "Error", Message = "This email is already used" });
             }
 
-            ApplicationUser user = await _authenticationService.CreateUser(model);
+            ApplicationUser? user = await _authenticationService.CreateUser(model);
 
-            // Verifica daca a fost creat
+            // Checks is the user was created
             if (user == null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new Response { Status = "Error", Message = "Register failed" });
             }
 
-            // Creaza rolurile daca nu exista
+            // Creates user roles if they don't already exist
             await _authenticationService.CreateRoles();
 
-            // Atribuie rolurile utilizatorului
+            // Assigns roles to the user
             await _authenticationService.AssignUserRole(user);
 
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
+        // Promotes a normal user to admin
         [HttpPut("promote")]
         public async Task<IActionResult> PromoteUserToAdmin(string email)
         {
@@ -81,13 +82,13 @@ namespace healthy_lifestyle_web_app.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            // Daca exista utilizatorul si e validata parola
+            // Checks if the user with this email exists, then checks if password matches
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var roles = await _userManager.GetRolesAsync(user);
 
-                // Creaza claims pt utilizatorul continand numele, un identificator unic si rolurile sale
+                // Creates claims for the user containing name (as the email), a unique identifier and their roles
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.Email),
@@ -99,8 +100,8 @@ namespace healthy_lifestyle_web_app.Controllers
                     claims.Add(new Claim(ClaimTypes.Role, role));
                 }
 
-                // Creeaza un token bazat pe claims ale utilizatorului
-                // Folosit pentru a avea acces la anumite metode
+                // Creates a token based on the user's claims
+                // Can now access certain features depending on the role
                 var token = _authenticationService.GetToken(claims);
 
                 return Ok(new
@@ -110,7 +111,7 @@ namespace healthy_lifestyle_web_app.Controllers
                 });
             }
 
-            return Unauthorized();
+            return Unauthorized("Invalid email or password");
         }
 
     }

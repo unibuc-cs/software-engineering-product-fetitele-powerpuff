@@ -16,6 +16,7 @@ namespace healthy_lifestyle_web_app.Services
             _profileRepository = profileRepository;
         }
 
+        // Given an email, returns the corresponding user's profile (or null if it doesn't exist)
         public async Task<Entities.Profile?> GetUserProfileByEmail(string email)
         {
             ApplicationUser? currentUser = await _userRepository.GetByEmailAsync(email);

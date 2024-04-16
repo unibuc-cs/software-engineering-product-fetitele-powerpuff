@@ -4,7 +4,6 @@ using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
 using healthy_lifestyle_web_app.Services;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace healthy_lifestyle_web_app.Controllers
 {
@@ -35,21 +34,24 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(await _dayRepository.GetAllAsync());
         }
 
+        // Returns all days of the user currently logged in
         [HttpGet("by-user")]
         public async Task<IActionResult> GetByUser()
         {
-            string? email = User.Identity.Name;
+            string? email = User.Identity.Name;  // Find the name (email) of the user that is logged in
             if (email == null)
             {
                 return BadRequest("No user logged in");
             }
 
+            // Get the user's profile
             Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
             if (profile == null)
             {
                 return NotFound("Profile not found");
             }
 
+            // And the days associated with the profile
             List<Day> days = await _dayRepository.GetByUserAsync(profile.Id);
             List<GetDayDTO> getDaysDTO = new List<GetDayDTO>();
 
@@ -61,6 +63,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(getDaysDTO);
         }
 
+        // Returns the current day for the user logged in
         [HttpGet("current-day")]
         public async Task<IActionResult> GetCurrentDay()
         {
@@ -76,6 +79,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(_mapper.Map<GetDayDTO>(day));
         }
 
+        // Returns a day by date for the user logged in
         [HttpGet("by-date")]
         public async Task<IActionResult> GetByDate(DateOnly date)
         {
@@ -96,6 +100,9 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(_mapper.Map<GetDayDTO>(day));
         }
 
+        // Will eventually change to automatically create a new day for a user at midnight
+        // Currently creates (if it doesn't already exist) a new day with the current date for the user
+        // // that is logged in
         [HttpPost]
         public async Task<IActionResult> PostDay()
         {
@@ -121,6 +128,7 @@ namespace healthy_lifestyle_web_app.Controllers
             }
         }
 
+        // Add food and grams in a day
         [HttpPut("add-food")]
         public async Task<IActionResult> PutFood([FromBody] DayFoodModel model)
         {
@@ -153,6 +161,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok();
         }
 
+        // Change grams for a food logged in the day given by date
         [HttpPut("change-grams")]
         public async Task<IActionResult> PutGrams([FromBody] DayFoodModel model)
         {
@@ -187,6 +196,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return BadRequest("Couldn't update grams");
         }
 
+        // Same as add food
         [HttpPut("add-activity")]
         public async Task<IActionResult> PutPhysicalActivity([FromBody] DayPhysicalActivityModel model)
         {
@@ -219,6 +229,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok();
         }
 
+        // Same as change grams
         [HttpPut("change-minutes")]
         public async Task<IActionResult> PutMinutes([FromBody] DayPhysicalActivityModel model)
         {
@@ -253,6 +264,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return BadRequest("Couldn't update grams");
         }
 
+        // Removes the given food from the given day by date
         [HttpDelete("delete-food")]
         public async Task<IActionResult> DeleteFood(DateOnly date, string foodName)
         {
@@ -287,6 +299,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return BadRequest("Couldn't remove food");
         }
 
+        // Same as delete food
         [HttpDelete("delete-activity")]
         public async Task<IActionResult> DeletePhysicalActivity(DateOnly date, string activityName)
         {

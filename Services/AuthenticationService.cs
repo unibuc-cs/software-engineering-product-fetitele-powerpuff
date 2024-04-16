@@ -21,6 +21,7 @@ namespace healthy_lifestyle_web_app.Services
             _configuration = configuration;
         }
 
+        // Method used to create roles
         public async Task CreateRoles()
         {
             if (!await _roleManager.RoleExistsAsync(Roles.Admin))
@@ -30,6 +31,7 @@ namespace healthy_lifestyle_web_app.Services
                 await _roleManager.CreateAsync(new IdentityRole(Roles.User));
         }
 
+        // Creates a user, username is the same as email
         public async Task<ApplicationUser?> CreateUser(RegisterModel model)
         {
             ApplicationUser user = new()
