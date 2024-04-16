@@ -35,7 +35,7 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return null;
+                return NotFound("No used logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
@@ -58,7 +58,7 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return null;
+                return NotFound("No used logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
@@ -83,7 +83,7 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return null;
+                return NotFound("No used logged in");
             }
 
             ApplicationUser? user =  await _applicationUserRepository.GetByEmailAsync(email);
@@ -111,7 +111,7 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return null;
+                return NotFound("No used logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
@@ -139,7 +139,7 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return null;
+                return NotFound("No used logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
@@ -167,7 +167,7 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return null;
+                return NotFound("No used logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
@@ -195,7 +195,7 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return null;
+                return NotFound("No used logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
@@ -224,7 +224,7 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return null;
+                return NotFound("No used logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
