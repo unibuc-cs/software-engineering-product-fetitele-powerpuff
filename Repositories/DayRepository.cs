@@ -28,6 +28,13 @@ namespace healthy_lifestyle_web_app.Repositories
                 .Include(d => d.DayFoods).ToListAsync();
         }
 
+        public async Task<List<Day>> GetAfterDateByProfileAsync(int profileId, DateOnly date)
+        {
+            return await _context.Days.Where(d => d.ProfileId == profileId && d.Date >= date)
+                .Include(d => d.DayPhysicalActivities)
+                .Include(d => d.DayFoods).ToListAsync();
+        }
+
         public async Task<Day?> GetCurrentDayAsync(int id)
         {
             List<Day> days =  await _context.Days.Where(d => d.ProfileId == id)

@@ -18,6 +18,9 @@ namespace healthy_lifestyle_web_app.ContextModels
             modelBuilder.Entity<DayPhysicalActivity>().HasKey(d => new { d.ProfileId, d.Date, d.PhysicalActivityId });
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<WeightEvolution>().HasKey(we => new { we.EvolutionId, we.ProfileId });
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Muscle>()
                .HasIndex(m => m.Name) 
                .IsUnique();
@@ -36,6 +39,7 @@ namespace healthy_lifestyle_web_app.ContextModels
         public DbSet<Muscle> Muscles { get; set; }
         public DbSet<DayFood> DayFoods { get; set; }
         public DbSet<DayPhysicalActivity> DayPhysicalActivities { get; set; }
+        public DbSet<WeightEvolution> WeightEvolutions { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
     }

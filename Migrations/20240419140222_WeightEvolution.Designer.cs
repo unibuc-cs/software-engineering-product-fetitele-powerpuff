@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using healthy_lifestyle_web_app.ContextModels;
 
@@ -11,9 +12,11 @@ using healthy_lifestyle_web_app.ContextModels;
 namespace healthy_lifestyle_web_app.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240419140222_WeightEvolution")]
+    partial class WeightEvolution
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -445,10 +448,7 @@ namespace healthy_lifestyle_web_app.Migrations
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.WeightEvolution", b =>
                 {
                     b.Property<int>("EvolutionId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EvolutionId"));
 
                     b.Property<int>("ProfileId")
                         .HasColumnType("int");

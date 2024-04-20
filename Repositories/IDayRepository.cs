@@ -8,12 +8,15 @@ namespace healthy_lifestyle_web_app.Repositories
 
         // Gets all days of a user
         public Task<List<Day>> GetByUserAsync(int id);
+
+        // Get all days after a date for a profile
+        public Task<List<Day>> GetAfterDateByProfileAsync(int profileId, DateOnly date);
         
         // Gets the current day for a user
         public Task<Day?> GetCurrentDayAsync(int id);
 
         // Get day by user and date
-        public Task<Day?> GetByDateAsync(int id,  DateOnly date);
+        public Task<Day?> GetByDateAsync(int id, DateOnly date);
 
         // Creates a new day for a user
         public Task<bool> PostDayAsync(int id);
@@ -35,7 +38,5 @@ namespace healthy_lifestyle_web_app.Repositories
 
         // Delete physical activity
         public Task<bool> DeletePhysicalActivityAsync(Day day, int activityId);
-
-
     }
 }

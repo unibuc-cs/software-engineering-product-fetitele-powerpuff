@@ -12,14 +12,16 @@ namespace healthy_lifestyle_web_app.Controllers
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IApplicationUserRepository _applicationUserRepository;
+        private readonly IWeightEvolutionRepository _weightEvolutionRepository;
         private readonly IMapper _mapper;
 
         public ProfilesController(IProfileRepository profileRepository, 
-                IApplicationUserRepository applicationUserRepository, IMapper mapper)
+                IApplicationUserRepository applicationUserRepository, IWeightEvolutionRepository weightEvolutionRepository, IMapper mapper)
         {
             _profileRepository = profileRepository;
             _applicationUserRepository = applicationUserRepository;
             _mapper = mapper;
+            _weightEvolutionRepository = weightEvolutionRepository;
         }
 
         [HttpGet]
@@ -35,13 +37,13 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return NotFound("No used logged in");
+                return NotFound("No user logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
             if(user == null)
             {
-                return NotFound("No used found");
+                return NotFound("No user found");
             }
 
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
@@ -58,13 +60,13 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return NotFound("No used logged in");
+                return NotFound("No user logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
             if (user == null)
             {
-                return NotFound("No used found");
+                return NotFound("No user found");
             }
 
             Entities.Profile profile = _mapper.Map<Entities.Profile>(profileDTO);
@@ -72,7 +74,10 @@ namespace healthy_lifestyle_web_app.Controllers
 
             if (await _profileRepository.PostAsync(profile))
             {
-                return Ok();
+                if (await _weightEvolutionRepository.PostAsync(profile.Id, profile.Weight))
+                {
+                    return Ok("Profile created successfully");
+                }
             }
             return BadRequest("Profile already exists");
         }
@@ -83,13 +88,13 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return NotFound("No used logged in");
+                return NotFound("No user logged in");
             }
 
             ApplicationUser? user =  await _applicationUserRepository.GetByEmailAsync(email);
             if (user == null)
             {
-                return NotFound("No used found");
+                return NotFound("No user found");
             }
 
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
@@ -111,13 +116,13 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return NotFound("No used logged in");
+                return NotFound("No user logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
             if (user == null)
             {
-                return NotFound("No used found");
+                return NotFound("No user found");
             }
 
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
@@ -139,13 +144,13 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return NotFound("No used logged in");
+                return NotFound("No user logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
             if (user == null)
             {
-                return NotFound("No used found");
+                return NotFound("No user found");
             }
 
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
@@ -156,9 +161,13 @@ namespace healthy_lifestyle_web_app.Controllers
 
             if (await _profileRepository.PutWeightAsync(profile.Id, newWeight))
             {
-                return Ok();
+                if (await _weightEvolutionRepository.PostAsync(profile.Id, newWeight))
+                {
+                    return Ok("Weight updated successfully");
+                }
+                else { return BadRequest("Error updating weight in weight evolution"); }
             }
-            return BadRequest();
+            return BadRequest("Error updating weight in profile");
         }
 
         [HttpPut("change-height/{newHeight}")]
@@ -167,13 +176,13 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return NotFound("No used logged in");
+                return NotFound("No user logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
             if (user == null)
             {
-                return NotFound("No used found");
+                return NotFound("No user found");
             }
 
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
@@ -195,13 +204,13 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return NotFound("No used logged in");
+                return NotFound("No user logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
             if (user == null)
             {
-                return NotFound("No used found");
+                return NotFound("No user found");
             }
 
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
@@ -224,13 +233,13 @@ namespace healthy_lifestyle_web_app.Controllers
             string? email = User.Identity.Name;
             if (email == null)
             {
-                return NotFound("No used logged in");
+                return NotFound("No user logged in");
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
             if (user == null)
             {
-                return NotFound("No used found");
+                return NotFound("No user found");
             }
 
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
@@ -247,7 +256,6 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         // An admin can delete any profile by id
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
