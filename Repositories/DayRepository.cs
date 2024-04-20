@@ -1,5 +1,6 @@
 ﻿using healthy_lifestyle_web_app.ContextModels;
 using healthy_lifestyle_web_app.Entities;
+using healthy_lifestyle_web_app.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
@@ -28,7 +29,7 @@ namespace healthy_lifestyle_web_app.Repositories
                 .Include(d => d.DayFoods).ToListAsync();
         }
 
-        public async Task<List<Day>> GetAfterDateByProfileAsync(int profileId, DateOnly date)
+        public async Task<List<Day>> GetAfterDateAsync(int profileId, DateOnly date)
         {
             return await _context.Days.Where(d => d.ProfileId == profileId && d.Date >= date)
                 .Include(d => d.DayPhysicalActivities)
@@ -63,6 +64,28 @@ namespace healthy_lifestyle_web_app.Repositories
                 calories += (dayFood.Food.Calories * dayFood.Grams / 100);
             }
             return calories;
+        }
+
+        public async Task<List<DayFoodCaloriesModel>> GetDaysFoodCaloriesAsync(List<Day> days)
+        {
+            List<DayFoodCaloriesModel> list = new List<DayFoodCaloriesModel>();
+            foreach (Day day in days)
+            {
+                double calories = await GetCalories(day.ProfileId, day.Date);
+                DayFoodCaloriesModel dayFoodCaloriesModel = new DayFoodCaloriesModel(day.Date, calories);
+                list.Add(dayFoodCaloriesModel);
+            }
+            return list;
+        }
+
+        public async Task<double> GetAverageFoodCalories(List<DayFoodCaloriesModel> daysCalories)
+        {
+            double calories = 0;
+            foreach (DayFoodCaloriesModel dayCalories in daysCalories)
+            {
+                calories += dayCalories.Calories;
+            }
+            return calories / daysCalories.Count;
         }
 
         public async Task<bool> PostDayAsync(int id)
