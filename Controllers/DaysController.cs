@@ -100,6 +100,26 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(_mapper.Map<GetDayDTO>(day));
         }
 
+        [HttpGet("calories")]
+        public async Task<IActionResult> GetCalories(DateOnly date)
+        {
+            string? email = User.Identity.Name;
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, date);
+            if (day == null)
+            {
+                return NotFound("Day doesn't exist");
+            }
+
+            return Ok(await _dayRepository.GetCalories(profile.Id, date));
+        }
+
         // Will eventually change to automatically create a new day for a user at midnight
         // Currently creates (if it doesn't already exist) a new day with the current date for the user
         // // that is logged in
