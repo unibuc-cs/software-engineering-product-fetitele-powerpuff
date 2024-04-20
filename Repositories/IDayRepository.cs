@@ -19,14 +19,20 @@ namespace healthy_lifestyle_web_app.Repositories
         // Get day by user and date
         public Task<Day?> GetByDateAsync(int id, DateOnly date);
 
-        // Gets the number of calories for a given day of a user
-        public Task<double> GetCalories(int id, DateOnly date);
+        // Gets the number of food calories for a given day of a user
+        public Task<double> GetFoodCalories(int id, DateOnly date);
 
-        // Get a list of date and calories for a profile for given days
-        public Task<List<DayFoodCaloriesModel>> GetDaysFoodCaloriesAsync(List<Day> days);
+        // Gets the number of physical activity burned calories for a given day of a user
+        public Task<double> GetActivityCalories(int profileId, DateOnly date);
+
+        // Get a list of date and food calories for a profile for given days
+        public Task<List<DateCaloriesModel>> GetDaysFoodCaloriesAsync(List<Day> days);
+
+        // Get a list of date and activity calories for a profile for given days
+        public Task<List<DateCaloriesModel>> GetDaysActivityCaloriesAsync(List<Day> days);
 
         // Get the average calories for a list of day food calories
-        public Task<double> GetAverageFoodCalories(List<DayFoodCaloriesModel> daysCalories);
+        public Task<double> GetAverageCalories(List<DateCaloriesModel> dateCalories);
 
         // Creates a new day for a user
         public Task<bool> PostDayAsync(int id);

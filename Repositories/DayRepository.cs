@@ -53,7 +53,7 @@ namespace healthy_lifestyle_web_app.Repositories
                 .FirstOrDefaultAsync(d => d.ProfileId == id && d.Date == date);
         }
 
-        public async Task<double> GetCalories(int id, DateOnly date)
+        public async Task<double> GetFoodCalories(int id, DateOnly date)
         {
             List<DayFood> dayFoods = await _context.DayFoods.Include(df => df.Food)
                 .Where(df => df.ProfileId == id && df.Date == date).ToListAsync();
@@ -66,26 +66,53 @@ namespace healthy_lifestyle_web_app.Repositories
             return calories;
         }
 
-        public async Task<List<DayFoodCaloriesModel>> GetDaysFoodCaloriesAsync(List<Day> days)
+        public async Task<double> GetActivityCalories(int profileId, DateOnly date)
         {
-            List<DayFoodCaloriesModel> list = new List<DayFoodCaloriesModel>();
+            List<DayPhysicalActivity> dayActivities = await _context.DayPhysicalActivities
+                .Include(dpa => dpa.PhysicalActivity)
+                .Where(dpa => dpa.ProfileId == profileId && dpa.Date == date)
+                .ToListAsync();
+
+            double calories = 0;
+            foreach (DayPhysicalActivity dayActivity in dayActivities)
+            {
+                calories += (dayActivity.PhysicalActivity.Calories * dayActivity.Minutes);
+            }
+            return calories;
+        }
+
+        public async Task<List<DateCaloriesModel>> GetDaysFoodCaloriesAsync(List<Day> days)
+        {
+            List<DateCaloriesModel> list = new List<DateCaloriesModel>();
             foreach (Day day in days)
             {
-                double calories = await GetCalories(day.ProfileId, day.Date);
-                DayFoodCaloriesModel dayFoodCaloriesModel = new DayFoodCaloriesModel(day.Date, calories);
+                double calories = await GetFoodCalories(day.ProfileId, day.Date);
+                DateCaloriesModel dayFoodCaloriesModel = new DateCaloriesModel(day.Date, calories);
                 list.Add(dayFoodCaloriesModel);
             }
             return list;
         }
 
-        public async Task<double> GetAverageFoodCalories(List<DayFoodCaloriesModel> daysCalories)
+        public async Task<List<DateCaloriesModel>> GetDaysActivityCaloriesAsync(List<Day> days)
+        {
+            List<DateCaloriesModel> list = new List<DateCaloriesModel>();
+            foreach (Day day in days)
+            {
+                double calories = await GetActivityCalories(day.ProfileId, day.Date);
+                DateCaloriesModel dateCaloriesModel = new DateCaloriesModel(day.Date, calories);
+                list.Add(dateCaloriesModel);
+            }
+            return list;
+        }
+
+        public async Task<double> GetAverageCalories(List<DateCaloriesModel> datesCalories)
         {
             double calories = 0;
-            foreach (DayFoodCaloriesModel dayCalories in daysCalories)
+            foreach (DateCaloriesModel dateCalories in datesCalories)
             {
-                calories += dayCalories.Calories;
+                calories += dateCalories.Calories;
             }
-            return calories / daysCalories.Count;
+            return calories / datesCalories.Count;
         }
 
         public async Task<bool> PostDayAsync(int id)

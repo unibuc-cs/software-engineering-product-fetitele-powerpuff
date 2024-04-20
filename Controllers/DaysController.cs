@@ -101,8 +101,8 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(_mapper.Map<GetDayDTO>(day));
         }
 
-        [HttpGet("calories")]
-        public async Task<IActionResult> GetCalories(DateOnly date)
+        [HttpGet("food-calories")]
+        public async Task<IActionResult> GetFoodCalories(DateOnly date)
         {
             string? email = User.Identity.Name;
 
@@ -118,7 +118,27 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("Day doesn't exist");
             }
 
-            return Ok(await _dayRepository.GetCalories(profile.Id, date));
+            return Ok(await _dayRepository.GetFoodCalories(profile.Id, date));
+        }
+
+        [HttpGet("activity-calories")]
+        public async Task<IActionResult> GetActivityCalories(DateOnly date)
+        {
+            string? email = User.Identity.Name;
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, date);
+            if (day == null)
+            {
+                return NotFound("Day doesn't exist");
+            }
+
+            return Ok(await _dayRepository.GetActivityCalories(profile.Id, date));
         }
 
         // Get a list of date and food calories for a profile after a given date
@@ -140,12 +160,35 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("No days after the given date");
             }
 
-            // Return a list of dates and calories for the computed days
+            // Return a list of dates and food calories for the computed days
             return Ok(await _dayRepository.GetDaysFoodCaloriesAsync(days));
         }
 
-        // Get the average calories after a given date for a profile
-        [HttpGet("average-calories")]
+        // Get a list of date and food calories for a profile after a given date
+        [HttpGet("activity-calories-after-date")]
+        public async Task<IActionResult> GetActivityCaloriesAfterDate(DateOnly date)
+        {
+            string? email = User.Identity.Name;
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            // Get a list of days after the given date
+            List<Day> days = await _dayRepository.GetAfterDateAsync(profile.Id, date);
+            if (days.IsNullOrEmpty())
+            {
+                return NotFound("No days after the given date");
+            }
+
+            // Return a list of dates and activity calories for the computed days
+            return Ok(await _dayRepository.GetDaysActivityCaloriesAsync(days));
+        }
+
+        // Get the average food calories after a given date for a profile
+        [HttpGet("average-food-calories")]
         public async Task<IActionResult> GetAverageFoodCalories(DateOnly date)
         {
             string? email = User.Identity.Name;
@@ -164,9 +207,34 @@ namespace healthy_lifestyle_web_app.Controllers
             }
 
             // Get a list of dates and calories for the computed days
-            List<DayFoodCaloriesModel> daysCalories = await _dayRepository.GetDaysFoodCaloriesAsync(days);
+            List<DateCaloriesModel> daysCalories = await _dayRepository.GetDaysFoodCaloriesAsync(days);
 
-            return Ok(await _dayRepository.GetAverageFoodCalories(daysCalories));
+            return Ok(await _dayRepository.GetAverageCalories(daysCalories));
+        }
+
+        // Get the average activity calories after a given date for a profile
+        [HttpGet("average-activity-calories")]
+        public async Task<IActionResult> GetAverageActivityCalories(DateOnly date)
+        {
+            string? email = User.Identity.Name;
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            // Get a list of days after the given date
+            List<Day> days = await _dayRepository.GetAfterDateAsync(profile.Id, date);
+            if (days.IsNullOrEmpty())
+            {
+                return NotFound("No days after the given date");
+            }
+
+            // Get a list of dates and calories for the computed days
+            List<DateCaloriesModel> daysCalories = await _dayRepository.GetDaysActivityCaloriesAsync(days);
+
+            return Ok(await _dayRepository.GetAverageCalories(daysCalories));
         }
 
         // Will eventually change to automatically create a new day for a user at midnight
