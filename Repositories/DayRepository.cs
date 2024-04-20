@@ -45,6 +45,19 @@ namespace healthy_lifestyle_web_app.Repositories
                 .FirstOrDefaultAsync(d => d.ProfileId == id && d.Date == date);
         }
 
+        public async Task<double> GetCalories(int id, DateOnly date)
+        {
+            List<DayFood> dayFoods = await _context.DayFoods.Include(df => df.Food)
+                .Where(df => df.ProfileId == id && df.Date == date).ToListAsync();
+
+            double calories = 0;
+            foreach(DayFood dayFood in dayFoods)
+            {
+                calories += (dayFood.Food.Calories * dayFood.Grams / 100);
+            }
+            return calories;
+        }
+
         public async Task<bool> PostDayAsync(int id)
         {
             Day day = new(id, DateOnly.FromDateTime(DateTime.Today));
