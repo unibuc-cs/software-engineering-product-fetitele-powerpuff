@@ -25,5 +25,31 @@ namespace healthy_lifestyle_web_app.Repositories
         {
             return await _userManager.FindByEmailAsync(email);
         }
+
+        public async Task<bool> DeleteAsync(string id)
+        {
+            var user = await _applicationContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                return false;
+            }
+
+            _applicationContext.Users.Remove(user);
+            await _applicationContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteByEmailAsync(string email)
+        {
+            var user = await _applicationContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                return false;
+            }
+
+            _applicationContext.Users.Remove(user);
+            await _applicationContext.SaveChangesAsync();
+            return true;
+        }
     }
 }
