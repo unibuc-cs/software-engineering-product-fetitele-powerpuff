@@ -9,7 +9,7 @@ namespace healthy_lifestyle_web_app.Repositories
     {
         private readonly ApplicationContext _context;
 
-        public ProfileRepository(ApplicationContext context, IMapper mapper)
+        public ProfileRepository(ApplicationContext context)
         {
             _context = context;
         }

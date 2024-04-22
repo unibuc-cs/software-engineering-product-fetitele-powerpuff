@@ -22,5 +22,6 @@ namespace healthy_lifestyle_web_app.Entities
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public ICollection<Day>? Days { get; set;}
+        public ICollection<WeightEvolution> WeightEvolutions { get; set; }
     }
 }

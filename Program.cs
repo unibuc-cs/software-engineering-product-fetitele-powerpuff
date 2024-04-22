@@ -95,6 +95,7 @@ builder.Services.AddScoped<IPhysicalActivityMuscleRepository,  PhysicalActivityM
 builder.Services.AddScoped<IMuscleRepository, MuscleRepository>();
 builder.Services.AddScoped<IDayRepository, DayRepository>();
 builder.Services.AddScoped<IFoodRepository, FoodRepository>();
+builder.Services.AddScoped<IWeightEvolutionRepository, WeightEvolutionRepository>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 
 var app = builder.Build();

@@ -10,8 +10,6 @@ namespace healthy_lifestyle_web_app.Controllers
     [ApiController]
     public class FoodController : ControllerBase
     {
-
-
         private readonly IFoodRepository _foodRepository;
         private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly IMapper _mapper;
@@ -22,7 +20,6 @@ namespace healthy_lifestyle_web_app.Controllers
             _applicationUserRepository = applicationUserRepository;
             _mapper = mapper;
         }
-
 
         // This is the information the user will see 
         [HttpGet]
@@ -38,7 +35,6 @@ namespace healthy_lifestyle_web_app.Controllers
 
             return Ok(foodsDTO);
         }
-
 
 
         // This is the information the admin will see 
@@ -72,7 +68,6 @@ namespace healthy_lifestyle_web_app.Controllers
         [HttpPost]
         public async Task<IActionResult> PostFood(PostFoodDTO food)
         {
-
             if (User.IsInRole("Admin"))
             {
                 food.Public = true; // Alimentele adăugate de admin sunt publice pentru toți
@@ -103,21 +98,5 @@ namespace healthy_lifestyle_web_app.Controllers
             }
             return BadRequest("Food already in the database");
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
