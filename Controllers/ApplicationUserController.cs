@@ -21,7 +21,8 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+        // Un admin poate sa stearga si dupa id si dupa email
+        [HttpDelete("dupa-id/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             // Verifică dacă utilizatorul curent este administrator
@@ -39,7 +40,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return NotFound("User not found");
         }
 
-        [HttpDelete("{email}")]
+        [HttpDelete("dupa-email/{email}")]
         public async Task<IActionResult> DeleteUserByEmail(string email)
         {
             if (!User.IsInRole("Admin"))
