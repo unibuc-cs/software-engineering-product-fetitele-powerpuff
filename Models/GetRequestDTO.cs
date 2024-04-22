@@ -4,6 +4,5 @@
     {
         public int Id { get; set; }
         public int FoodId { get; set; }
-        public GetFoodAdminDTO? GetFoodAdmin { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace healthy_lifestyle_web_app.Repositories
             return await _context.Requests.ToListAsync();
         }
 
-        public async Task<Request> GetByIdAsync(int id)
+        public async Task<Request?> GetByIdAsync(int id)
         {
             return await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
         }

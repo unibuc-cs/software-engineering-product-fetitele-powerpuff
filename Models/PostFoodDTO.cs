@@ -8,5 +8,6 @@
         public double Proteins { get; set; }
         public double Fats { get; set; }
         public bool Public { get; internal set; }
+        public string? ApplicationUserId { get; internal set; }
     }
 }

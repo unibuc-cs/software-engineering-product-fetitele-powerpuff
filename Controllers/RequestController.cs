@@ -16,12 +16,15 @@ namespace healthy_lifestyle_web_app.Controllers
         private readonly IRequestRepository _requestRepository;
         private readonly IMapper _mapper;
         private readonly IFoodRepository _foodRepository;
+        private readonly IApplicationUserRepository _userRepository;
 
-        public RequestController(IRequestRepository requestRepository, IMapper mapper, IFoodRepository foodRepository)
+        public RequestController(IRequestRepository requestRepository, IMapper mapper, 
+            IFoodRepository foodRepository, IApplicationUserRepository applicationUserRepository)
         {
             _requestRepository = requestRepository;
             _mapper = mapper;
             _foodRepository = foodRepository;
+            _userRepository = applicationUserRepository;
         }
 
         [HttpGet]
@@ -42,7 +45,7 @@ namespace healthy_lifestyle_web_app.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRequestById(int id)
         {
-            Request request = await _requestRepository.GetByIdAsync(id);
+            Request? request = await _requestRepository.GetByIdAsync(id);
             if (request == null)
             {
                 return NotFound("Request not found");
@@ -68,14 +71,21 @@ namespace healthy_lifestyle_web_app.Controllers
                 }
 
                 // Obținem alimentul după nume
-                Food food = await _foodRepository.GetByNameAsync(foodName);
+                Food? food = await _foodRepository.GetByNameAsync(foodName);
                 if (food == null)
                 {
                     return NotFound("Food not found");
                 }
 
+                ApplicationUser? user = await _userRepository.GetByEmailAsync(userEmail);
+                if (user == null)
+                {
+                    return NotFound("No user with this email");
+                }
+
+
                 // Verificăm dacă utilizatorul curent este proprietarul alimentului
-                if (food.ApplicationUserId != userEmail)
+                if (food.ApplicationUserId != user.Id)
                 {
                     // Utilizatorul nu este proprietarul alimentului, deci nu are permisiunea de a crea cererea
                     return Forbid("You are not allowed to create a request for this food");
@@ -99,13 +109,13 @@ namespace healthy_lifestyle_web_app.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRequest(int id)
         {
-            Request existingRequest = await _requestRepository.GetByIdAsync(id);
+            Request? existingRequest = await _requestRepository.GetByIdAsync(id);
             if (existingRequest == null)
             {
                 return NotFound("Request not found");
             }
 
-            Food food = await _foodRepository.GetByIdAsync(existingRequest.FoodId);
+            Food? food = await _foodRepository.GetByIdAsync(existingRequest.FoodId);
             if (food == null)
             {
                 return NotFound("Food not found");
