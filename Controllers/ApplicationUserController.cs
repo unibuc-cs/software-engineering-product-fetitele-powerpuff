@@ -19,5 +19,48 @@ namespace healthy_lifestyle_web_app.Controllers
         {
             return Ok(await _applicationUserRepository.GetAllAsync());
         }
+
+
+        // Un admin poate sa stearga si dupa id si dupa email
+        [HttpDelete("dupa-id/{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            // Verifică dacă utilizatorul curent este administrator
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid("Only admins can delete users.");
+            }
+
+            // Apelăm metoda de ștergere a utilizatorului din repository
+            if (await _applicationUserRepository.DeleteAsync(id))
+            {
+                return Ok();
+            }
+
+            return NotFound("User not found");
+        }
+
+        [HttpDelete("dupa-email/{email}")]
+        public async Task<IActionResult> DeleteUserByEmail(string email)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Forbid("Only admins can delete users.");
+            }
+
+            var user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            if (await _applicationUserRepository.DeleteByEmailAsync(email))
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to delete user");
+        }
+
     }
 }

@@ -22,6 +22,13 @@ namespace healthy_lifestyle_web_app.Repositories
             return (await _context.Foods.ToListAsync());
         }
 
+
+        public async Task<Food?> GetByIdAsync(int id)
+        {
+            return await _context.Foods.FirstOrDefaultAsync(f => f.Id == id);
+        }
+
+
         public async Task<Food?> GetByNameAsync(string name)
         {
             return await _context.Foods
@@ -33,6 +40,20 @@ namespace healthy_lifestyle_web_app.Repositories
             try
             {
                 _context.Foods.Add(food);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateAsync(Food food)
+        {
+            try
+            {
+                _context.Entry(food).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return true;
             }

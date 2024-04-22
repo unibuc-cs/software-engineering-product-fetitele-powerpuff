@@ -11,11 +11,13 @@ namespace healthy_lifestyle_web_app.Controllers
     public class FoodController : ControllerBase
     {
         private readonly IFoodRepository _foodRepository;
+        private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly IMapper _mapper;
 
-        public FoodController(IFoodRepository foodRepository, IMapper mapper)
+        public FoodController(IFoodRepository foodRepository, IMapper mapper, IApplicationUserRepository applicationUserRepository)
         {
             _foodRepository = foodRepository;
+            _applicationUserRepository = applicationUserRepository;
             _mapper = mapper;
         }
 
@@ -69,10 +71,25 @@ namespace healthy_lifestyle_web_app.Controllers
             if (User.IsInRole("Admin"))
             {
                 food.Public = true; // Alimentele adăugate de admin sunt publice pentru toți
+                food.ApplicationUserId = null;
             }
             else
             {
                 food.Public = false; // Alimentele adăugate de utilizatori sunt private
+                string? email = User.Identity.Name;
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    return Forbid("You cannot create food");
+                }
+
+                ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+                if (user == null)
+                {
+                    return NotFound("No user with this email");
+                }
+
+                food.ApplicationUserId = user.Id;
             }
 
             if (await _foodRepository.PostAsync(_mapper.Map<Food>(food)))
