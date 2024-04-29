@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\healthy-lifestyle-web-app.props" />
+</Project>

@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\healthy-lifestyle-web-app.props" />
+</Project>
