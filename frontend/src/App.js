@@ -5,18 +5,28 @@ import PhysicalActivity from './pages/PhysicalActivity';
 import Day from './pages/Day';
 import Food from './pages/Food';
 import Admin from './pages/Admin';
-import LoginRegister from './pages/LoginRegister'; // Ensure this path is correct
+import LoginRegister from './pages/LoginRegister'; 
+import AuthGuard from './components/AuthGuard';
+import AdminAuthGuard from './components/AdminAuthGuard';
+import Logout from './components/logout/Logout';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route exact path="/" element={<LoginRegister />} />
-        <Route exact path="/profile" element={<Profile />} />
-        <Route exact path="/day" element={<Day />} />
-        <Route exact path="/food" element={<Food />} />
-        <Route exact path="/physical-activity" element={<PhysicalActivity />} />
-        <Route exact path="/admin" element={<Admin />} />
+        <Route exact path="/logout"
+               element={<AuthGuard><Logout /></AuthGuard>} />
+        <Route exact path="/profile" 
+               element={<AuthGuard><Profile /></AuthGuard>} />
+        <Route exact path="/day" 
+               element={<AuthGuard><Day /></AuthGuard>} />
+        <Route exact path="/food" 
+               element={<AuthGuard><Food /></AuthGuard>} />
+        <Route exact path="/physical-activity" 
+               element={<AuthGuard><PhysicalActivity /></AuthGuard>} />
+        <Route exact path="/admin" 
+               element={<AdminAuthGuard><Admin /></AdminAuthGuard>} />
       </Routes>
     </Router>
   );
