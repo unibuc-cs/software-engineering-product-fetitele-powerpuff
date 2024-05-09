@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using healthy_lifestyle_web_app.ContextModels;
 using healthy_lifestyle_web_app.Entities;
+using healthy_lifestyle_web_app.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace healthy_lifestyle_web_app.Repositories
@@ -29,6 +30,30 @@ namespace healthy_lifestyle_web_app.Repositories
             try
             {
                 _context.Profiles.Add(profile);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> PutAsync(int id, PostProfileDTO profileDTO)
+        {
+            Entities.Profile? profile = await _context.Profiles.FirstOrDefaultAsync(p => p.Id == id);
+            if (profile == null)
+            {
+                return false;
+            }
+            profile.Name = profileDTO.Name;
+            profile.Birthdate = profileDTO.Birthdate;
+            profile.Weight = profileDTO.Weight;
+            profile.Height = profileDTO.Height;
+            profile.Goal = profileDTO.Goal;
+            try
+            {
+                _context.Profiles.Update(profile);
                 await _context.SaveChangesAsync();
                 return true;
             }
