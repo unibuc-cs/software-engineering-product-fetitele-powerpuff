@@ -1,9 +1,4 @@
-import React, { useState } from "react";
-
-import axios from "axios";
-
-import PhysicalActivityItem from '../components/physical-activity/PhysicalActivityItem.jsx';
-
+import React from "react";
 
 function PhysicalActivity() {
     const [physicalActivities, setPhysicalActivities] = useState([]);
@@ -60,37 +55,7 @@ function PhysicalActivity() {
 
     return (
         <div>
-            <button onClick={getAllActivites}>See All</button>
-
-            {physicalActivities && physicalActivities.map(physicalActivity => {
-                return (<PhysicalActivityItem
-                    key={physicalActivity.name}
-                    name={physicalActivity.name}
-                    muscles={physicalActivity.muscles}
-                />);
-            })}
-            {allError && <p>{allError}</p>}
-
-            <input type="text" placeholder="Activity Name" 
-                   value={activityName} onChange={(event) => {setActivityName(event.target.value)}} />
-            <button onClick={getByName}>Search</button>
-
-            {activity && <PhysicalActivityItem key={activity.name} name={activity.name} muscles={activity.muscles} />}
-            {nameError && <p>{nameError}</p>}
-
-            <input type="text" placeholder="Search by Muscle Name"
-                   value={muscleName} onChange={(event) => {setMuscleName(event.target.value)}} />
-            <button onClick={getByMuscle}>Search</button>
-
-            {activitiesByMuscle && activitiesByMuscle.map(activity => {
-                return (<PhysicalActivityItem
-                    key={activity.name}
-                    name={activity.name}
-                    muscles={activity.muscles}
-                />
-                );
-            })}
-            {muscleError && <p>{muscleError}</p>}
+            <p>PhysicalActivity page</p>
         </div>
     );
 }

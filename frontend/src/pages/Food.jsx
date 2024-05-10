@@ -1,9 +1,10 @@
 import React from "react";
+import Header from "../components/header/Header";
 
 function Food() {
     return (
         <div>
-            <p>Food page</p>
+            <Header page='food'/>
         </div>
     );
 }

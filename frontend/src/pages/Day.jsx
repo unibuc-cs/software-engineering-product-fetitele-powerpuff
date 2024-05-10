@@ -1,9 +1,10 @@
 import React from "react";
+import Header from "../components/header/Header";
 
 function Day() {
     return (
         <div>
-            <p>day page</p>
+            <Header page='day'/>
         </div>
     );
 }

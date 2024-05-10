@@ -15,7 +15,7 @@ namespace healthy_lifestyle_web_app.Controllers
         private readonly IWeightEvolutionRepository _weightEvolutionRepository;
         private readonly IMapper _mapper;
 
-        public ProfilesController(IProfileRepository profileRepository, 
+        public ProfilesController(IProfileRepository profileRepository,
                 IApplicationUserRepository applicationUserRepository, IWeightEvolutionRepository weightEvolutionRepository, IMapper mapper)
         {
             _profileRepository = profileRepository;
@@ -41,7 +41,7 @@ namespace healthy_lifestyle_web_app.Controllers
             }
 
             ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
-            if(user == null)
+            if (user == null)
             {
                 return NotFound("No user found");
             }
@@ -69,6 +69,20 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("No user found");
             }
 
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+            if (profileDTO.Birthdate > currentDate)
+            {
+                return BadRequest("Invalid birthdate");
+            }
+            if (profileDTO.Weight < 0)
+            {
+                return BadRequest("Invalid weight");
+            }
+            if (profileDTO.Height < 0)
+            {
+                return BadRequest("Invalid height");
+            }
+
             Entities.Profile profile = _mapper.Map<Entities.Profile>(profileDTO);
             profile.ApplicationUserId = user.Id;
 
@@ -80,6 +94,63 @@ namespace healthy_lifestyle_web_app.Controllers
                 }
             }
             return BadRequest("Profile already exists");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(PostProfileDTO profileDTO)
+        {
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return NotFound("No user logged in");
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No user found");
+            }
+
+            Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
+            if (profile == null)
+            {
+                return NotFound("No profile with this application user id");
+            }
+
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+            if (profileDTO.Birthdate > currentDate)
+            {
+                return BadRequest("Invalid birthdate");
+            }
+            if (profileDTO.Weight < 0)
+            {
+                return BadRequest("Invalid weight");
+            }
+            if (profileDTO.Height < 0)
+            {
+                return BadRequest("Invalid height");
+            }
+
+            bool weightChange = false;
+            if (profile.Weight != profileDTO.Weight)
+            {
+                weightChange = true;
+            }
+
+            if (await _profileRepository.PutAsync(profile.Id, profileDTO))
+            {
+                // If the weight has been changed, record it in the weight evolution
+                if (weightChange)
+                {
+                    if (await _weightEvolutionRepository.PostAsync(profile.Id, profileDTO.Weight))
+                    {
+                        return Ok("Profile updated successfully");
+                    }
+                    else { return BadRequest("Error updating weight in weight evolution"); }
+                }
+                return Ok("Profile updated successfully");
+            }
+            return BadRequest();
         }
 
         [HttpPut("change-name/{newName}")]
@@ -125,6 +196,12 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("No user found");
             }
 
+            DateOnly currentDate = DateOnly.FromDateTime(DateTime.UtcNow.Date);
+            if (newBirthdate > currentDate)
+            {
+                return BadRequest("Invalid birthdate");
+            }
+
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
             if (profile == null)
             {
@@ -153,19 +230,35 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("No user found");
             }
 
+            if (newWeight < 0)
+            {
+                return BadRequest("Invalid weight");
+            }
+
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
             if (profile == null)
             {
                 return NotFound("No profile with this application user id");
             }
 
+            bool weightChange = false;
+            if (profile.Weight != newWeight)
+            {
+                weightChange = true;
+            }
+
             if (await _profileRepository.PutWeightAsync(profile.Id, newWeight))
             {
-                if (await _weightEvolutionRepository.PostAsync(profile.Id, newWeight))
+                // If the weight has been changed, record it in the weight evolution
+                if (weightChange)
                 {
-                    return Ok("Weight updated successfully");
+                    if (await _weightEvolutionRepository.PostAsync(profile.Id, newWeight))
+                    {
+                        return Ok("Weight updated successfully");
+                    }
+                    else { return BadRequest("Error updating weight in weight evolution"); }
                 }
-                else { return BadRequest("Error updating weight in weight evolution"); }
+                return Ok("Weight updated successfully");
             }
             return BadRequest("Error updating weight in profile");
         }
@@ -183,6 +276,11 @@ namespace healthy_lifestyle_web_app.Controllers
             if (user == null)
             {
                 return NotFound("No user found");
+            }
+
+            if (newHeight < 0)
+            {
+                return BadRequest("Invalid height");
             }
 
             Entities.Profile? profile = await _profileRepository.GetByApplicationUserIdAsync(user.Id);
