@@ -41,7 +41,7 @@ function Profile() {
 
     return (
         <div>
-            <Header/>
+            <Header page='profile'/>
             <h3>{profileInfo.name}</h3>
             <p>Birthdate: {profileInfo.birthdate}</p>
             <p>Height: {profileInfo.height}</p>

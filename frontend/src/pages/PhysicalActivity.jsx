@@ -1,9 +1,10 @@
 import React from "react";
+import Header from "../components/header/Header";
 
 function PhysicalActivity() {
     return (
         <div>
-            <p>PhysicalActivity page</p>
+            <Header page='physical-activity'/>
         </div>
     );
 }
