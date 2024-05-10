@@ -131,13 +131,24 @@ namespace healthy_lifestyle_web_app.Controllers
                 return BadRequest("Invalid height");
             }
 
+            bool weightChange = false;
+            if (profile.Weight != profileDTO.Weight)
+            {
+                weightChange = true;
+            }
+
             if (await _profileRepository.PutAsync(profile.Id, profileDTO))
             {
-                if (await _weightEvolutionRepository.PostAsync(profile.Id, profileDTO.Weight))
+                // If the weight has been changed, record it in the weight evolution
+                if (weightChange)
                 {
-                    return Ok("Profile updated successfully");
+                    if (await _weightEvolutionRepository.PostAsync(profile.Id, profileDTO.Weight))
+                    {
+                        return Ok("Profile updated successfully");
+                    }
+                    else { return BadRequest("Error updating weight in weight evolution"); }
                 }
-                else { return BadRequest("Error updating weight in weight evolution"); }
+                return Ok("Profile updated successfully");
             }
             return BadRequest();
         }
@@ -230,13 +241,24 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("No profile with this application user id");
             }
 
+            bool weightChange = false;
+            if (profile.Weight != newWeight)
+            {
+                weightChange = true;
+            }
+
             if (await _profileRepository.PutWeightAsync(profile.Id, newWeight))
             {
-                if (await _weightEvolutionRepository.PostAsync(profile.Id, newWeight))
+                // If the weight has been changed, record it in the weight evolution
+                if (weightChange)
                 {
-                    return Ok("Weight updated successfully");
+                    if (await _weightEvolutionRepository.PostAsync(profile.Id, newWeight))
+                    {
+                        return Ok("Weight updated successfully");
+                    }
+                    else { return BadRequest("Error updating weight in weight evolution"); }
                 }
-                else { return BadRequest("Error updating weight in weight evolution"); }
+                return Ok("Weight updated successfully");
             }
             return BadRequest("Error updating weight in profile");
         }
