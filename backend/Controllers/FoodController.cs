@@ -36,7 +36,6 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(foodsDTO);
         }
 
-
         // This is the information the admin will see 
         [HttpGet("for-admin")]
         public async Task<IActionResult> GetFoodAdmin()
@@ -52,7 +51,6 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(foodsDTO);
         }
 
-
         [HttpGet("{name}")]
         public async Task<IActionResult> GetByName(string name)
         {
@@ -64,11 +62,10 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(_mapper.Map<GetFoodDTO>(food));
         }
 
-
         [HttpPost]
         public async Task<IActionResult> PostFood(PostFoodDTO food)
         {
-            if (User.IsInRole("Admin"))
+            if (User.IsInRole("admin"))
             {
                 food.Public = true; // Alimentele adăugate de admin sunt publice pentru toți
                 food.ApplicationUserId = null;

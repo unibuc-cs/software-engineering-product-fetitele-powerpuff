@@ -2,6 +2,7 @@
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // Only an admin can use the methods in this controller
@@ -27,7 +28,7 @@ namespace healthy_lifestyle_web_app.Controllers
             List<Muscle> muscles = await _muscleRepository.GetAllAsync();
             List<GetMuscleDTO> musclesDTO = new List<GetMuscleDTO>();
 
-            for(int i = 0; i < muscles.Count; i++)
+            for (int i = 0; i < muscles.Count; i++)
             {
                 musclesDTO.Add(_mapper.Map<GetMuscleDTO>(muscles[i]));
             }
@@ -37,24 +38,26 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PostMuscle(PostDeleteMuscleDTO muscle)
         {
-            if(await _muscleRepository.PostAsync(_mapper.Map<Muscle>(muscle)))
+            if (await _muscleRepository.PostAsync(_mapper.Map<Muscle>(muscle)))
             {
-                return Ok();
+                return Ok("Muscle added successfully");
             }
             return BadRequest("Muscle already in the database");
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteMuscle(PostDeleteMuscleDTO muscle)
+        [HttpDelete("{name}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteMuscle(String name)
         {
-            if(await _muscleRepository.DeleteAsync(_mapper.Map<Muscle>(muscle)))
+            PostDeleteMuscleDTO muscle = new PostDeleteMuscleDTO(name);
+            if (await _muscleRepository.DeleteAsync(_mapper.Map<Muscle>(muscle)))
             {
-                return Ok();
+                return Ok("Muscle deleted successfully");
             } 
-            return NotFound();
+            return NotFound("No muscle with this name");
         }
-        
     }
 }

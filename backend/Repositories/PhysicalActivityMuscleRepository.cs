@@ -33,6 +33,7 @@ namespace healthy_lifestyle_web_app.Repositories
 
             return true;
         }
+
         public async Task<bool> DeleteMuscleFromPhysicalActivity(string muscleName, string activityName)
         {
             // Includes the list of associated entities

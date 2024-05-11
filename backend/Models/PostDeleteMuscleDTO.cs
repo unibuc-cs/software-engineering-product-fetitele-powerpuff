@@ -3,5 +3,10 @@
     public class PostDeleteMuscleDTO
     {
         public string Name { get; set; }
+
+        public PostDeleteMuscleDTO(String name) 
+        { 
+            Name = name;
+        }
     }
 }

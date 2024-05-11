@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import './admin-user.css';
 import axios from 'axios';
 
-function User () {
+function AdminUser () {
     const [users, setUsers] = useState([]);
     const [promoteEmail, setPromoteEmail] = useState('');
     const [deleteEmail, setDeleteEmail] = useState('');
@@ -114,4 +114,4 @@ function User () {
     );
 }
 
-export default User;
+export default AdminUser;
