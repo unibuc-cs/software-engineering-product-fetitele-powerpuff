@@ -3,6 +3,7 @@ using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Repositories;
 using AutoMapper;
 using healthy_lifestyle_web_app.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace healthy_lifestyle_web_app.Controllers
 {
@@ -38,6 +39,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // This is the information the admin will see 
         [HttpGet("for-admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetFoodAdmin()
         {
             List<Food> foods = await _foodRepository.GetAllAsync();
@@ -91,7 +93,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
             if (await _foodRepository.PostAsync(_mapper.Map<Food>(food)))
             {
-                return Ok();
+                return Ok("Food added successfully");
             }
             return BadRequest("Food already in the database");
         }
