@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import axios from "axios";
 
-import PhysicalActivityItem from '../components/physical-activity/PhysicalActivityItem.jsx';
+import PhysicalActivityItem from '../components/physical-activity-item/PhysicalActivityItem.jsx';
 
 
 function PhysicalActivity() {
