@@ -1,5 +1,6 @@
 ﻿using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -54,29 +55,28 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         // Promotes a normal user to admin
-        [HttpPut("promote")]
+        [HttpPut("promote/{email}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PromoteUserToAdmin(string email)
         {
             // Check if the user exists
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                return StatusCode(StatusCodes.Status404NotFound,
-                    new Response { Status = "Error", Message = "There is no registered user with this email" });
+                return NotFound("There is no registered user with this email");
             }
 
             // Check if the user is already an admin
             var isAdmin = await _userManager.IsInRoleAsync(user, Roles.Admin);
             if (isAdmin)
             {
-                return StatusCode(StatusCodes.Status400BadRequest,
-                    new Response { Status = "Error", Message = "This user is already an admin" });
+                return BadRequest("This user is already an admin");
             }
 
             // Add the admin role
             await _authenticationService.PromoteUserToAdmin(user);
 
-            return Ok(user);
+            return Ok("User promoted successfully");
         }
 
         [HttpPost("login")]
@@ -113,6 +113,5 @@ namespace healthy_lifestyle_web_app.Controllers
 
             return Unauthorized("Invalid email or password");
         }
-
     }
 }
