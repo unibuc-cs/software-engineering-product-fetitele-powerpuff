@@ -51,6 +51,17 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(physicalActivitesDTO);
         }
 
+        [HttpGet("by-id/{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            PhysicalActivity? physicalActivity = await _physicalActivityRepository.GetByIdAsync(id);
+            if (physicalActivity == null)
+            {
+                return NotFound("No activity with this id");
+            }
+            return Ok(_mapper.Map<GetPhysicalActivityDTO>(physicalActivity));
+        }
+
         [HttpGet("{name}")]
         public async Task<IActionResult> GetByName(string name)
         {

@@ -69,6 +69,17 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(foodsDTO);
         }
 
+        [HttpGet("by-id/{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            Food? food =  await _foodRepository.GetByIdAsync(id);
+            if (food == null)
+            {
+                return NotFound("No food with this id");
+            }
+            return Ok(_mapper.Map<GetFoodDTO>(food));
+        }
+
         [HttpGet("{name}")]
         public async Task<IActionResult> GetByName(string name)
         {
