@@ -4,7 +4,6 @@ import axios from "axios";
 
 import PhysicalActivityItem from '../components/physical-activity-item/PhysicalActivityItem.jsx';
 
-
 function PhysicalActivity() {
     const [physicalActivities, setPhysicalActivities] = useState([]);
     const [allError, setAllError] = useState(null);

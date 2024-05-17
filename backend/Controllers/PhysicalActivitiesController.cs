@@ -2,6 +2,7 @@
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace healthy_lifestyle_web_app.Controllers
@@ -36,6 +37,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // This is the information the admin will see (+ id and calories)
         [HttpGet("for-admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetPhysicalActivitesAdmin()
         {
             List<PhysicalActivity> physicalActivities = await _physicalActivityRepository.GetAllAsync();
@@ -86,24 +88,35 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // An admin can add a new activity
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PostPhysicalActivity(PostPhysicalActivityDTO physicalActivity)
         {
+            if (physicalActivity.calories < 0)
+            {
+                return BadRequest("Invalid calories");
+            }
             if (await _physicalActivityRepository.PostAsync(_mapper.Map<PhysicalActivity>(physicalActivity)))
             {
-                return Ok();
+                return Ok("Physical activity added successfully");
             }
             return BadRequest("Physical activity already in the database");
         }
 
         // Or delete one
-        [HttpDelete]
-        public async Task<IActionResult> DeletePhysicalActivity(DeletePhysicalActivity physicalActivity)
+        [HttpDelete("{name}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeletePhysicalActivity(String name)
         {
-            if (await _physicalActivityRepository.DeleteAsync(_mapper.Map<PhysicalActivity>(physicalActivity)))
+            PhysicalActivity physicalActivity = await _physicalActivityRepository.GetByNameAsync(name);
+            if (physicalActivity == null)
             {
-                return Ok();
+                return NotFound("No physical activity with this name");
             }
-            return NotFound();
+            if (await _physicalActivityRepository.DeleteAsync(physicalActivity))
+            {
+                return Ok("Physical activity deleted successfully");
+            }
+            return BadRequest("Error deleting physical activity");
         }
     }
 }

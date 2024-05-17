@@ -3,6 +3,7 @@ using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Repositories;
 using AutoMapper;
 using healthy_lifestyle_web_app.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace healthy_lifestyle_web_app.Controllers
 {
@@ -52,9 +53,9 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(foodsDTO);
         }
 
-
         // This is the information the admin will see 
         [HttpGet("for-admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetFoodAdmin()
         {
             List<Food> foods = await _foodRepository.GetAllAsync();
@@ -67,7 +68,6 @@ namespace healthy_lifestyle_web_app.Controllers
 
             return Ok(foodsDTO);
         }
-
 
         [HttpGet("{name}")]
         public async Task<IActionResult> GetByName(string name)
@@ -98,11 +98,10 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(_mapper.Map<GetFoodDTO>(food));
         }
 
-
         [HttpPost]
         public async Task<IActionResult> PostFood(PostFoodDTO food)
         {
-            if (User.IsInRole("Admin"))
+            if (User.IsInRole("admin"))
             {
                 food.Public = true; // Alimentele adăugate de admin sunt publice pentru toți
                 food.ApplicationUserId = null;
@@ -128,7 +127,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
             if (await _foodRepository.PostAsync(_mapper.Map<Food>(food)))
             {
-                return Ok();
+                return Ok("Food added successfully");
             }
             return BadRequest("Food already in the database");
         }
