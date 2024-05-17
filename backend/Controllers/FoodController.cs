@@ -26,12 +26,28 @@ namespace healthy_lifestyle_web_app.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFood()
         {
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return NotFound("No user logged in");
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No user found");
+            }
+
             List<Food> foods = await _foodRepository.GetAllAsync();
             List<GetFoodDTO> foodsDTO = new List<GetFoodDTO>();
 
             for (int i = 0; i < foods.Count; i++)
             {
-                foodsDTO.Add(_mapper.Map<GetFoodDTO>(foods[i]));
+                // Send only public foods or the user's foods
+                if (foods[i].Public || foods[i].ApplicationUserId == user.Id)
+                {
+                    foodsDTO.Add(_mapper.Map<GetFoodDTO>(foods[i]));
+                }
             }
 
             return Ok(foodsDTO);
@@ -57,10 +73,28 @@ namespace healthy_lifestyle_web_app.Controllers
         public async Task<IActionResult> GetByName(string name)
         {
             Food? food = await _foodRepository.GetByNameAsync(name);
+
             if (food == null)
             {
                 return NotFound("No food with this name");
             }
+
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return NotFound("No user logged in");
+            }
+
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("No user found");
+            }
+
+            if (!(food.Public || food.ApplicationUserId == user.Id)) {
+                return NotFound("No food with this name");
+            }
+            
             return Ok(_mapper.Map<GetFoodDTO>(food));
         }
 
