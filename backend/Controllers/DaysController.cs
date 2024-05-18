@@ -295,7 +295,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
             await _dayRepository.PutFoodAsync(day, food, model.Grams);
 
-            return Ok();
+            return Ok("Food added successfully to day");
         }
 
         // Change grams for a food logged in the day given by date
@@ -363,7 +363,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
             await _dayRepository.PutPhysicalActivityAsync(day, activity, model.Minutes);
 
-            return Ok();
+            return Ok("Physical activity added successfully to day");
         }
 
         // Same as change grams
@@ -402,7 +402,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         // Removes the given food from the given day by date
-        [HttpDelete("delete-food")]
+        [HttpDelete("delete-food/{date}/{foodName}")]
         public async Task<IActionResult> DeleteFood(DateOnly date, string foodName)
         {
             string? email = User.Identity.Name;
@@ -437,7 +437,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         // Same as delete food
-        [HttpDelete("delete-activity")]
+        [HttpDelete("delete-activity/{date}/{activityName}")]
         public async Task<IActionResult> DeletePhysicalActivity(DateOnly date, string activityName)
         {
             string? email = User.Identity.Name;
