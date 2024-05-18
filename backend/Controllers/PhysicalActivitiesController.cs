@@ -53,6 +53,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet("by-id/{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetById(int id)
         {
             PhysicalActivity? physicalActivity = await _physicalActivityRepository.GetByIdAsync(id);

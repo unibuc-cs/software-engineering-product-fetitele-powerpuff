@@ -3,6 +3,7 @@ using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
 using healthy_lifestyle_web_app.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace healthy_lifestyle_web_app.Controllers
@@ -24,6 +25,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Get the weight evolution of the user logged in
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetByProfile()
         {
             // Find the name (email) of the user that is logged in

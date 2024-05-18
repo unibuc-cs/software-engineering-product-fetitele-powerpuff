@@ -3,6 +3,7 @@ using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
 using healthy_lifestyle_web_app.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -30,6 +31,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _dayRepository.GetAllAsync());
@@ -37,6 +39,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Returns all days of the user currently logged in
         [HttpGet("by-user")]
+        [Authorize]
         public async Task<IActionResult> GetByUser()
         {
             string? email = User.Identity.Name;  // Find the name (email) of the user that is logged in
@@ -66,6 +69,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Returns the current day for the user logged in
         [HttpGet("current-day")]
+        [Authorize]
         public async Task<IActionResult> GetCurrentDay()
         {
             string? email = User.Identity.Name;
@@ -82,6 +86,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Returns a day by date for the user logged in
         [HttpGet("by-date")]
+        [Authorize]
         public async Task<IActionResult> GetByDate(DateOnly date)
         {
             string? email = User.Identity.Name;
@@ -102,6 +107,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet("food-calories")]
+        [Authorize]
         public async Task<IActionResult> GetFoodCalories(DateOnly date)
         {
             string? email = User.Identity.Name;
@@ -122,6 +128,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet("activity-calories")]
+        [Authorize]
         public async Task<IActionResult> GetActivityCalories(DateOnly date)
         {
             string? email = User.Identity.Name;
@@ -143,6 +150,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Get a list of date and food calories for a profile after a given date
         [HttpGet("food-calories-after-date")]
+        [Authorize]
         public async Task<IActionResult> GetFoodCaloriesAfterDate(DateOnly date)
         {
             string? email = User.Identity.Name;
@@ -166,6 +174,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Get a list of date and food calories for a profile after a given date
         [HttpGet("activity-calories-after-date")]
+        [Authorize]
         public async Task<IActionResult> GetActivityCaloriesAfterDate(DateOnly date)
         {
             string? email = User.Identity.Name;
@@ -189,6 +198,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Get the average food calories after a given date for a profile
         [HttpGet("average-food-calories")]
+        [Authorize]
         public async Task<IActionResult> GetAverageFoodCalories(DateOnly date)
         {
             string? email = User.Identity.Name;
@@ -214,6 +224,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Get the average activity calories after a given date for a profile
         [HttpGet("average-activity-calories")]
+        [Authorize]
         public async Task<IActionResult> GetAverageActivityCalories(DateOnly date)
         {
             string? email = User.Identity.Name;
@@ -241,6 +252,7 @@ namespace healthy_lifestyle_web_app.Controllers
         // Currently creates (if it doesn't already exist) a new day with the current date for the user
         // // that is logged in
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostDay()
         {
             string? email = User.Identity.Name;
@@ -267,6 +279,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Add food and grams in a day
         [HttpPut("add-food")]
+        [Authorize]
         public async Task<IActionResult> PutFood([FromBody] DayFoodModel model)
         {
             string? email = User.Identity.Name;
@@ -300,6 +313,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Change grams for a food logged in the day given by date
         [HttpPut("change-grams")]
+        [Authorize]
         public async Task<IActionResult> PutGrams([FromBody] DayFoodModel model)
         {
             string? email = User.Identity.Name;
@@ -335,6 +349,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Same as add food
         [HttpPut("add-activity")]
+        [Authorize]
         public async Task<IActionResult> PutPhysicalActivity([FromBody] DayPhysicalActivityModel model)
         {
             string? email = User.Identity.Name;
@@ -368,6 +383,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Same as change grams
         [HttpPut("change-minutes")]
+        [Authorize]
         public async Task<IActionResult> PutMinutes([FromBody] DayPhysicalActivityModel model)
         {
             string? email = User.Identity.Name;
@@ -403,6 +419,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Removes the given food from the given day by date
         [HttpDelete("delete-food/{date}/{foodName}")]
+        [Authorize]
         public async Task<IActionResult> DeleteFood(DateOnly date, string foodName)
         {
             string? email = User.Identity.Name;
@@ -438,6 +455,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Same as delete food
         [HttpDelete("delete-activity/{date}/{activityName}")]
+        [Authorize]
         public async Task<IActionResult> DeletePhysicalActivity(DateOnly date, string activityName)
         {
             string? email = User.Identity.Name;

@@ -28,9 +28,14 @@ function PhysicalActivity() {
 
     const getAllActivites = async () => {
         setAllError(null);
+        const token = localStorage.getItem('token');
 
         try {
-            const response = await axios.get('https://localhost:7094/api/PhysicalActivities');
+            const response = await axios.get('https://localhost:7094/api/PhysicalActivities',{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setPhysicalActivities(response.data);
         } catch (error) {
             setPhysicalActivities([]);
@@ -41,9 +46,14 @@ function PhysicalActivity() {
 
     const getByName = async () => {
         setNameError(null);
+        const token = localStorage.getItem('token');
 
         try {
-            const response = await axios.get(`https://localhost:7094/api/PhysicalActivities/${activityName}`);
+            const response = await axios.get(`https://localhost:7094/api/PhysicalActivities/${activityName}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
 
             setActivity(response.data);
         } catch (error) {
@@ -55,9 +65,14 @@ function PhysicalActivity() {
 
     const getByMuscle = async () => {
         setMuscleError(null);
+        const token = localStorage.getItem('token');
 
         try {
-            const response = await axios.get(`https://localhost:7094/api/PhysicalActivities/target-${muscleName}`);
+            const response = await axios.get(`https://localhost:7094/api/PhysicalActivities/target-${muscleName}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
 
             setActivitiesByMuscle(response.data);
         } catch (error) {

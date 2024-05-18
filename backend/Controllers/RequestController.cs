@@ -58,6 +58,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPost("{foodName}")]
+        [Authorize]
         public async Task<IActionResult> CreateRequest(string foodName)
         {
             if (!User.IsInRole("Admin"))

@@ -159,6 +159,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPut("change-name/{newName}")]
+        [Authorize]
         public async Task<IActionResult> PutName(string newName)
         {
             string? email = User.Identity.Name;
@@ -187,6 +188,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPut("change-birthday/{newBirthdate}")]
+        [Authorize]
         public async Task<IActionResult> PutBirthdate(DateOnly newBirthdate)
         {
             string? email = User.Identity.Name;
@@ -221,6 +223,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPut("change-weight/{newWeight}")]
+        [Authorize]
         public async Task<IActionResult> PutWeight(double newWeight)
         {
             string? email = User.Identity.Name;
@@ -269,6 +272,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPut("change-height/{newHeight}")]
+        [Authorize]
         public async Task<IActionResult> PutHeight(double newHeight)
         {
             string? email = User.Identity.Name;
@@ -302,6 +306,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPut("change-goal/{newGoal}")]
+        [Authorize]
         public async Task<IActionResult> PutGoal(Goal newGoal)
         {
             string? email = User.Identity.Name;
