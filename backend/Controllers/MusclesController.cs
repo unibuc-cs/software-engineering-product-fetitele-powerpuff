@@ -23,6 +23,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetMuscles()
         {
             List<Muscle> muscles = await _muscleRepository.GetAllAsync();

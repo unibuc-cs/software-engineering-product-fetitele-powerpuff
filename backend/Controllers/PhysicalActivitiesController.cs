@@ -22,6 +22,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // This is the information the user will see (only name and muscles)
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetPhysicalActivites()
         {
             List<PhysicalActivity> physicalActivities = await _physicalActivityRepository.GetAllAsync();
@@ -52,6 +53,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet("{name}")]
+        [Authorize]
         public async Task<IActionResult> GetByName(string name)
         {
             PhysicalActivity? physicalActivity = await _physicalActivityRepository.GetByNameAsync(name);
@@ -64,6 +66,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // Returns all activities that target the given muscle
         [HttpGet("target-{muscleName}")]
+        [Authorize]
         public async Task<IActionResult> GetByMuscle(string muscleName)
         {
             List<PhysicalActivity>? physicalActivities = await _physicalActivityRepository.GetByMuscleAsync(muscleName);

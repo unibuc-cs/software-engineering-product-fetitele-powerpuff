@@ -2,6 +2,7 @@
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace healthy_lifestyle_web_app.Controllers
@@ -25,6 +26,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _profileRepository.GetAllAsync());
@@ -32,6 +34,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // What the user will see when they look at their profile
         [HttpGet("user-profile")]
+        [Authorize]
         public async Task<IActionResult> GetByApplicationUserId()
         {
             string? email = User.Identity.Name;
@@ -55,6 +58,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Post(PostProfileDTO profileDTO)
         {
             string? email = User.Identity.Name;
@@ -97,6 +101,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Put(PostProfileDTO profileDTO)
         {
             string? email = User.Identity.Name;
@@ -326,6 +331,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // A user can delete their own profile
         [HttpDelete]
+        [Authorize]
         public async Task<IActionResult> DeleteUserProfile()
         {
             string? email = User.Identity.Name;
@@ -355,6 +361,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // An admin can delete any profile by id
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int id)
         {
             if (await _profileRepository.DeleteAsync(id))

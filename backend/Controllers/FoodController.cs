@@ -24,6 +24,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         // This is the information the user will see 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetFood()
         {
             string? email = User.Identity.Name;
@@ -70,6 +71,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet("{name}")]
+        [Authorize]
         public async Task<IActionResult> GetByName(string name)
         {
             Food? food = await _foodRepository.GetByNameAsync(name);
@@ -99,6 +101,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> PostFood(PostFoodDTO food)
         {
             if (User.IsInRole("admin"))
