@@ -20,9 +20,21 @@ function Food() {
     const [proteins, setProteins] = useState(0);
     const [addError, setAddError] = useState(null);
 
+    const [grams, setGrams] = useState(0);
+    const [addToDayError, setAddToDayError] = useState(null);
+
+    const [requestError, setRequestError] = useState(null);
+    const [requestSuccess, setRequestSuccess] = useState(null);
+
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     const getAllFoods = async () => {
         setAllError(null);
-
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get('https://localhost:7094/api/Food', {
@@ -31,6 +43,7 @@ function Food() {
                 }
             });
             setFoods(response.data);
+            console.log(response.data);
         } catch(error) {
             setAllError('No foods found');
             setFoods([]);
@@ -40,7 +53,6 @@ function Food() {
 
     const getByName = async () => {
         setNameError(null);
-
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`https://localhost:7094/api/Food/${foodName}`, {
@@ -48,7 +60,6 @@ function Food() {
                     Authorization: `Bearer ${token}`
                 }
             });
-
             setFood(response.data);
         } catch (error) {
             setNameError('No food with this name');
@@ -88,6 +99,52 @@ function Food() {
         }
     };
 
+    const addFoodToDay = async (foodNameDay, grams) => {
+        if (grams <= 0) {
+            setAddToDayError('Please enter a value greater than 0 for grams.');
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.put('https://localhost:7094/api/Days/add-food', {
+                date: formatDate(new Date()),
+                foodName: foodNameDay,
+                grams: grams
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            console.log(response.status);
+        } 
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    const createPublicRequest = async (foodNameRequest) => {
+        setRequestError(null);
+        try {
+            const response = await axios.post(`https://localhost:7094/api/Request/${foodNameRequest}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            setRequestSuccess(response.data);
+            setTimeout(() => {
+                setRequestSuccess(null);
+            }, 3000);
+            console.log(response.status);
+        } 
+        catch (error) {
+            setRequestError(error.response.data);
+            console.log(error);
+        }
+    }
+
     return (
         <div>
             <Header page='food'/>
@@ -100,12 +157,14 @@ function Food() {
                     calories={food.calories}
                     carbohydrates={food.carbohydrates}
                     fats={food.fats}
-                    proteins={food.proteins}    
+                    proteins={food.proteins}
+                    public={food.public}    
                 />
                 );
             })}    
             {allError && <p>{allError}</p>}
 
+            <h2>Search Food</h2>
             <input type="text" placeholder="Search food" 
                    value={foodName} onChange={(event) => {setFoodName(event.target.value)}} />
             <button onClick={getByName}>Search</button>
@@ -116,10 +175,24 @@ function Food() {
                 calories={food.calories}
                 carbohydrates={food.carbohydrates}
                 fats={food.fats}
-                proteins={food.proteins}    
+                proteins={food.proteins}  
+                public={food.public}  
             />}
-            {nameError && <p>{{nameError}}</p>}
 
+            {food && <div>
+                <label htmlFor="grams">Grams</label>
+                <input type="number" placeholder="Grams"
+                          value={grams} onChange={(event) => setGrams(event.target.value)} />
+                <button onClick={() => addFoodToDay(food.name, grams)}>Add to Day</button>
+                <button onClick={() => createPublicRequest(food.name)}>Create Request To Make Food Public</button>
+            </div>}
+
+            {nameError && <p>{{nameError}}</p>}
+            {addToDayError && <p>{addToDayError}</p>}
+            {requestError && <p>{requestError}</p>}
+            {requestSuccess && <p>{requestSuccess}</p>}
+
+            <h2>Add Food</h2>
             <form onSubmit={addFood}>
                 <div>
                     <label htmlFor="food-name">Name</label>
@@ -134,8 +207,7 @@ function Food() {
                            value={calories} onChange={(event) => setCalories(event.target.value)}
                            placeholder="Calories per 100g" />
                 </div>
-
-                
+ 
                 <div>
                     <label htmlFor="carbohydrates">Carbohydrates</label>
                     <input type="number" id="carbohydrates"

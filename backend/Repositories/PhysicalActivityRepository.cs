@@ -23,6 +23,13 @@ namespace healthy_lifestyle_web_app.Repositories
                 .Include(p => p.Muscles).ToListAsync());
         }
 
+        public async Task<PhysicalActivity?> GetByIdAsync(int id)
+        {
+            return await _context.PhysicalActivities
+                        .Include(p => p.Muscles)
+                        .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
         public async Task<PhysicalActivity?> GetByNameAsync(string name)
         {
             return await _context.PhysicalActivities

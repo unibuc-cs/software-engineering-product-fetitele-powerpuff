@@ -2,6 +2,7 @@
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Request = healthy_lifestyle_web_app.Entities.Request;
 
@@ -28,6 +29,7 @@ namespace healthy_lifestyle_web_app.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAllRequests()
         {
             List<Request> requests = await _requestRepository.GetAllAsync();
@@ -41,8 +43,8 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(requestsDTO);
         }
 
-
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetRequestById(int id)
         {
             Request? request = await _requestRepository.GetByIdAsync(id);
@@ -55,13 +57,11 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(requestDTO);
         }
 
-
-        [HttpPost]
+        [HttpPost("{foodName}")]
         public async Task<IActionResult> CreateRequest(string foodName)
         {
             if (!User.IsInRole("Admin"))
             { 
-
                 // Obținem identitatea utilizatorului curent
                 string userEmail = User.Identity.Name;
                 if (string.IsNullOrEmpty(userEmail))
@@ -83,19 +83,17 @@ namespace healthy_lifestyle_web_app.Controllers
                     return NotFound("No user with this email");
                 }
 
-
                 // Verificăm dacă utilizatorul curent este proprietarul alimentului
                 if (food.ApplicationUserId != user.Id)
                 {
                     // Utilizatorul nu este proprietarul alimentului, deci nu are permisiunea de a crea cererea
-                    return Forbid("You are not allowed to create a request for this food");
+                    return BadRequest("You are not allowed to create a request for this food");
                 }
-
 
                 Request request = new Request { FoodId = food.Id };
                 if (await _requestRepository.CreateAsync(request))
                 {
-                    return Ok();
+                    return Ok("Request created successfully");
                 }
                 return BadRequest("Failed to create request");
             }
@@ -105,8 +103,8 @@ namespace healthy_lifestyle_web_app.Controllers
             }
         }
 
-
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> UpdateRequest(int id)
         {
             Request? existingRequest = await _requestRepository.GetByIdAsync(id);
@@ -121,15 +119,13 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("Food not found");
             }
 
-
             food.Public = true;
 
             if (await _foodRepository.UpdateAsync(food))
             {
-          
                 if (await _requestRepository.DeleteAsync(existingRequest.Id))
                 {
-                    return Ok();
+                    return Ok("Request approved successfully");
                 }
 
                 food.Public = false;
@@ -139,18 +135,15 @@ namespace healthy_lifestyle_web_app.Controllers
             return BadRequest("Failed to update request");
         }
 
-
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteRequest(int id)
         {
             if (await _requestRepository.DeleteAsync(id))
             {
-                return Ok();
+                return Ok("Request denied successfully");
             }
             return NotFound("Request not found");
         }
     }
-   
- 
 }
-
