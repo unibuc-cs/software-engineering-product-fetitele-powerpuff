@@ -10,6 +10,8 @@ using Microsoft.OpenApi.Models;
 using healthy_lifestyle_web_app.Repositories;
 using healthy_lifestyle_web_app.Models;
 using Microsoft.OpenApi.Any;
+using Hangfire;
+using Hangfire.SqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -110,6 +112,23 @@ builder.Services.AddScoped<IDayRepository, DayRepository>();
 builder.Services.AddScoped<IFoodRepository, FoodRepository>();
 builder.Services.AddScoped<IWeightEvolutionRepository, WeightEvolutionRepository>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
+builder.Services.AddScoped<CreateDaysService>();
+
+// Add Hangfire services
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("App"), new SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(1),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(1),
+        QueuePollInterval = TimeSpan.Zero,
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks = true
+    }));
+
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -129,5 +148,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard();
+
+using (var scope = app.Services.CreateScope())
+{
+    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+    var createDaysService = scope.ServiceProvider.GetRequiredService<CreateDaysService>();
+
+    // Execute CreateDays every day at midnight (Romanian Midnight)
+    recurringJobManager.AddOrUpdate(
+        "create-days",
+        () => createDaysService.CreateDays(),
+        "0 21 * * *");
+}
 
 app.Run();
