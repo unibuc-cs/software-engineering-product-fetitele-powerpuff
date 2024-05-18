@@ -96,10 +96,6 @@ function Day() {
             console.log(error);
         }
     };
-
-    // useEffect(() => {
-    //     setDate(new Date());
-    // }, []);
     
     useEffect(() => {
         if (date) {
@@ -112,6 +108,7 @@ function Day() {
             <Header page='day'/>
 
             <div id="day">
+                <h1>{formatDate(date)}</h1>
                 <h2>Food</h2>
                 {isCurrentDate && <button onClick={() => navigate('/food')}>Add Food</button>}
                 <ul>

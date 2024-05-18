@@ -16,6 +16,16 @@ function PhysicalActivity() {
     const [activitiesByMuscle, setActivitiesByMuscle] = useState([]);
     const [muscleError, setMuscleError] = useState(null);
 
+    const [minutes, setMinutes] = useState(0);  
+    const [addToDayError, setAddToDayError] = useState(null);
+
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     const getAllActivites = async () => {
         setAllError(null);
 
@@ -57,6 +67,29 @@ function PhysicalActivity() {
         }
     };
 
+    const addActivityToDay = async (activityNameDay, minutes) => {
+        setAddToDayError(null);
+        if (minutes <= 0) {
+            setAddToDayError('Minutes must be greater than 0');
+            return;
+        }
+        try {
+            const token = localStorage.getItem('token');
+            await axios.put('https://localhost:7094/api/Days/add-activity', {
+                date: formatDate(new Date()),
+                activityName: activityNameDay,
+                minutes: minutes
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+        } 
+        catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div>
             <button onClick={getAllActivites}>See All</button>
@@ -70,12 +103,21 @@ function PhysicalActivity() {
             })}
             {allError && <p>{allError}</p>}
 
+            <h2>Search Activity To Add To Day</h2>                
             <input type="text" placeholder="Activity Name" 
                    value={activityName} onChange={(event) => {setActivityName(event.target.value)}} />
             <button onClick={getByName}>Search</button>
 
             {activity && <PhysicalActivityItem key={activity.name} name={activity.name} muscles={activity.muscles} />}
+            
+            {activity && <div>
+                <label htmlFor="minutes">Minutes</label>
+                <input type="number" placeholder="Minutes" value={minutes} onChange={(event) => {setMinutes(event.target.value)}} />
+                <button onClick={() => {addActivityToDay(activity.name, minutes)}}>Add to Day</button>
+            </div>}
+
             {nameError && <p>{nameError}</p>}
+            {addToDayError && <p>{addToDayError}</p>}
 
             <input type="text" placeholder="Search by Muscle Name"
                    value={muscleName} onChange={(event) => {setMuscleName(event.target.value)}} />
