@@ -12,6 +12,7 @@ function Day() {
     const [updateGramsError, setUpdateGramsError] = useState(null);
     const [minutes, setMinutes] = useState({});
     const [updateMinutesError, setUpdateMinutesError] = useState(null);
+    const [dayError, setDayError] = useState(null);
 
     const formatDate = (date) => {
         const year = date.getFullYear();
@@ -89,6 +90,7 @@ function Day() {
         } 
         catch (error) {
             console.log(error);
+            throw error;
         }
     };
 
@@ -192,6 +194,7 @@ function Day() {
 
     // Runs when the date changes (when the user clicks on the previous or next day buttons)
     useEffect(() => {
+        setDayError(null);
         if (date) {
             getCompleteDay(date)
                 .then((day) => {
@@ -204,11 +207,12 @@ function Day() {
                 })
                 .catch((error) => {
                     console.error('Error fetching day:', error);
+                    setDayError('No data from this date');
                 });
         }
     }, [date]);
 
-    const foodCalories = (food) => food.details.calories * food.grams / 100; 
+    const foodCalories = (food) => Math.floor(food.details.calories * food.grams / 100); 
     const activityCalories = (activity, weight) => { 
         return Math.floor(activity.details.calories * (activity.minutes / 60) * weight); 
     };
@@ -224,7 +228,7 @@ function Day() {
     return (
         <div>
             <Header page='day'/>
-            <div id="day">
+            {!dayError && <div id="day">
                 <h1>{formatDate(date)}</h1>
                 {completeDay && <h3>Calories: {sumCalories(completeDay.dayFoods)} / {completeDay.calories}</h3>}
                 {completeDay && <h3>
@@ -277,7 +281,9 @@ function Day() {
                         );
                     })}
                 </ul>
-            </div>
+            </div>}
+
+            {dayError && <h3>{dayError}</h3>}
 
             <button onClick={() => setDate(new Date(date.setDate(date.getDate() - 1)))}>Previous Day</button>
             {!isCurrentDate && <button onClick={() => setDate(new Date(date.setDate(date.getDate() + 1)))}>Next Day</button>}
