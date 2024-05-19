@@ -111,6 +111,8 @@ function AdminFood () {
                             <p>Carbohydrates: {food.carbohydrates}</p>
                             <p>Proteins: {food.proteins}</p>
                             <p>Fats: {food.fats}</p>
+                            <p>Is Public: {food.public.toString()}</p>
+                            {food.applicationUserId && <p>User: {food.applicationUserId}</p>}
                         </div>
                     );
                 })}

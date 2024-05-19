@@ -35,7 +35,7 @@ namespace healthy_lifestyle_web_app.Repositories
         public Task<double> GetAverageCalories(List<DateCaloriesModel> dateCalories);
 
         // Creates a new day for a user
-        public Task<bool> PostDayAsync(int id);
+        public Task<bool> PostDayAsync(Profile profile);
 
         // Add food
         public Task<bool> PutFoodAsync(Day day, Food food, int grams);

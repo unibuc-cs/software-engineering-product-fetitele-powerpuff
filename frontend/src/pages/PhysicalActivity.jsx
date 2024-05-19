@@ -99,6 +99,7 @@ function PhysicalActivity() {
                     Authorization: `Bearer ${token}`
                 }
             });
+            setMinutes(0);
         } 
         catch (error) {
             console.log(error);

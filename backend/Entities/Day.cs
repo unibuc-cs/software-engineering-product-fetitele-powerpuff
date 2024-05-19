@@ -16,14 +16,16 @@ namespace healthy_lifestyle_web_app.Entities
 
         [JsonIgnore]
         public Profile? Profile { get; set; }
+        public int Calories { get; set; }
 
         public ICollection<DayFood> DayFoods { get; set; }
         public ICollection<DayPhysicalActivity> DayPhysicalActivities { get; set; }
 
-        public Day(int profileId, DateOnly date)
+        public Day(int profileId, DateOnly date, int calories)
         {
             ProfileId = profileId;
             Date = date;
+            Calories = calories;
             DayFoods = new List<DayFood>();
             DayPhysicalActivities = new List<DayPhysicalActivity>();
         }

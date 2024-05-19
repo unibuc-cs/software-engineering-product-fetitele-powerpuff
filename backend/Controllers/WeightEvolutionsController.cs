@@ -53,5 +53,33 @@ namespace healthy_lifestyle_web_app.Controllers
 
             return Ok(getWeightEvolutionDTOs);
         }
+
+        [HttpGet("weight")]
+        [Authorize]
+        public async Task<IActionResult> GetByProfileAndDate(DateOnly date)
+        {
+            // Find the name (email) of the user that is logged in
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return BadRequest("No user logged in");
+            }
+
+            // Get the user's profile
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            // Get the weight evolutions of that profile
+            WeightEvolution? weightEvolution = await _weightEvolutionRepository.GetByProfileIdAndDateAsync(profile.Id, date);
+            if (weightEvolution == null)
+            {
+                return NotFound("No data about this date");
+            }
+
+            return Ok(weightEvolution.Weight);
+        }
     }
 }

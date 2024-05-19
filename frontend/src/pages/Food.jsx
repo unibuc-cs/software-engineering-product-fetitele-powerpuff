@@ -19,6 +19,7 @@ function Food() {
     const [fats, setFats] = useState(0);
     const [proteins, setProteins] = useState(0);
     const [addError, setAddError] = useState(null);
+    const [addSucces, setAddSucces] = useState(null);
 
     const [grams, setGrams] = useState(0);
     const [addToDayError, setAddToDayError] = useState(null);
@@ -71,6 +72,7 @@ function Food() {
     const addFood = async (event) => {
         event.preventDefault();
         setAddError(null);
+        setAddSucces(null);
 
         if (calories <= 0 || carbohydrates <= 0 || fats <= 0 || proteins <= 0) {
             setAddError('Please enter values greater than 0 for all fields.');
@@ -93,6 +95,12 @@ function Food() {
             });
 
             console.log(response.status);
+            setName('');
+            setCalories(0);
+            setCarbohydrates(0);
+            setProteins(0);
+            setFats(0);
+            setAddSucces('Food added successfully');
         } catch (error) {
             setAddError('Could not add food, please try again later');
             console.log(error);
@@ -118,6 +126,7 @@ function Food() {
                 }
             });
 
+            setGrams(0);
             console.log(response.status);
         } 
         catch (error) {
@@ -158,7 +167,6 @@ function Food() {
                     carbohydrates={food.carbohydrates}
                     fats={food.fats}
                     proteins={food.proteins}
-                    public={food.public}    
                 />
                 );
             })}    
@@ -175,8 +183,7 @@ function Food() {
                 calories={food.calories}
                 carbohydrates={food.carbohydrates}
                 fats={food.fats}
-                proteins={food.proteins}  
-                public={food.public}  
+                proteins={food.proteins}   
             />}
 
             {food && <div>
@@ -184,10 +191,13 @@ function Food() {
                 <input type="number" placeholder="Grams"
                           value={grams} onChange={(event) => setGrams(event.target.value)} />
                 <button onClick={() => addFoodToDay(food.name, grams)}>Add to Day</button>
+            </div>
+            }
+            {food && !food.public && <div>
                 <button onClick={() => createPublicRequest(food.name)}>Create Request To Make Food Public</button>
             </div>}
 
-            {nameError && <p>{{nameError}}</p>}
+            {nameError && <p>{nameError}</p>}
             {addToDayError && <p>{addToDayError}</p>}
             {requestError && <p>{requestError}</p>}
             {requestSuccess && <p>{requestSuccess}</p>}
@@ -230,6 +240,7 @@ function Food() {
                 </div>
 
                 {addError && <p>{addError}</p>}
+                {addSucces && <p>{addSucces}</p>}
                 <button type="submit">Add Food</button>
             </form>
         </div>

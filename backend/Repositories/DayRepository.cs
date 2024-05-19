@@ -1,18 +1,22 @@
-﻿using healthy_lifestyle_web_app.ContextModels;
+﻿using AutoMapper;
+using healthy_lifestyle_web_app.ContextModels;
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace healthy_lifestyle_web_app.Repositories
 {
     public class DayRepository: IDayRepository
     {
         private readonly ApplicationContext _context;
+        private readonly IWeightEvolutionRepository _weightEvolutionRepository;
 
-        public DayRepository(ApplicationContext context)
+        public DayRepository(ApplicationContext context, IWeightEvolutionRepository weightEvolutionRepository)
         {
             _context = context;
+            _weightEvolutionRepository = weightEvolutionRepository;
         }   
 
         public async Task<List<Day>> GetAllAsync()
@@ -115,9 +119,26 @@ namespace healthy_lifestyle_web_app.Repositories
             return calories / datesCalories.Count;
         }
 
-        public async Task<bool> PostDayAsync(int id)
+        public async Task<bool> PostDayAsync(Entities.Profile profile)
         {
-            Day day = new(id, DateOnly.FromDateTime(DateTime.Today));
+            Goal goal = profile.Goal;
+            WeightEvolution? we = await _weightEvolutionRepository.GetByProfileIdAndDateAsync(profile.Id, DateOnly.FromDateTime(DateTime.Today));
+
+            if (we == null)
+            {
+                return false;
+            }
+
+            int calories = (int)(we.Weight * 38);
+
+            if (goal == Goal.Lose)
+            {
+                calories = (int)(0.8 * calories);
+            } else if (goal == Goal.Gain) {
+                calories = (int)(1.2 * calories);
+            }
+
+            Day day = new(profile.Id, DateOnly.FromDateTime(DateTime.Today), calories);
             
             try
             {

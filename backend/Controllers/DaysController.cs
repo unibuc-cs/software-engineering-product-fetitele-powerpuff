@@ -248,9 +248,8 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(await _dayRepository.GetAverageCalories(daysCalories));
         }
 
-        // Will eventually change to automatically create a new day for a user at midnight
         // Currently creates (if it doesn't already exist) a new day with the current date for the user
-        // // that is logged in
+        // that is logged in
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> PostDay()
@@ -267,7 +266,7 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("Profile not found");
             }
 
-            if (await _dayRepository.PostDayAsync(profile.Id))
+            if (await _dayRepository.PostDayAsync(profile))
             {
                 return Ok("Day created");
             }

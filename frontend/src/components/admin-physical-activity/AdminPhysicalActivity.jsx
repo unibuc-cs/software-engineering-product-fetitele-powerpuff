@@ -309,7 +309,6 @@ function AdminPhysicalActivity() {
 
             <button onClick={getPhysicalActivities}>Get Physical Activities</button>
             <div id="admin-physical-activities">
-                <h4>Physical Activities:</h4>
                 {physicalActivities && physicalActivities.map(physicalActivity => {
                     return (<PhysicalActivityItemAdmin
                         key={physicalActivity.id}
@@ -352,7 +351,6 @@ function AdminPhysicalActivity() {
 
             <button onClick={getMuscles}>Get Muscles</button>
             <div id="admin-muscles">
-                <h4>Muscles:</h4>
                 {muscles && muscles.map(muscle => {
                     return (
                         <div key={muscle.id}>

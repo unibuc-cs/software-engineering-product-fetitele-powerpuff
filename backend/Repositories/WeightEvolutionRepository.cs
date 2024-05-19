@@ -15,7 +15,21 @@ namespace healthy_lifestyle_web_app.Repositories
 
         public async Task<List<WeightEvolution>> GetByProfileIdAsync(int profileId)
         {
-            return await _context.WeightEvolutions.Where(we => we.ProfileId == profileId).ToListAsync();
+           return await _context.WeightEvolutions.Where(we => we.ProfileId == profileId).ToListAsync();
+        }
+
+        public async Task<WeightEvolution?> GetByProfileIdAndDateAsync(int profileId, DateOnly date)
+        {
+            var weightEvolutions = await _context.WeightEvolutions.Where(we => we.ProfileId == profileId ).ToListAsync();
+            weightEvolutions = weightEvolutions.OrderByDescending(weightEvolutions => weightEvolutions.Date).ToList();
+            for (var i = 0; i < weightEvolutions.Count; i++)
+            {
+                if (date >= weightEvolutions[i].Date)
+                {
+                    return weightEvolutions[i];
+                }
+            }
+            return null;
         }
 
         public async Task<bool> PostAsync(int profileId, double weight)

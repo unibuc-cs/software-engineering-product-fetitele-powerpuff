@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { act, useEffect } from "react";
 import Header from "../components/header/Header";
 import axios from "axios";
 import { useState } from "react";
@@ -38,6 +38,22 @@ function Day() {
         }
     };
 
+    const getWeight = async (dateString) => {
+        const formattedDate = formatDate(new Date(dateString));
+
+        try {
+            const response = await axios.get(
+                `https://localhost:7094/api/WeightEvolutions/weight?date=${formattedDate}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const getCompleteDay = async (date) => {
         try {
             const day = await getDay(date);
@@ -62,8 +78,11 @@ function Day() {
 
             const dayFoods = await Promise.all(dayFoodsPromises);
             const dayActivities = await Promise.all(dayActivitiesPromises);
+            
+            const weight = await getWeight(date);
 
-            const completeDayData = { ...day, dayFoods: dayFoods, dayPhysicalActivities: dayActivities };
+            const completeDayData = { ...day, dayFoods: dayFoods, 
+                dayPhysicalActivities: dayActivities, weight: weight };
             setCompleteDay(completeDayData);
 
             return completeDayData; 
@@ -189,12 +208,31 @@ function Day() {
         }
     }, [date]);
 
+    const foodCalories = (food) => food.details.calories * food.grams / 100; 
+    const activityCalories = (activity, weight) => { 
+        return Math.floor(activity.details.calories * (activity.minutes / 60) * weight); 
+    };
+
+    const sumCalories = (dayFoods) => {
+        return dayFoods.reduce((acc, food) => acc + food.details.calories, 0);
+    }
+
+    const activeCalories = (dayActivities, weight) => {
+        return dayActivities.reduce((acc, activity) => acc + activityCalories(activity, weight), 0);
+    }
+
     return (
         <div>
             <Header page='day'/>
-
             <div id="day">
                 <h1>{formatDate(date)}</h1>
+                {completeDay && <h3>Calories: {sumCalories(completeDay.dayFoods)} / {completeDay.calories}</h3>}
+                {completeDay && <h3>
+                    Calories left: {sumCalories(completeDay.dayFoods) <= completeDay.calories ? 
+                    completeDay.calories - sumCalories(completeDay.dayFoods) : 0}
+                </h3>}
+                {completeDay && <h3>
+                    Active calories: {activeCalories(completeDay.dayPhysicalActivities, completeDay.weight)}</h3>}
                 <h2>Food</h2>
                 {isCurrentDate && <button onClick={() => navigate('/food')}>Add Food</button>}
                 <ul>
@@ -211,7 +249,7 @@ function Day() {
                                     />
                                 </p>}
                                 {updateGramsError && <p>{updateGramsError}</p>}
-                                <p>Calories: TO DO CALCULATE CALORIES</p>
+                                <p>Calories: {foodCalories(food)}</p>
                                 {isCurrentDate && <button onClick={() => {deleteFood(date, food.details.name)}}>Delete Food</button>}
                             </li>
                         );
@@ -233,7 +271,7 @@ function Day() {
                                         onChange={(e) => updateMinutes(activity.details.name, e.target.value)}
                                     />
                                 </p>}
-                                <p>Calories burned: TO DO CALCULATE CALORIES BURNED</p>
+                                <p>Calories burned: {activityCalories(activity, completeDay.weight)}</p>
                                 {isCurrentDate && <button onClick={() => {deleteActivity(date, activity.details.name)}}>Delete Activity</button>}
                             </li>
                         );

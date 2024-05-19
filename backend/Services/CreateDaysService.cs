@@ -22,7 +22,7 @@ namespace healthy_lifestyle_web_app.Services
                 List<Profile> profiles = await _profileRepository.GetAllAsync();
                 foreach (Profile profile in profiles)
                 {
-                    await _dayRepository.PostDayAsync(profile.Id);
+                    await _dayRepository.PostDayAsync(profile);
                 }
                 return true;
             }
