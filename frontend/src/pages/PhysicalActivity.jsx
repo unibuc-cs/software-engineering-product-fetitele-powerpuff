@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import axios from "axios";
 
+import Header from "../components/header/Header";
 import PhysicalActivityItem from '../components/physical-activity-item/PhysicalActivityItem.jsx';
 
 function PhysicalActivity() {
@@ -28,6 +29,12 @@ function PhysicalActivity() {
 
     const getAllActivites = async () => {
         setAllError(null);
+
+        if (physicalActivities.length !== 0) {
+            setPhysicalActivities([]);
+            return;
+        }
+
         const token = localStorage.getItem('token');
 
         try {
@@ -108,46 +115,53 @@ function PhysicalActivity() {
 
     return (
         <div>
-            <button onClick={getAllActivites}>See All</button>
+            <Header page='physical-activity'/>
+            <div className="item-container">
+                <h3>See All</h3>
+                <button onClick={getAllActivites}>See All</button>
 
-            {physicalActivities && physicalActivities.map(physicalActivity => {
-                return (<PhysicalActivityItem
-                    key={physicalActivity.name}
-                    name={physicalActivity.name}
-                    muscles={physicalActivity.muscles}
-                />);
-            })}
-            {allError && <p>{allError}</p>}
+                <div>
+                    {physicalActivities && physicalActivities.map(physicalActivity => {
+                        return (<PhysicalActivityItem
+                            key={physicalActivity.name}
+                            name={physicalActivity.name}
+                            muscles={physicalActivity.muscles}
+                        />);
+                    })}
+                </div>
 
-            <h2>Search Activity To Add To Day</h2>                
-            <input type="text" placeholder="Activity Name" 
-                   value={activityName} onChange={(event) => {setActivityName(event.target.value)}} />
-            <button onClick={getByName}>Search</button>
+                {allError && <p className="error">{allError}</p>}
 
-            {activity && <PhysicalActivityItem key={activity.name} name={activity.name} muscles={activity.muscles} />}
-            
-            {activity && <div>
-                <label htmlFor="minutes">Minutes</label>
-                <input type="number" placeholder="Minutes" value={minutes} onChange={(event) => {setMinutes(event.target.value)}} />
-                <button onClick={() => {addActivityToDay(activity.name, minutes)}}>Add to Day</button>
-            </div>}
+                <h2>Search Activity To Add To Day</h2>                
+                <input className="search-item-input" type="text" placeholder="Activity Name" 
+                    value={activityName} onChange={(event) => {setActivityName(event.target.value)}} />
+                <button className="search-item-button" onClick={getByName}>Search</button>
 
-            {nameError && <p>{nameError}</p>}
-            {addToDayError && <p>{addToDayError}</p>}
+                {activity && <PhysicalActivityItem key={activity.name} name={activity.name} muscles={activity.muscles} />}
+                
+                {activity && <div>
+                    <label htmlFor="minutes">Minutes</label>
+                    <input id="minutes" type="number" placeholder="Minutes" value={minutes} onChange={(event) => {setMinutes(event.target.value)}} />
+                    <button className="add-item-day" onClick={() => {addActivityToDay(activity.name, minutes)}}>Add to Day</button>
+                </div>}
 
-            <input type="text" placeholder="Search by Muscle Name"
-                   value={muscleName} onChange={(event) => {setMuscleName(event.target.value)}} />
-            <button onClick={getByMuscle}>Search</button>
+                {nameError && <p className="error">{nameError}</p>}
+                {addToDayError && <p className="error">{addToDayError}</p>}
 
-            {activitiesByMuscle && activitiesByMuscle.map(activity => {
-                return (<PhysicalActivityItem
-                    key={activity.name}
-                    name={activity.name}
-                    muscles={activity.muscles}
-                />
-                );
-            })}
-            {muscleError && <p>{muscleError}</p>}
+                <input className="search-item-input" type="text" placeholder="Search by Muscle Name"
+                    value={muscleName} onChange={(event) => {setMuscleName(event.target.value)}} />
+                <button className="search-item-button" onClick={getByMuscle}>Search</button>
+
+                {activitiesByMuscle && activitiesByMuscle.map(activity => {
+                    return (<PhysicalActivityItem
+                        key={activity.name}
+                        name={activity.name}
+                        muscles={activity.muscles}
+                    />
+                    );
+                })}
+                {muscleError && <p className="error">{muscleError}</p>}
+            </div>
         </div>
     );
 }

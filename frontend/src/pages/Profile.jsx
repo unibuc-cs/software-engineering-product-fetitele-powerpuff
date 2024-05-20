@@ -143,52 +143,54 @@ function Profile() {
     // Render the form for creating or updating a profile
     const renderForm = (profileInfo) => {
         return (
-            <form onSubmit={profileInfo ? handleUpdate : handleCreate}>
-                <div>
-                    <label htmlFor="name">Name</label>
-                    <input type="text" id="name"
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
-                        placeholder="Name" />
-                </div>
+            <div className="form-container">
+                <form onSubmit={profileInfo ? handleUpdate : handleCreate}>
+                    <div>
+                        <label htmlFor="name">Name</label>
+                        <input type="text" id="name"
+                            value={name}
+                            onChange={(event) => setName(event.target.value)}
+                            placeholder="Name" />
+                    </div>
 
-                <div>
-                    <label htmlFor="birthdate">Birthdate</label>
-                    <input type="date" id="birthdate"
-                           value={birthdate} 
-                           onChange={(event) => setBirthdate(event.target.value)} />
-                </div>
+                    <div>
+                        <label htmlFor="birthdate">Birthdate</label>
+                        <input type="date" id="birthdate"
+                            value={birthdate} 
+                            onChange={(event) => setBirthdate(event.target.value)} />
+                    </div>
 
-                <div>
-                    <label htmlFor="weight">Weight</label>
-                    <input type="number" id="weight"
-                           value={weight} 
-                           onChange={(event) => setWeight(event.target.value)}
-                           placeholder="Weight" />
-                </div>
+                    <div>
+                        <label htmlFor="weight">Weight</label>
+                        <input type="number" id="weight"
+                            value={weight} 
+                            onChange={(event) => setWeight(event.target.value)}
+                            placeholder="Weight" />
+                    </div>
 
-                <div>
-                    <label htmlFor="height">Height</label>
-                    <input type="number" id="height"
-                           value={height} 
-                           onChange={(event) => setHeight(event.target.value)}
-                           placeholder="Height" />
-                </div>
+                    <div>
+                        <label htmlFor="height">Height</label>
+                        <input type="number" id="height"
+                            value={height} 
+                            onChange={(event) => setHeight(event.target.value)}
+                            placeholder="Height" />
+                    </div>
 
-                <div>
-                    <label htmlFor="goal">Goal</label>
-                    <select id="goal" 
-                            value={goal} 
-                            onChange={(event) => setGoal(event.target.value)}>
-                        <option value="0">Lose</option>
-                        <option value="1">Gain</option>
-                        <option value="2">Maintain</option>
-                    </select>
-                </div>
+                    <div>
+                        <label htmlFor="goal">Goal</label>
+                        <select id="goal" 
+                                value={goal} 
+                                onChange={(event) => setGoal(event.target.value)}>
+                            <option value="0">Lose</option>
+                            <option value="1">Gain</option>
+                            <option value="2">Maintain</option>
+                        </select>
+                    </div>
 
-                <button type="submit">{profileInfo ? "Update Profile" : "Create Profile"}</button>
-                {error && <p>{error}</p>}
-            </form>
+                    <button type="submit">{profileInfo ? "Update Profile" : "Create Profile"}</button>
+                    {error && <p className="error">{error}</p>}
+                </form>
+            </div>
         );
     };
 
@@ -248,13 +250,15 @@ function Profile() {
     return (
         <div>
             <Header page='profile'/>
-            <h3>{profileInfo.name}</h3>
-            <p>Birthdate: {profileInfo.birthdate}</p>
-            <p>Height: {profileInfo.height}</p>
-            <p>Weight: {profileInfo.weight}</p>
-            <p>Goal: {profileInfo.goal}</p>
-            <button onClick={() => setEditProfile(true)}>Edit Profile</button>
-            <button onClick={() => deleteProfile()}>Delete Profile</button>
+            <div className="profile-container">
+                <h3>{profileInfo.name}</h3>
+                <p>Birthdate: {profileInfo.birthdate}</p>
+                <p>Height: {profileInfo.height}</p>
+                <p>Weight: {profileInfo.weight}</p>
+                <p>Goal: {profileInfo.goal}</p>
+                <button onClick={() => setEditProfile(true)}>Edit Profile</button>
+                <button onClick={() => deleteProfile()}>Delete Profile</button>
+            </div>
         </div>
     );
 }

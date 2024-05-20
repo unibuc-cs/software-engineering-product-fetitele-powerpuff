@@ -228,65 +228,70 @@ function Day() {
     return (
         <div>
             <Header page='day'/>
-            {!dayError && <div id="day">
-                <h1>{formatDate(date)}</h1>
-                {completeDay && <h3>Calories: {sumCalories(completeDay.dayFoods)} / {completeDay.calories}</h3>}
-                {completeDay && <h3>
-                    Calories left: {sumCalories(completeDay.dayFoods) <= completeDay.calories ? 
-                    completeDay.calories - sumCalories(completeDay.dayFoods) : 0}
-                </h3>}
-                {completeDay && <h3>
-                    Active calories: {activeCalories(completeDay.dayPhysicalActivities, completeDay.weight)}</h3>}
-                <h2>Food</h2>
-                {isCurrentDate && <button onClick={() => navigate('/food')}>Add Food</button>}
-                <ul>
-                    {completeDay && completeDay.dayFoods.map((food, index) => {
-                        return (
-                            <li key={index}>
-                                <h3>{food.details.name}</h3>
-                                {!isCurrentDate && <p>Grams: {food.grams}</p>}
-                                {isCurrentDate && <p>Grams: 
-                                    <input 
-                                        type="number" 
-                                        value={grams[food.details.name]} 
-                                        onChange={(e) => updateGrams(food.details.name, e.target.value)}
-                                    />
-                                </p>}
-                                {updateGramsError && <p>{updateGramsError}</p>}
-                                <p>Calories: {foodCalories(food)}</p>
-                                {isCurrentDate && <button onClick={() => {deleteFood(date, food.details.name)}}>Delete Food</button>}
-                            </li>
-                        );
-                    })}
-                </ul>
+            <div id="day-container">
+                {!dayError && <div id="day">
+                    <h1>{formatDate(date)}</h1>
+                    {completeDay && <h3>Calories: {sumCalories(completeDay.dayFoods)} / {completeDay.calories}</h3>}
+                    {completeDay && <h3>
+                        Calories left: {sumCalories(completeDay.dayFoods) <= completeDay.calories ? 
+                        completeDay.calories - sumCalories(completeDay.dayFoods) : 0}
+                    </h3>}
+                    {completeDay && <h3>
+                        Active calories: {activeCalories(completeDay.dayPhysicalActivities, completeDay.weight)}</h3>}
 
-                <h2>Physical Activities</h2>
-                {isCurrentDate && <button onClick={() => navigate('/physical-activity')}>Add Physical Activity</button>}
-                <ul>
-                    {completeDay && completeDay.dayPhysicalActivities.map((activity, index) => {
-                        return (
-                            <li key={index}>
-                                <h3>{activity.details.name}</h3>
-                                {!isCurrentDate  && <p>Minutes: {activity.minutes}</p>}
-                                {isCurrentDate && <p>Minutes:
-                                    <input 
-                                        type="number" 
-                                        value={minutes[activity.details.name]} 
-                                        onChange={(e) => updateMinutes(activity.details.name, e.target.value)}
-                                    />
-                                </p>}
-                                <p>Calories burned: {activityCalories(activity, completeDay.weight)}</p>
-                                {isCurrentDate && <button onClick={() => {deleteActivity(date, activity.details.name)}}>Delete Activity</button>}
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>}
+                    <h2>Food</h2>
+                    {isCurrentDate && <button onClick={() => navigate('/food')}>Add Food</button>}
+                    <ul>
+                        {completeDay && completeDay.dayFoods.map((food, index) => {
+                            return (
+                                <li key={index}>
+                                    <h3>{food.details.name}</h3>
+                                    {!isCurrentDate && <p>Grams: {food.grams}</p>}
+                                    {isCurrentDate && <p>Grams: 
+                                        <input 
+                                            type="number" 
+                                            value={grams[food.details.name]} 
+                                            onChange={(e) => updateGrams(food.details.name, e.target.value)}
+                                        />
+                                    </p>}
+                                    {updateGramsError && <p>{updateGramsError}</p>}
+                                    <p>Calories: {foodCalories(food)}</p>
+                                    {isCurrentDate && <button onClick={() => {deleteFood(date, food.details.name)}}>Delete Food</button>}
+                                </li>
+                            );
+                        })}
+                    </ul>
 
-            {dayError && <h3>{dayError}</h3>}
+                    <h2>Physical Activities</h2>
+                    {isCurrentDate && <button onClick={() => navigate('/physical-activity')}>Add Physical Activity</button>}
+                    <ul>
+                        {completeDay && completeDay.dayPhysicalActivities.map((activity, index) => {
+                            return (
+                                <li key={index}>
+                                    <h3>{activity.details.name}</h3>
+                                    {!isCurrentDate  && <p>Minutes: {activity.minutes}</p>}
+                                    {isCurrentDate && <p>Minutes:
+                                        <input 
+                                            type="number" 
+                                            value={minutes[activity.details.name]} 
+                                            onChange={(e) => updateMinutes(activity.details.name, e.target.value)}
+                                        />
+                                    </p>}
+                                    <p>Calories burned: {activityCalories(activity, completeDay.weight)}</p>
+                                    {isCurrentDate && <button onClick={() => {deleteActivity(date, activity.details.name)}}>Delete Activity</button>}
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>}
 
-            <button onClick={() => setDate(new Date(date.setDate(date.getDate() - 1)))}>Previous Day</button>
-            {!isCurrentDate && <button onClick={() => setDate(new Date(date.setDate(date.getDate() + 1)))}>Next Day</button>}
+                {dayError && <h3 className="error">{dayError}</h3>}
+
+                <div>
+                    <button className="change-day" onClick={() => setDate(new Date(date.setDate(date.getDate() - 1)))}>Previous Day</button>
+                    {!isCurrentDate && <button className="change-day" onClick={() => setDate(new Date(date.setDate(date.getDate() + 1)))}>Next Day</button>}
+                </div>
+            </div>
         </div>
     );
 }

@@ -16,6 +16,12 @@ function AdminFood () {
     // Get all foods
     const getFoods = async () => {
         setGetError('');
+
+        if (foods.length !== 0) {
+            setFoods([]);
+            return;
+        }
+
         try {
             const response = await axios.get('https://localhost:7094/api/Food/for-admin', {
                 headers: {
@@ -56,7 +62,6 @@ function AdminFood () {
             setCarbohydrates('');
             setProteins('');
             setFats('');
-            getFoods();
         } 
         catch (error) {
             console.log(error);
@@ -68,35 +73,35 @@ function AdminFood () {
     }
 
     return (
-        <div>
+        <div className='edit-container'>
             <h1>Edit Food</h1>
 
-            <div id="add-food-admin">
+            <div id="add-food-admin" className='form-container'>
                 <h3>Add Food</h3>
                 <form onSubmit={createFood}>
                     <div>
                         <label htmlFor="food-name">Name</label>
-                        <input type="text" id="food-name" value={name} onChange={e => setName(e.target.value)} />
+                        <input placeholder='Name' type="text" id="food-name" value={name} onChange={e => setName(e.target.value)} />
                     </div>
                     <div>
                         <label htmlFor="food-calories">Calories</label>
-                        <input type="number" id="food-calories" value={calories} onChange={e => setCalories(e.target.value)} />
+                        <input placeholder='Calories' type="number" id="food-calories" value={calories} onChange={e => setCalories(e.target.value)} />
                     </div>
                     <div>
                         <label htmlFor="food-carbohydrates">Carbohydrates</label>
-                        <input type="number" id="food-carbohydrates" value={carbohydrates} onChange={e => setCarbohydrates(e.target.value)} />
+                        <input placeholder='0' type="number" id="food-carbohydrates" value={carbohydrates} onChange={e => setCarbohydrates(e.target.value)} />
                     </div>
                     <div>
                         <label htmlFor="food-proteins">Proteins</label>
-                        <input type="number" id="food-proteins" value={proteins} onChange={e => setProteins(e.target.value)} />
+                        <input placeholder='0' type="number" id="food-proteins" value={proteins} onChange={e => setProteins(e.target.value)} />
                     </div>
                     <div>
                         <label htmlFor="food-fats">Fats</label>
-                        <input type="number" id="food-fats" value={fats} onChange={e => setFats(e.target.value)} />
+                        <input placeholder='0' type="number" id="food-fats" value={fats} onChange={e => setFats(e.target.value)} />
                     </div>
                     <button type="submit">Create Food</button>
-                    {createError && <p>{createError}</p>}
-                    {createSuccess && <p>{createSuccess}</p>}
+                    {createError && <p className='error'>{createError}</p>}
+                    {createSuccess && <p className='success'>{createSuccess}</p>}
                 </form>
             </div>
 
@@ -105,7 +110,7 @@ function AdminFood () {
                 {foods && foods.map(food => {
                     return (
                         <div key={food.id}>
-                            <h2>{food.name}</h2>
+                            <h3>{food.name}</h3>
                             <p>Id: {food.id}</p>
                             <p>Calories: {food.calories}</p>
                             <p>Carbohydrates: {food.carbohydrates}</p>
@@ -116,7 +121,7 @@ function AdminFood () {
                         </div>
                     );
                 })}
-                {getError && <p>{getError}</p>}
+                {getError && <p className='error'>{getError}</p>}
             </div>
         </div>
     );

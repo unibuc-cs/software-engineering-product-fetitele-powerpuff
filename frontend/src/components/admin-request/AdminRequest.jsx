@@ -9,6 +9,11 @@ function AdminRequest() {
     const [denyRequestSuccess, setDenyRequestSuccess] = useState(null);
 
     const getAllRequests = async () => {
+        if (requests.length !== 0) {
+            setRequests([]);
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get('https://localhost:7094/api/Request', {
@@ -91,22 +96,25 @@ function AdminRequest() {
     }
 
     return (
-        <div>
+        <div className='edit-container'>
             <h1>Edit Requests</h1>
 
             <h2>Approve a Request</h2>
             <input type="text" placeholder="Request Id" id="approve-request-id"/>
             <button onClick={() => approveRequest(document.getElementById('approve-request-id').value)}>Approve</button>
-            {approveRequestError && <p>{approveRequestError}</p>}
-            {approveRequestSuccess && <p>{approveRequestSuccess}</p>}
+            {approveRequestError && <p className='error'>{approveRequestError}</p>}
+            {approveRequestSuccess && <p className='success'>{approveRequestSuccess}</p>}
 
             <h2>Deny a Request</h2>
             <input type="text" placeholder="Request Id" id="deny-request-id"/>
             <button onClick={() => deleteRequest(document.getElementById('deny-request-id').value)}>Deny</button>
-            {denyRequestError && <p>{denyRequestError}</p>}
-            {denyRequestSuccess && <p>{denyRequestSuccess}</p>}
+            {denyRequestError && <p className='error'>{denyRequestError}</p>}
+            {denyRequestSuccess && <p className='success'>{denyRequestSuccess}</p>}
 
-            <button onClick={getCompleteRequests}>Get All Requests</button>
+            <div className="button-container">
+                <button id='requests-button' onClick={getCompleteRequests}>Get All Requests</button>
+            </div>
+            
             <div id="admin-requests">
                 {requests.map(request => (
                     <div key={request.id}>

@@ -2,16 +2,16 @@ import React from "react";
 
 function PhysicalActivityItem(props) {
     const muscles = props.muscles.map(muscle => (
-        <li key={muscle.id}>{muscle.name}</li>
+        <div key={muscle.id}>{muscle.name}</div>
     ));
 
     return (
-        <div>
+        <div className="item">
             <h3>{props.name}</h3>
             <p>Muscles: </p>
-            <ul>
+            <div>
                 {muscles}
-            </ul>            
+            </div>            
         </div>
     );
 }

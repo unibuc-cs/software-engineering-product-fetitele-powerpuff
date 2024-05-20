@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 
-import './register.css';
-
 function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -63,7 +61,7 @@ function Register() {
     }
 
     return (
-        <div>
+        <div className="form-container">
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="register-email">Email</label>
@@ -87,7 +85,7 @@ function Register() {
                 </div>
 
                 <button type="submit">Register</button>
-                {error && <p>{error}</p>}
+                {error && <p className="error">{error}</p>}
             </form>
         </div>
     );

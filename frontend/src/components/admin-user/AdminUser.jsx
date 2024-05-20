@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import './admin-user.css';
 import axios from 'axios';
 
 function AdminUser () {
@@ -15,6 +14,12 @@ function AdminUser () {
     // Get all users
     const getUsers = async () => {
         setGetError('');
+
+        if (users.length !== 0){
+            setUsers([]);
+            return;
+        }
+
         try {
             const response = await axios.get('https://localhost:7094/api/ApplicationUser', {
                 headers: {
@@ -44,7 +49,6 @@ function AdminUser () {
                 setPromoteSuccess('');
             }, 3000);
             setPromoteEmail('');
-            getUsers();
         } 
         catch (error) {
             console.log(error);
@@ -78,23 +82,23 @@ function AdminUser () {
     }
 
     return (
-        <div>
+        <div className="edit-container">
             <h1>Edit Users</h1>
             
             <div id="promote-user">
                 <h3>Promote a User To Admin</h3>
                 <input type="email" value={promoteEmail} onChange={(event) => setPromoteEmail(event.target.value)} placeholder="Email" />
                 <button onClick={() => promoteUser(promoteEmail)}>Promote User</button>
-                {promoteError && <p>{promoteError}</p>}
-                {promoteSuccess && <p>{promoteSuccess}</p>}
+                {promoteError && <p className="error">{promoteError}</p>}
+                {promoteSuccess && <p className="success">{promoteSuccess}</p>}
             </div>
 
             <div id="delete-user">
                 <h3>Delete a User</h3>
                 <input type="email" value={deleteEmail} onChange={(event) => setDeleteEmail(event.target.value)} placeholder="Email" />
                 <button onClick={() => deleteUser(deleteEmail)}>Delete User</button>
-                {deleteError && <p>{deleteError}</p>}
-                {deleteSuccess && <p>{deleteSuccess}</p>}
+                {deleteError && <p className="error">{deleteError}</p>}
+                {deleteSuccess && <p className="success">{deleteSuccess}</p>}
             </div>
 
             <button onClick={() => getUsers()}>View Users</button>
@@ -107,7 +111,7 @@ function AdminUser () {
                         </div>
                     );
                 })}
-                {getError && <p>{getError}</p>}
+                {getError && <p className="error">{getError}</p>}
             </div>
 
         </div>

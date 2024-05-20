@@ -11,15 +11,28 @@ function Admin() {
     return (
         <div>
             <Header page='admin'/>
-            <button onClick={() => setActiveComponent('users')}>Edit Users</button>
-            <button onClick={() => setActiveComponent('food')}>Edit Food</button>
-            <button onClick={() => setActiveComponent('physicalActivities')}>Edit Physical Activities</button>
-            <button onClick={() => setActiveComponent('requests')}>Edit Requests</button>
+            <div className="admin-container">
+                <button
+                    className={activeComponent === 'users' ? 'active' : ''}
+                    onClick={() => setActiveComponent('users')}>Edit Users</button>
 
-            {activeComponent === 'users' && <AdminUser />}
-            {activeComponent === 'food' && <AdminFood />}
-            {activeComponent === 'physicalActivities' && <AdminPhysicalActivity />}
-            {activeComponent === 'requests' && <AdminRequest />}
+                <button 
+                    className={activeComponent === 'food' ? 'active' : ''}
+                    onClick={() => setActiveComponent('food')}>Edit Food</button>
+
+                <button 
+                    className={activeComponent === 'physicalActivities' ? 'active' : ''}
+                    onClick={() => setActiveComponent('physicalActivities')}>Edit Physical Activities</button>
+
+                <button 
+                    className={activeComponent === 'requests' ? 'active' : ''}
+                    onClick={() => setActiveComponent('requests')}>Edit Requests</button>
+
+                {activeComponent === 'users' && <AdminUser />}
+                {activeComponent === 'food' && <AdminFood />}
+                {activeComponent === 'physicalActivities' && <AdminPhysicalActivity />}
+                {activeComponent === 'requests' && <AdminRequest />}
+            </div>
         </div>
     );
 }

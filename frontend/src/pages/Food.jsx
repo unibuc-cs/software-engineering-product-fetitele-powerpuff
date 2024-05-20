@@ -36,6 +36,13 @@ function Food() {
 
     const getAllFoods = async () => {
         setAllError(null);
+
+        // Toggle showing all foods
+        if (foods.length !== 0) {
+            setFoods([]);
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get('https://localhost:7094/api/Food', {
@@ -157,92 +164,98 @@ function Food() {
     return (
         <div>
             <Header page='food'/>
-            <button onClick={getAllFoods}>See All</button>
+            <div className="item-container">
+                <h2>See All</h2>
+                <button onClick={getAllFoods}>See All</button>
 
-            {foods.map(food => {
-                return (<FoodItem
+                <div>
+                    {foods.map(food => {
+                        return (<FoodItem
+                            key={food.name}
+                            name={food.name}
+                            calories={food.calories}
+                            carbohydrates={food.carbohydrates}
+                            fats={food.fats}
+                            proteins={food.proteins}
+                        />
+                        );
+                    })}    
+                </div>
+                
+                {allError && <p className="error">{allError}</p>}
+
+                <h2>Search Food</h2>
+                <input className="search-item-input" type="text" placeholder="Search food" 
+                    value={foodName} onChange={(event) => {setFoodName(event.target.value)}} />
+                <button className="search-item-button" onClick={getByName}>Search</button>
+
+                {food && <FoodItem 
                     key={food.name}
                     name={food.name}
                     calories={food.calories}
                     carbohydrates={food.carbohydrates}
                     fats={food.fats}
-                    proteins={food.proteins}
-                />
-                );
-            })}    
-            {allError && <p>{allError}</p>}
+                    proteins={food.proteins}   
+                />}
 
-            <h2>Search Food</h2>
-            <input type="text" placeholder="Search food" 
-                   value={foodName} onChange={(event) => {setFoodName(event.target.value)}} />
-            <button onClick={getByName}>Search</button>
+                {food && <div>
+                    <label htmlFor="grams">Grams</label>
+                    <input id="grams" type="number" placeholder="Grams"
+                            value={grams} onChange={(event) => setGrams(event.target.value)} />
+                    <button className="add-item-day" onClick={() => addFoodToDay(food.name, grams)}>Add to Day</button>
+                </div>
+                }
+                {food && !food.public && <div>
+                    <button onClick={() => createPublicRequest(food.name)}>Create Request To Make Food Public</button>
+                </div>}
 
-            {food && <FoodItem 
-                key={food.name}
-                name={food.name}
-                calories={food.calories}
-                carbohydrates={food.carbohydrates}
-                fats={food.fats}
-                proteins={food.proteins}   
-            />}
+                {nameError && <p className="error">{nameError}</p>}
+                {addToDayError && <p className="error">{addToDayError}</p>}
+                {requestError && <p className="error">{requestError}</p>}
+                {requestSuccess && <p className="success">{requestSuccess}</p>}
 
-            {food && <div>
-                <label htmlFor="grams">Grams</label>
-                <input type="number" placeholder="Grams"
-                          value={grams} onChange={(event) => setGrams(event.target.value)} />
-                <button onClick={() => addFoodToDay(food.name, grams)}>Add to Day</button>
+                <h2>Add Food</h2>
+                <form onSubmit={addFood}>
+                    <div>
+                        <label htmlFor="food-name">Name</label>
+                        <input type="text" id="food-name" 
+                            value={name} onChange={(event) => setName(event.target.value)}
+                            placeholder="Name" />
+                    </div>
+
+                    <div>
+                        <label htmlFor="calories">Calories</label>
+                        <input type="number" id="calories"
+                            value={calories} onChange={(event) => setCalories(event.target.value)}
+                            placeholder="Calories per 100g" />
+                    </div>
+    
+                    <div>
+                        <label htmlFor="carbohydrates">Carbohydrates</label>
+                        <input type="number" id="carbohydrates"
+                            value={carbohydrates} onChange={(event) => setCarbohydrates(event.target.value)}
+                            placeholder="Carbohydrates per 100g" />
+                    </div>
+
+                    <div>
+                        <label htmlFor="fats">Fats</label>
+                        <input type="number" id="fats"
+                            value={fats} onChange={(event) => setFats(event.target.value)}
+                            placeholder="Fats per 100g" />
+                    </div>
+
+                    <div>
+                        <label htmlFor="proteins">Proteins</label>
+                        <input type="number" id="proteins"
+                            value={proteins} onChange={(event) => setProteins(event.target.value)}
+                            placeholder="Proteins per 100g" />
+                    </div>
+
+                    {addError && <p className="error">{addError}</p>}
+                    {addSucces && <p className="success">{addSucces}</p>}
+                    <button type="submit">Add Food</button>
+                </form>
             </div>
-            }
-            {food && !food.public && <div>
-                <button onClick={() => createPublicRequest(food.name)}>Create Request To Make Food Public</button>
-            </div>}
-
-            {nameError && <p>{nameError}</p>}
-            {addToDayError && <p>{addToDayError}</p>}
-            {requestError && <p>{requestError}</p>}
-            {requestSuccess && <p>{requestSuccess}</p>}
-
-            <h2>Add Food</h2>
-            <form onSubmit={addFood}>
-                <div>
-                    <label htmlFor="food-name">Name</label>
-                    <input type="text" id="food-name" 
-                           value={name} onChange={(event) => setName(event.target.value)}
-                           placeholder="Name" />
-                </div>
-
-                <div>
-                    <label htmlFor="calories">Calories</label>
-                    <input type="number" id="calories"
-                           value={calories} onChange={(event) => setCalories(event.target.value)}
-                           placeholder="Calories per 100g" />
-                </div>
- 
-                <div>
-                    <label htmlFor="carbohydrates">Carbohydrates</label>
-                    <input type="number" id="carbohydrates"
-                           value={carbohydrates} onChange={(event) => setCarbohydrates(event.target.value)}
-                           placeholder="Carbohydrates per 100g" />
-                </div>
-
-                <div>
-                    <label htmlFor="fats">Fats</label>
-                    <input type="number" id="fats"
-                           value={fats} onChange={(event) => setFats(event.target.value)}
-                           placeholder="Fats per 100g" />
-                </div>
-
-                <div>
-                    <label htmlFor="proteins">Proteins</label>
-                    <input type="number" id="proteins"
-                           value={proteins} onChange={(event) => setProteins(event.target.value)}
-                           placeholder="Proteins per 100g" />
-                </div>
-
-                {addError && <p>{addError}</p>}
-                {addSucces && <p>{addSucces}</p>}
-                <button type="submit">Add Food</button>
-            </form>
         </div>
     );
 }

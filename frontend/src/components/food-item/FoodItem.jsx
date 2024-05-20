@@ -2,7 +2,7 @@ import React from "react";
 
 function FoodItem(props) {
     return (
-        <div>
+        <div className="item">
             <h3>{props.name}</h3>
             <p>Calories: {props.calories}</p>
             <p>Carbohydrates: {props.carbohydrates}</p>

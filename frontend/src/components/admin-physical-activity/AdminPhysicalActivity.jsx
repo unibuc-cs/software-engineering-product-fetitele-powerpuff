@@ -40,6 +40,12 @@ function AdminPhysicalActivity() {
     // Get all physical activities
     const getPhysicalActivities = async () => {
         setGetError('');
+
+        if (physicalActivities.length !== 0) {
+            setPhysicalActivities([]);
+            return;
+        }
+
         try {
             const response = await axios.get('https://localhost:7094/api/PhysicalActivities/for-admin', {
                 headers: {
@@ -76,7 +82,6 @@ function AdminPhysicalActivity() {
             }, 3000);
             setCreateName('');
             setCreateCalories('');
-            getPhysicalActivities();
         } 
         catch (error) {
             console.log("Error creating physical activity: ", error.response.data);
@@ -101,7 +106,6 @@ function AdminPhysicalActivity() {
                 setDeleteSuccess('');
             }, 3000);
             setDeleteName('');
-            getPhysicalActivities();
         }
         catch (error) {
             console.log("Error deleting physical activity: ", error.response.data);
@@ -127,7 +131,6 @@ function AdminPhysicalActivity() {
             }, 3000);
             setPairMuscleName('');
             setPairActivityName('');
-            getPhysicalActivities();
         }
         catch (error) {
             console.log("Error pairing muscle with activity: ", error.response.data);
@@ -153,7 +156,6 @@ function AdminPhysicalActivity() {
             }, 3000);
             setUnpairMuscleName('');
             setUnpairActivityName('');
-            getPhysicalActivities();
         }
         catch (error) {
             console.log("Error unpairing muscle with activity: ", error.response.data);
@@ -164,6 +166,12 @@ function AdminPhysicalActivity() {
     // Get all muscles
     const getMuscles = async () => {
         setGetMusclesError('');
+
+        if (muscles.length !== 0) {
+            setMuscles([]);
+            return;
+        }
+
         try {
             const response = await axios.get('https://localhost:7094/api/Muscles', {
                 headers: {
@@ -198,7 +206,6 @@ function AdminPhysicalActivity() {
                 setMuscleCreateSuccess('');
             }, 3000);
             setMuscleCreateName('');
-            getMuscles();
         }
         catch (error) {
             console.log("Error creating muscle: ", error.response.data);
@@ -223,8 +230,6 @@ function AdminPhysicalActivity() {
                 setMuscleDeleteSuccess('');
             }, 3000);
             setMuscleDeleteName('');
-            getMuscles();
-            getPhysicalActivities();
         }
         catch (error) {
             console.log("Error deleting muscle: ", error.response.data);
@@ -233,10 +238,10 @@ function AdminPhysicalActivity() {
     }
 
     return (
-        <div>
+        <div className='edit-container'>
             <h1>Edit Physical Activities</h1>
 
-            <div id="add-physical-activity-admin">
+            <div id="add-physical-activity-admin" className='form-container'>
                 <h3>Add a physical activity</h3>
                 <form onSubmit={createPhysicalActivity}>
                     <div>
@@ -250,12 +255,12 @@ function AdminPhysicalActivity() {
                                onChange={(event) => setCreateCalories(event.target.value)} />
                     </div>
                     <button type="submit">Add Physical Activity</button>
-                    {createError && <p>{createError}</p>}
-                    {createSuccess && <p>{createSuccess}</p>}
+                    {createError && <p className='error'>{createError}</p>}
+                    {createSuccess && <p className='success'>{createSuccess}</p>}
                 </form>
             </div>
 
-            <div id="delete-physical-activity-admin">
+            <div id="delete-physical-activity-admin" className='form-container'>
                 <h3>Delete a physical activity</h3>
                 <form onSubmit={deletePhysicalActivity}>
                     <div>
@@ -264,12 +269,12 @@ function AdminPhysicalActivity() {
                                onChange={(event) => setDeleteName(event.target.value)} />
                     </div>
                     <button type="submit">Delete Physical Activity</button>
-                    {deleteError && <p>{deleteError}</p>}
-                    {deleteSuccess && <p>{deleteSuccess}</p>}
+                    {deleteError && <p className='error'>{deleteError}</p>}
+                    {deleteSuccess && <p className='success'>{deleteSuccess}</p>}
                 </form>
             </div>
 
-            <div id="pair-muscle-activity-admin">
+            <div id="pair-muscle-activity-admin" className='form-container'>
                 <h3>Pair a muscle with a physical activity</h3>
                 <form onSubmit={pairMuscleActivity}>
                     <div>
@@ -283,12 +288,12 @@ function AdminPhysicalActivity() {
                                 onChange={(event) => setPairActivityName(event.target.value)} />
                     </div>
                     <button type="submit">Pair Muscle with Activity</button>
-                    {pairError && <p>{pairError}</p>}
-                    {pairSuccess && <p>{pairSuccess}</p>}
+                    {pairError && <p className='error'>{pairError}</p>}
+                    {pairSuccess && <p className='success'>{pairSuccess}</p>}
                 </form>
             </div>
 
-            <div id="unpair-muscle-activity-admin">
+            <div id="unpair-muscle-activity-admin" className='form-container'>
                 <h3>Unpair a muscle with a physical activity</h3>
                 <form onSubmit={unpairMuscleActivity}>
                     <div>
@@ -302,8 +307,8 @@ function AdminPhysicalActivity() {
                                 onChange={(event) => setUnpairActivityName(event.target.value)} />
                     </div>
                     <button type="submit">Unpair Muscle with Activity</button>
-                    {unpairError && <p>{unpairError}</p>}
-                    {unpairSuccess && <p>{unpairSuccess}</p>}
+                    {unpairError && <p className='error'>{unpairError}</p>}
+                    {unpairSuccess && <p className='success'>{unpairSuccess}</p>}
                 </form>
             </div>
 
@@ -318,10 +323,10 @@ function AdminPhysicalActivity() {
                         muscles={physicalActivity.muscles}
                     />);
                 })}
-                {getError && <p>{getError}</p>}
+                {getError && <p className='error'>{getError}</p>}
             </div>
 
-            <div id="add-muscle-admin">
+            <div id="add-muscle-admin" className='form-container'>
                 <h3>Add a muscle</h3>
                 <form onSubmit={createMuscle}>
                     <div>
@@ -330,12 +335,12 @@ function AdminPhysicalActivity() {
                                 onChange={(event) => setMuscleCreateName(event.target.value)} />
                     </div>
                     <button type="submit">Add Muscle</button>
-                    {muscleCreateError && <p>{muscleCreateError}</p>}
-                    {muscleCreateSuccess && <p>{muscleCreateSuccess}</p>}
+                    {muscleCreateError && <p className='error'>{muscleCreateError}</p>}
+                    {muscleCreateSuccess && <p className='success'>{muscleCreateSuccess}</p>}
                 </form>
             </div>
 
-            <div id="delete-muscle-admin">
+            <div id="delete-muscle-admin" className='form-container'>
                 <h3>Delete a muscle</h3>
                 <form onSubmit={deleteMuscle}>
                     <div>
@@ -344,8 +349,8 @@ function AdminPhysicalActivity() {
                                 onChange={(event) => setMuscleDeleteName(event.target.value)} />
                     </div>
                     <button type="submit">Delete Muscle</button>
-                    {muscleDeleteError && <p>{muscleDeleteError}</p>}
-                    {muscleDeleteSuccess && <p>{muscleDeleteSuccess}</p>}
+                    {muscleDeleteError && <p className='error'>{muscleDeleteError}</p>}
+                    {muscleDeleteSuccess && <p className='success'>{muscleDeleteSuccess}</p>}
                 </form>
             </div>
 
@@ -359,7 +364,7 @@ function AdminPhysicalActivity() {
                         </div>
                     );
                 })}
-                {getMusclesError && <p>{getMusclesError}</p>}
+                {getMusclesError && <p className='error'>{getMusclesError}</p>}
             </div>
         </div>
     );

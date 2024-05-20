@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import axios from 'axios';
 
-import './login.css'
-
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -30,6 +28,7 @@ function Login() {
 
             localStorage.setItem('token', token);
             localStorage.setItem('expiration', expiration);
+            window.dispatchEvent(new Event('login'));
 
             // Then navigate to user's profile
             navigate('/profile');
@@ -41,7 +40,7 @@ function Login() {
     } 
 
     return (
-        <div>
+        <div className="form-container">
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="login-email">Email</label>
@@ -58,7 +57,7 @@ function Login() {
                 </div>
 
                 <button type="submit">Login</button>
-                {error && <p>{error}</p>}
+                {error && <p className="error">{error}</p>}
             </form>
         </div>
     );

@@ -122,14 +122,9 @@ namespace healthy_lifestyle_web_app.Repositories
         public async Task<bool> PostDayAsync(Entities.Profile profile)
         {
             Goal goal = profile.Goal;
-            WeightEvolution? we = await _weightEvolutionRepository.GetByProfileIdAndDateAsync(profile.Id, DateOnly.FromDateTime(DateTime.Today));
+            double we = profile.Weight;
 
-            if (we == null)
-            {
-                return false;
-            }
-
-            int calories = (int)(we.Weight * 38);
+            int calories = (int)(we * 38);
 
             if (goal == Goal.Lose)
             {

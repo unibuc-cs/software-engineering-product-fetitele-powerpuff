@@ -1,0 +1,426 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+}
+
+/* Form styles */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.form-container form {
+    background-color: #ececec;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.form-container form div {
+    margin-bottom: 15px;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #01352c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.form-container button:hover {
+    background-color: #004445;
+}
+
+.form-container p {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Profile styles */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #ececec;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+.profile-container h3 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    color: #343a40;
+    font-weight: bold;
+}
+
+.profile-container p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #343a40;
+}
+
+.profile-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #01352c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.profile-container button:hover {
+    background-color: #004445;
+}
+
+.profile-container button.delete {
+    background-color: #dc3545;
+}
+
+.profile-container button.delete:hover {
+    background-color: #c82333;
+}
+
+/* Food styles */
+.item-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ececec;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Button Styles */
+.item-container button {
+    padding: 10px 15px;
+    background-color: #01352c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.item-container button:hover {
+    background-color: #004445;
+}
+
+.search-item-input {
+    width: 90%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.search-item-button, .add-item-day {
+    margin-left: 5px;
+}
+
+.item-container form {
+    margin-top: 20px;
+}
+
+.item-container form div {
+    margin-bottom: 15px;
+}
+
+.item-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.item-container form input, select, #grams, #minutes {
+    width: 15%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.item-container p {
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.item:first-of-type {
+    margin-top: 1%;
+}
+
+.item {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; 
+    text-align: center;
+}
+
+.item h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #343a40;
+}
+
+.item p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #343a40;
+}
+
+.item ul {
+    list-style: none;
+}
+
+/* Day styles */
+#day-container, #change-day-buttons {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ececec;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#day-container h1 {
+    font-size: 28px;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+#day-container h2 {
+    font-size: 24px;
+    color: #343a40;
+    margin-top: 20px;
+}
+
+#day-container h3 {
+    font-size: 20px;
+    color: #343a40;
+    margin-top: 10px;
+}
+
+#day-container button, .change-day {
+    padding: 10px 15px;
+    background-color: #01352c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+#day-container button:hover, .change-day:hover {
+    background-color: #004445;
+}
+
+#day-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+#day-container li {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+#day-container li h3, p {
+    color: #343a40;
+    margin: 5px 0;
+}
+
+#day-container input[type="number"] {
+    width: 60px;
+    padding: 5px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#day-container br {
+    display: block;
+    margin: 20px 0; 
+    content: '';
+    border-top: 1px solid #ccc;
+}
+
+/* Admin styles */
+.admin-container {
+    background-color: #ececec;
+    text-align: center;
+    padding: 5px;
+}
+
+.admin-container button {
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #01352c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.admin-container button:hover {
+    background-color: #004445;
+}
+
+.admin-container button:focus {
+    outline: none;
+    box-shadow: 0 0 5px #004445;
+}
+
+.admin-container button.active {
+    background-color: #004445;
+}
+
+.admin-container button:not(:last-child) {
+    margin-right: 10px;
+}
+
+.active-component {
+    margin-top: 20px;
+}
+
+/* Admin components styles */
+.edit-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ececec;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.edit-container h1 {
+    font-size: 28px;
+    color: #343a40;
+    margin-bottom: 20px;
+}
+
+.edit-container div {
+    margin-bottom: 20px;
+}
+
+.edit-container input[type="email"], input[type="text"] {
+    width: 60%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.edit-container input[type="text"] {
+    width: 40%;
+}
+
+.edit-container button {
+    padding: 10px 15px;
+    background-color: #01352c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.edit-container button:hover {
+    background-color: #004445;
+}
+
+.edit-container p {
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+#admin-users div, #admin-foods div, 
+#admin-physical-activities .admin-activity-item, #admin-muscles div, 
+#admin-requests div {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+#admin-users h3, #admin-muscles h3, #admin-requests h3, #admin-foods h3, .admin-activity-item h3 {
+    font-size: 16px;
+    color: #343a40;
+    margin-bottom: 5px;
+}
+
+#admin-users p, #admin-muscles p, #admin-requests p, #admin-foods p, .admin-activity-item p {
+    font-size: 16px;
+    color: #343a40;
+    margin: 5px 0;
+}
+
+.admin-activity-item div p {
+    font-size: 14px;
+    color: #343a40;
+}
+
+.button-container {
+    text-align: center;
+}
+
+#requests-button {
+    margin-top: 20px;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
