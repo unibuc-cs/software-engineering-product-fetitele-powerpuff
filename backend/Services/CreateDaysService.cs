@@ -31,5 +31,14 @@ namespace healthy_lifestyle_web_app.Services
                 return false;
             }
         }
+
+        public async Task<bool> CreateDayForNewUser(Profile profile)
+        {
+            if (await _dayRepository.PostDayAsync(profile))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
