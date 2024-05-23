@@ -2,6 +2,7 @@
 using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using healthy_lifestyle_web_app.Repositories;
+using healthy_lifestyle_web_app.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,15 +15,18 @@ namespace healthy_lifestyle_web_app.Controllers
         private readonly IProfileRepository _profileRepository;
         private readonly IApplicationUserRepository _applicationUserRepository;
         private readonly IWeightEvolutionRepository _weightEvolutionRepository;
+        private readonly CreateDaysService _createDaysService;
         private readonly IMapper _mapper;
 
         public ProfilesController(IProfileRepository profileRepository,
-                IApplicationUserRepository applicationUserRepository, IWeightEvolutionRepository weightEvolutionRepository, IMapper mapper)
+                IApplicationUserRepository applicationUserRepository, IWeightEvolutionRepository weightEvolutionRepository, 
+                CreateDaysService createDaysService, IMapper mapper)
         {
             _profileRepository = profileRepository;
             _applicationUserRepository = applicationUserRepository;
-            _mapper = mapper;
             _weightEvolutionRepository = weightEvolutionRepository;
+            _createDaysService = createDaysService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -94,8 +98,13 @@ namespace healthy_lifestyle_web_app.Controllers
             {
                 if (await _weightEvolutionRepository.PostAsync(profile.Id, profile.Weight))
                 {
-                    return Ok("Profile created successfully");
+                    if (await _createDaysService.CreateDayForNewUser(profile))
+                    {
+                        return Ok("Profile created successfully");
+                    }
+                    return BadRequest("Error creating day");
                 }
+                return BadRequest("Error creating weight evolution");
             }
             return BadRequest("Profile already exists");
         }
