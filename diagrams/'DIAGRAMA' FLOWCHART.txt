@@ -1,0 +1,50 @@
+Flowchart
+
+
+-> Ma inregistrez - email valid, cu cont ->mesaj + ma pune sa ma loghez cu el
+                          - contul e invalid -> incerc dinou
+                          - email valid , fara cont -> se aproba, ma duc la login
+
+Ca admin - AFISEZI UTILIZATORI- daca exista - afisez lista
+                                                   - daca nu exista - primesc mesaj ca nu avem inca utilizatori
+                - STERGE UTILIZATORI - dupa ID/ NUME -> daca exista - s-a sters
+                                                                                    daca nu exista - primesc mesaj ca nu exista id-ul/numele
+                 - PROMOTE UTILIZATOR - daca e user -> devine admin
+                                                         - daca nu -> primesc mesaj ca e deja admin
+DE AICI ORICE VREI 
+1. nu ai profil -> primesti mesaj sa iti faci profil -> te inregistrezi
+2  ai profil -> PROFIL - CREATE-> iti faci profil
+                                 - VEZI PROFILUL
+                                 - STERGI PROFIL - exista -> se sterge
+                                                             - nu exista -> primesti mesaj
+                                - UPDATE PROFIL pentru name/birthday/wieght/height/goal -> se afiseaza profilul updatat
+            -> DAY - VEZI TOATE ZILELE , FILTREZI DUPA utilizator/data/zi curenta/food-calories/activity-calories/
+food-calories-after-date, activity-calories-after-date, average-food-calories, average-activity-calories
+                                        - daca exista zile in functie de filtre -> le afiseaza
+                                        - daca nu sunt -> primesti mesaj 
+                               - STERGI MANCARE/ ACTIVITATE DIN ZI -> daca exista , se va sterge
+                                                                                               -> daca nu, primesti mesaj     
+                               - ADAUGI MANCARE/ACTIVITATE FIZICA -> se afiseaza lista completa
+                               - MODIFICI GRAMELE / MINUTE unui fel de mancare/ exercitiu -> se afiseaza lista actualizata
+              -> MUSCLE - AFISEZI MUSCHII -> primesti lista cu toti
+                                 - ADAUGI MUSCHI -> se adauga la lista existenta
+                                 - STERGI MUSCHI - exista -> se sterge
+                                                              - nu exista -> primesti mesaj
+              -> Physical Activities - AFISEZ ACTIVITATILE - exista -> vezi lista cu toate
+                                                                                  - nu exista -> primesti mesaj
+                                              - AFISEZI CU FILTRE PENTRU nume/ muschi/ admin(vezi si id) - exista -> lista cu cele care corespund filtrelor
+                                                                                                                                 -- nu exista -> primesti mesaj
+                                               - ADAUGI ACTIVITATE -> se adauga in lista cu toate si le vezi
+                                               - STERGI ACTIVITATE -> exista -> se sterge si vezi lista cu ce mai e
+                                                                                  -- nu exista -> primesti mesaj
+              -> FOOD -- AFISEZI MANCAREA ca user/admin - DACA EXISTA PRIMESTI LISTA(admin-> tot+id)
+                             -- ADAUGI MANCARE - ca admin se adauga direct la lista
+                                                               - ca user o vezi doar in lista personala
+                             -- AFISARE MANCARE DUPA nume - daca exista o afisezi 
+                                                                                   - daca nu exista primes mesaj
+               -> REQUEST - AFISEZ CERERILE / LE AFISEZ DUPA ID(ca admin) - primesc lista cu toate requesturile de la user
+                                    - DETELE -> sterg un request -> mancarea nu e aprobata si ramane doar in lista locala a userului
+                                     - ADAUG REQUEST( ca user) -> SE ADAUGA IN LISTA CERERILOR, DACA ADMINUL O APROBA-> APARE IN LISTA DE MANCARE PUBLICA
+               -> WeightEvolutions - iti vezi propriul profil la diverse date pentru a urmari evolutia
+
+    
