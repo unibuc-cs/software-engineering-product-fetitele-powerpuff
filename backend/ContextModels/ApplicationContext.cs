@@ -28,6 +28,10 @@ namespace healthy_lifestyle_web_app.ContextModels
             modelBuilder.Entity<PhysicalActivity>()
                .HasIndex(p => p.Name)
                .IsUnique();
+
+            modelBuilder.Entity<Food>()
+               .HasIndex(m => m.Name)
+               .IsUnique();
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }

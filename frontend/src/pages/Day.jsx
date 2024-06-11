@@ -218,11 +218,11 @@ function Day() {
     };
 
     const sumCalories = (dayFoods) => {
-        return dayFoods.reduce((acc, food) => acc + food.details.calories, 0);
+        return Math.floor(dayFoods.reduce((acc, food) => acc + food.details.calories * food.grams / 100, 0));
     }
 
     const activeCalories = (dayActivities, weight) => {
-        return dayActivities.reduce((acc, activity) => acc + activityCalories(activity, weight), 0);
+        return Math.floor(dayActivities.reduce((acc, activity) => acc + activityCalories(activity, weight), 0));
     }
 
     return (

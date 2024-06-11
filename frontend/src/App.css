@@ -175,6 +175,10 @@ body {
     box-sizing: border-box;
 }
 
+#goal {
+    width: 40%;
+}
+
 .item-container p {
     font-size: 14px;
     margin-top: 10px;
