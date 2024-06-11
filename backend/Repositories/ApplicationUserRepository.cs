@@ -34,6 +34,14 @@ namespace healthy_lifestyle_web_app.Repositories
                 return false;
             }
 
+            // Get the user's foods
+            var foods = await _applicationContext.Foods.Where(f => f.ApplicationUserId == id).ToListAsync();
+            if (foods != null && foods.Any())
+            {
+                // Delete the user's foods
+                _applicationContext.Foods.RemoveRange(foods);
+            }
+
             _applicationContext.Users.Remove(user);
             await _applicationContext.SaveChangesAsync();
             return true;
@@ -45,6 +53,14 @@ namespace healthy_lifestyle_web_app.Repositories
             if (user == null)
             {
                 return false;
+            }
+
+            // Get the user's foods
+            var foods = await _applicationContext.Foods.Where(f => f.ApplicationUserId == user.Id).ToListAsync();
+            if (foods != null && foods.Any())
+            {
+                // Delete the user's foods
+                _applicationContext.Foods.RemoveRange(foods);
             }
 
             _applicationContext.Users.Remove(user);

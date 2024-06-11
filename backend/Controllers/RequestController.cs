@@ -120,7 +120,10 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("Food not found");
             }
 
+            // Setam public = true si utilizatorul = null
             food.Public = true;
+            food.ApplicationUserId = null;
+            food.ApplicationUser = null;
 
             if (await _foodRepository.UpdateAsync(food))
             {
