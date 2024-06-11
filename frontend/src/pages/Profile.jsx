@@ -244,19 +244,33 @@ function Profile() {
         fetchProfileInfo();
     }, []); // Empty dependency array => runs once on mount
 
-     // This runs every time the profileInfo changes
-     useEffect(() => {
+    // This runs every time the profileInfo changes
+    useEffect(() => {
         if (profileInfo) {
             getWeightEvolution().then(data => {
                 // Sort data by date
                 const sortedData = data.sort((a, b) => new Date(a.date) - new Date(b.date));
     
+                // Get all dates from the first date in the weight evolution (the date the profile was created) to the current date
+                const startDate = new Date(sortedData[0].date);
+                const endDate = new Date();
+                const allDates = [];
+                for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+                    allDates.push(new Date(d));
+                }
+    
+                // For each date find the most recent weight change before that date
+                const allWeights = allDates.map(date => {
+                    const mostRecentWeight = sortedData.filter(entry => new Date(entry.date) <= date).pop();
+                    return mostRecentWeight ? mostRecentWeight.weight : sortedData[0].weight;
+                });
+    
                 const chartData2 = {
-                    labels: sortedData.map(entry => new Date(entry.date).toLocaleDateString()),
+                    labels: allDates.map(date => date.toLocaleDateString()),
                     datasets: [
                         {
                             label: 'Weight Evolution',
-                            data: sortedData.map(entry => entry.weight),
+                            data: allWeights,
                         },
                     ],
                 };
