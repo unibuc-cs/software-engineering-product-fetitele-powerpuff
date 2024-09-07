@@ -6,13 +6,17 @@ import Header from "../components/header/Header";
 import FoodItem from "../components/food-item/FoodItem";
 
 function Food() {
+    // Get all foods
     const [foods, setFoods] = useState([]);
+    const [gramsObj, setGramsObj] = useState({});
     const [allError, setAllError] = useState(null);
 
+    // Get food by name
     const [foodName, setFoodName] = useState(''); 
     const [food, setFood] = useState(null);
     const [nameError, setNameError] = useState(null);
 
+    // Create a new, private food
     const [name, setName] = useState('');
     const [calories, setCalories] = useState(0);
     const [carbohydrates, setCarbohydrates] = useState(0);
@@ -21,9 +25,11 @@ function Food() {
     const [addError, setAddError] = useState(null);
     const [addSucces, setAddSucces] = useState(null);
 
+    // Add a food to a day
     const [grams, setGrams] = useState(0);
     const [addToDayError, setAddToDayError] = useState(null);
 
+    // Make a request
     const [requestError, setRequestError] = useState(null);
     const [requestSuccess, setRequestSuccess] = useState(null);
 
@@ -81,8 +87,9 @@ function Food() {
         setAddError(null);
         setAddSucces(null);
 
-        if (calories <= 0 || carbohydrates <= 0 || fats <= 0 || proteins <= 0) {
-            setAddError('Please enter values greater than 0 for all fields.');
+        // Validate food data
+        if (calories <= 0 || carbohydrates < 0 || fats < 0 || proteins < 0) {
+            setAddError('Please enter values greater or equal to 0 for all fields.');
             return;
         }
 
@@ -102,6 +109,7 @@ function Food() {
             });
 
             console.log(response.status);
+            // Clear the form
             setName('');
             setCalories(0);
             setCarbohydrates(0);
@@ -114,6 +122,7 @@ function Food() {
         }
     };
 
+    // Add a food to a day, grams must be positive
     const addFoodToDay = async (foodNameDay, grams) => {
         if (grams <= 0) {
             setAddToDayError('Please enter a value greater than 0 for grams.');
@@ -141,6 +150,30 @@ function Food() {
         }
     }
 
+    // Add food to day, for the get all foods section
+    const addFoodToDayObj = async (foodNameDay, grams) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.put('https://localhost:7094/api/Days/add-food', {
+                date: formatDate(new Date()),
+                foodName: foodNameDay,
+                grams: grams
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            handleGramsObj(foodNameDay, 0);
+            console.log(response.status);
+        } 
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    // Users can create requests to make their private foods public
     const createPublicRequest = async (foodNameRequest) => {
         setRequestError(null);
         try {
@@ -161,6 +194,15 @@ function Food() {
         }
     }
 
+    // For the get all foods section, update the 
+    // grams value for a food
+    const handleGramsObj = (foodName, value) => {
+        setGramsObj({
+            ...gramsObj,
+            [foodName]: value
+        });
+    }
+
     return (
         <div>
             <Header page='food'/>
@@ -170,14 +212,22 @@ function Food() {
 
                 <div>
                     {foods.map(food => {
-                        return (<FoodItem
-                            key={food.name}
-                            name={food.name}
-                            calories={food.calories}
-                            carbohydrates={food.carbohydrates}
-                            fats={food.fats}
-                            proteins={food.proteins}
-                        />
+                        return (<div> 
+                            <FoodItem
+                                key={food.name}
+                                name={food.name}
+                                calories={food.calories}
+                                carbohydrates={food.carbohydrates}
+                                fats={food.fats}
+                                proteins={food.proteins}
+                            />
+                            <input className="grams" type="number" placeholder="Grams"
+                                value={gramsObj[food.name]} 
+                                onChange={(event) => handleGramsObj(food.name, event.target.value)} 
+                            />
+                            <button className="add-item-day" 
+                                onClick={() => addFoodToDayObj(food.name, gramsObj[food.name])}>Add to Day</button>
+                        </div>
                         );
                     })}    
                 </div>
@@ -200,7 +250,7 @@ function Food() {
 
                 {food && <div>
                     <label htmlFor="grams">Grams</label>
-                    <input id="grams" type="number" placeholder="Grams"
+                    <input className="grams" type="number" placeholder="Grams"
                             value={grams} onChange={(event) => setGrams(event.target.value)} />
                     <button className="add-item-day" onClick={() => addFoodToDay(food.name, grams)}>Add to Day</button>
                 </div>

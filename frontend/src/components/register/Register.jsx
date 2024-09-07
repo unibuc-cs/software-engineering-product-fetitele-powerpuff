@@ -50,6 +50,8 @@ function Register() {
             localStorage.setItem('token', token);
             localStorage.setItem('expiration', expiration);
 
+            window.dispatchEvent(new Event('login'));
+
             // When registering there will be no profile
             // The user will be prompted to create it
             navigate('/profile');

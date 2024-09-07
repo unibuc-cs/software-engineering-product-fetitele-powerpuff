@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import './navbar.css';
 
 function Navbar() {
+    // If the user is not logged in => a login link is displayed
+    // After login it changes to a logout link
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
 
     // Set event listeners for login and logout events (they are dispatched from the respective pages)

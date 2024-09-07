@@ -1,5 +1,6 @@
 import React from "react";
 
+// Food item
 function FoodItem(props) {
     return (
         <div className="item">

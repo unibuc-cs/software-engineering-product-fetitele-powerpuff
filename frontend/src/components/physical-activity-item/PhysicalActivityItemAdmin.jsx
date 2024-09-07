@@ -1,5 +1,6 @@
 import React from "react";
 
+// COmponent for the admin page
 function PhysicalActivityItemAdmin(props) {
     const muscles = props.muscles.map(muscle => (
         <p key={muscle.id}>{muscle.name}</p>

@@ -6,17 +6,23 @@ import Header from "../components/header/Header";
 import PhysicalActivityItem from '../components/physical-activity-item/PhysicalActivityItem.jsx';
 
 function PhysicalActivity() {
+    // Get all activities
     const [physicalActivities, setPhysicalActivities] = useState([]);
+    const [minutesObj, setMinutesObj] = useState({});
     const [allError, setAllError] = useState(null);
 
+    // Get activity by name
     const [activityName, setActivityName] = useState('');
     const [activity, setActivity] = useState(null);
     const [nameError, setNameError] = useState(null);
 
+    // Get activities by targeted muscle
     const [muscleName, setMuscleName] = useState('');
     const [activitiesByMuscle, setActivitiesByMuscle] = useState([]);
+    const [minutesMuscleObj, setMinutesMuscleObj] = useState({});
     const [muscleError, setMuscleError] = useState(null);
 
+    // Add an activity to a day
     const [minutes, setMinutes] = useState(0);  
     const [addToDayError, setAddToDayError] = useState(null);
 
@@ -30,6 +36,7 @@ function PhysicalActivity() {
     const getAllActivites = async () => {
         setAllError(null);
 
+        // Toggle see all activities
         if (physicalActivities.length !== 0) {
             setPhysicalActivities([]);
             return;
@@ -70,6 +77,7 @@ function PhysicalActivity() {
         }
     };
 
+    // Get all activities that target the specified muscle
     const getByMuscle = async () => {
         setMuscleError(null);
         const token = localStorage.getItem('token');
@@ -89,6 +97,7 @@ function PhysicalActivity() {
         }
     };
 
+    // Add an activity to a day, minutes must be positive
     const addActivityToDay = async (activityNameDay, minutes) => {
         setAddToDayError(null);
         if (minutes <= 0) {
@@ -113,6 +122,63 @@ function PhysicalActivity() {
         }
     }
 
+    // Add to day for the get all activities section
+    const addActivityToDayObj = async (activityNameDay, minutes) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.put('https://localhost:7094/api/Days/add-activity', {
+                date: formatDate(new Date()),
+                activityName: activityNameDay,
+                minutes: minutes
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            handleMinutesObj(activityNameDay, 0);
+        } 
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    // Add to day for the bet by muscle section
+    const addActivityToDayMuscleObj = async (activityNameDay, minutes) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.put('https://localhost:7094/api/Days/add-activity', {
+                date: formatDate(new Date()),
+                activityName: activityNameDay,
+                minutes: minutes
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            handleMinutesMuscleObj(activityNameDay, 0);
+        } 
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    // For the get all activities section, update
+    // the minutes value for an activity
+    const handleMinutesObj = (activityName, value) => {
+        setMinutesObj({
+            ...minutesObj,
+            [activityName]: value
+        });
+    }
+
+    // Same as above for the get by muscle section
+    const handleMinutesMuscleObj = (activityName, value) => {
+        setMinutesMuscleObj({
+            ...minutesMuscleObj,
+            [activityName]: value
+        });
+    }
+
     return (
         <div>
             <Header page='physical-activity'/>
@@ -122,11 +188,22 @@ function PhysicalActivity() {
 
                 <div>
                     {physicalActivities && physicalActivities.map(physicalActivity => {
-                        return (<PhysicalActivityItem
-                            key={physicalActivity.name}
-                            name={physicalActivity.name}
-                            muscles={physicalActivity.muscles}
-                        />);
+                        return (
+                            <div> 
+                                <PhysicalActivityItem
+                                    key={physicalActivity.name}
+                                    name={physicalActivity.name}
+                                    muscles={physicalActivity.muscles}
+                                />
+                                <label htmlFor="minutes">Minutes</label>
+                                <input className="minutes" 
+                                    type="number" 
+                                    placeholder="Minutes" 
+                                    value={minutesObj[physicalActivity.name]} 
+                                    onChange={(event) => {handleMinutesObj(physicalActivity.name, event.target.value)}} />
+                                <button className="add-item-day" 
+                                    onClick={() => {addActivityToDayObj(physicalActivity.name, minutesObj[physicalActivity.name])}}>Add to Day</button>
+                            </div>);
                     })}
                 </div>
 
@@ -141,7 +218,7 @@ function PhysicalActivity() {
                 
                 {activity && <div>
                     <label htmlFor="minutes">Minutes</label>
-                    <input id="minutes" type="number" placeholder="Minutes" value={minutes} onChange={(event) => {setMinutes(event.target.value)}} />
+                    <input className="minutes" type="number" placeholder="Minutes" value={minutes} onChange={(event) => {setMinutes(event.target.value)}} />
                     <button className="add-item-day" onClick={() => {addActivityToDay(activity.name, minutes)}}>Add to Day</button>
                 </div>}
 
@@ -153,11 +230,22 @@ function PhysicalActivity() {
                 <button className="search-item-button" onClick={getByMuscle}>Search</button>
 
                 {activitiesByMuscle && activitiesByMuscle.map(activity => {
-                    return (<PhysicalActivityItem
-                        key={activity.name}
-                        name={activity.name}
-                        muscles={activity.muscles}
-                    />
+                    return (
+                        <div>
+                            <PhysicalActivityItem
+                                key={activity.name}
+                                name={activity.name}
+                                muscles={activity.muscles}
+                            />
+                            <label htmlFor="minutes">Minutes</label>
+                                <input className="minutes" 
+                                    type="number" 
+                                    placeholder="Minutes" 
+                                    value={minutesMuscleObj[activity.name]} 
+                                    onChange={(event) => {handleMinutesMuscleObj(activity.name, event.target.value)}} />
+                                <button className="add-item-day" 
+                                    onClick={() => {addActivityToDayMuscleObj(activity.name, minutesMuscleObj[activity.name])}}>Add to Day</button>
+                        </div>
                     );
                 })}
                 {muscleError && <p className="error">{muscleError}</p>}

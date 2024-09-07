@@ -23,6 +23,7 @@ function Day() {
 
     const isCurrentDate = formatDate(date) === formatDate(new Date());
 
+    // Get a day by date
     const getDay = async (dateString) => {
         const formattedDate = formatDate(new Date(dateString));
         try {
@@ -59,6 +60,7 @@ function Day() {
         try {
             const day = await getDay(date);
 
+            // Get foods and activity info for the given day
             const dayFoodsPromises = day.dayFoods.map(async (food) => {
                 const response = await axios.get(`https://localhost:7094/api/Food/by-id/${food.foodId}`, {
                     headers: {
@@ -82,6 +84,7 @@ function Day() {
             
             const weight = await getWeight(date);
 
+            // Set all the day data
             const completeDayData = { ...day, dayFoods: dayFoods, 
                 dayPhysicalActivities: dayActivities, weight: weight };
             setCompleteDay(completeDayData);
@@ -94,6 +97,8 @@ function Day() {
         }
     };
 
+    // Update the grams for a food in a day
+    // Will recalculate calories consumed
     const updateGrams = async (foodName, grams) => {
         setUpdateGramsError(null);
         if (grams <= 0) {
@@ -119,7 +124,9 @@ function Day() {
             setUpdateGramsError(error.response.data);
         }
     };
-
+    
+    // Update minutes for an activity in a day
+    // Will also recalculate calories burned
     const updateMinutes = async (activityName, minutes) => {
         setUpdateMinutesError(null);
         if (minutes <= 0) { 
@@ -146,6 +153,8 @@ function Day() {
         }
     };
 
+    // Remove a food from a day
+    // Will also recalculate calories consumed
     const deleteFood = async (date, foodName) => {
         try {
             const formattedDate = formatDate(date);
@@ -161,6 +170,8 @@ function Day() {
         }
     };
 
+    // Remove an activity from a day
+    // Will also recalculate calories burned
     const deleteActivity = async (date, activityName) => {
         try {
             const formattedDate = formatDate(date);
@@ -176,6 +187,7 @@ function Day() {
         }
     };
 
+    // Set grams for each food in a day
     const updateGramsState = (day) => {
         const initialGrams = {};
         day.dayFoods.forEach(food => {
@@ -184,6 +196,7 @@ function Day() {
         setGrams(initialGrams);
     };
 
+    // Set minutes for each activity in a day
     const updateMinutesState = (day) => {
         const initialMinutes = {};
         day.dayPhysicalActivities.forEach(activity => {
@@ -195,6 +208,7 @@ function Day() {
     // Runs when the date changes (when the user clicks on the previous or next day buttons)
     useEffect(() => {
         setDayError(null);
+        // If day exists get all data about foods and activities from that day
         if (date) {
             getCompleteDay(date)
                 .then((day) => {
@@ -207,24 +221,44 @@ function Day() {
                 })
                 .catch((error) => {
                     console.error('Error fetching day:', error);
+                    // If day doesn't exist
                     setDayError('No data from this date');
                 });
         }
     }, [date]);
 
-    const foodCalories = (food) => Math.floor(food.details.calories * food.grams / 100); 
+    const foodCalories = (food) => Math.floor(food.details.calories * food.grams / 100);
+    const foodCarbs = (food) => Math.floor(food.details.carbohydrates * food.grams / 100); 
+    const foodFats = (food) => Math.floor(food.details.fats * food.grams / 100); 
+    const foodProteins = (food) => Math.floor(food.details.proteins * food.grams / 100); 
+
     const activityCalories = (activity, weight) => { 
+        // Formula for calculating burned calories
         return Math.floor(activity.details.calories * (activity.minutes / 60) * weight); 
     };
 
+    // Get the sum of all calories consumed and burned
     const sumCalories = (dayFoods) => {
         return Math.floor(dayFoods.reduce((acc, food) => acc + food.details.calories * food.grams / 100, 0));
+    }
+
+    const sumCarbs = (dayFoods) => {
+        return Math.floor(dayFoods.reduce((acc, food) => acc + food.details.carbohydrates * food.grams / 100, 0));
+    }
+
+    const sumFats = (dayFoods) => {
+        return Math.floor(dayFoods.reduce((acc, food) => acc + food.details.fats * food.grams / 100, 0));
+    }
+
+    const sumProteins = (dayFoods) => {
+        return Math.floor(dayFoods.reduce((acc, food) => acc + food.details.proteins * food.grams / 100, 0));
     }
 
     const activeCalories = (dayActivities, weight) => {
         return Math.floor(dayActivities.reduce((acc, activity) => acc + activityCalories(activity, weight), 0));
     }
 
+    // Users can only modify the current day
     return (
         <div>
             <Header page='day'/>
@@ -238,8 +272,12 @@ function Day() {
                     </h3>}
                     {completeDay && <h3>
                         Active calories: {activeCalories(completeDay.dayPhysicalActivities, completeDay.weight)}</h3>}
+                    {completeDay && <h3>Carbohydrates: {sumCarbs(completeDay.dayFoods)}</h3>}
+                    {completeDay && <h3>Fats: {sumFats(completeDay.dayFoods)}</h3>}
+                    {completeDay && <h3>Proteins: {sumProteins(completeDay.dayFoods)}</h3>}
 
                     <h2>Food</h2>
+                    {/* Navigate to food page to search and add food */}
                     {isCurrentDate && <button onClick={() => navigate('/food')}>Add Food</button>}
                     <ul>
                         {completeDay && completeDay.dayFoods.map((food, index) => {
@@ -256,6 +294,9 @@ function Day() {
                                     </p>}
                                     {updateGramsError && <p>{updateGramsError}</p>}
                                     <p>Calories: {foodCalories(food)}</p>
+                                    <p>Carbohydrates: {foodCarbs(food)}</p>
+                                    <p>Fats: {foodFats(food)}</p>
+                                    <p>Proteins: {foodProteins(food)}</p>
                                     {isCurrentDate && <button onClick={() => {deleteFood(date, food.details.name)}}>Delete Food</button>}
                                 </li>
                             );
@@ -263,6 +304,7 @@ function Day() {
                     </ul>
 
                     <h2>Physical Activities</h2>
+                    {/* Navigate to physical activities page to search and add to day */}
                     {isCurrentDate && <button onClick={() => navigate('/physical-activity')}>Add Physical Activity</button>}
                     <ul>
                         {completeDay && completeDay.dayPhysicalActivities.map((activity, index) => {

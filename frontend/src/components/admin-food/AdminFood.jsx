@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Food component for admin page
 function AdminFood () {
     const [foods, setFoods] = useState([]);
     const [getError, setGetError] = useState('');
@@ -16,7 +17,7 @@ function AdminFood () {
     // Get all foods
     const getFoods = async () => {
         setGetError('');
-
+        // Toggle see all foods
         if (foods.length !== 0) {
             setFoods([]);
             return;
@@ -37,7 +38,7 @@ function AdminFood () {
         }
     }
 
-    // Create food
+    // Create public food
     const createFood = async (event) => {
         event.preventDefault();
         setCreateError('');

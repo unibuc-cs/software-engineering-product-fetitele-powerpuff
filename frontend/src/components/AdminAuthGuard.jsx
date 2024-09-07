@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import React from "react";
 
+// Render the given component only if the user is an admin
 const AdminAuthGuard = ({ children }) => {
     const token = localStorage.getItem('token');
 

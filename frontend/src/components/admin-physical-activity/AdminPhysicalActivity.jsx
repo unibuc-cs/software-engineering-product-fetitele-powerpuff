@@ -2,26 +2,31 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import PhysicalActivityItemAdmin from '../physical-activity-item/PhysicalActivityItemAdmin.jsx';
 
+// Physical Activity for admin page
 function AdminPhysicalActivity() {
     const [physicalActivities, setPhysicalActivities] = useState([]);
     const [muscles, setMuscles] = useState([]);
 
     const [getError, setGetError] = useState('');
 
+    // Create activity
     const [createName, setCreateName] = useState('');
     const [createCalories, setCreateCalories] = useState('');
     const [createError, setCreateError] = useState('');
     const [createSuccess, setCreateSuccess] = useState('');
 
+    // Delete activity
     const [deleteName, setDeleteName] = useState('');
     const [deleteError, setDeleteError] = useState('');
     const [deleteSuccess, setDeleteSuccess] = useState('');
 
+    // Pair a muscle with an activity
     const [pairMuscleName, setPairMuscleName] = useState('');
     const [pairActivityName, setPairActivityName] = useState('');
     const [pairError, setPairError] = useState('');
     const [pairSuccess, setPairSuccess] = useState('');
 
+    // Unpair a muscle and an activity
     const [unpairMuscleName, setUnpairMuscleName] = useState('');
     const [unpairActivityName, setUnpairActivityName] = useState('');
     const [unpairError, setUnpairError] = useState('');
@@ -29,10 +34,12 @@ function AdminPhysicalActivity() {
 
     const [getMusclesError, setGetMusclesError] = useState('');
 
+    // Create muscle
     const [muscleCreateName, setMuscleCreateName] = useState('');
     const [muscleCreateError, setMuscleCreateError] = useState('');
     const [muscleCreateSuccess, setMuscleCreateSuccess] = useState('');
 
+    // Delete muscle
     const [muscleDeleteName, setMuscleDeleteName] = useState('');
     const [muscleDeleteError, setMuscleDeleteError] = useState('');
     const [muscleDeleteSuccess, setMuscleDeleteSuccess] = useState('');
@@ -41,6 +48,7 @@ function AdminPhysicalActivity() {
     const getPhysicalActivities = async () => {
         setGetError('');
 
+        // Toggle see all muscles
         if (physicalActivities.length !== 0) {
             setPhysicalActivities([]);
             return;

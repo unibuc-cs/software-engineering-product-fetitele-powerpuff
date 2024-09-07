@@ -16,7 +16,7 @@ function App() {
     <Router>
        <Navbar/>
        <Routes>
-              <Route exact path="/" element={<LoginRegister />} />
+              <Route exact path="/" element={<LoginRegister />} /> {/* Only route unauthenticated users can access */}
               <Route exact path="/logout"
                      element={<AuthGuard><Logout /></AuthGuard>} />
               <Route exact path="/profile" 

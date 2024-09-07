@@ -5,6 +5,8 @@ import AdminFood from "../components/admin-food/AdminFood.jsx";
 import AdminPhysicalActivity from "../components/admin-physical-activity/AdminPhysicalActivity.jsx";
 import AdminRequest from "../components/admin-request/AdminRequest.jsx";
 
+// Admin page for managing users, foods, activities and requests
+
 function Admin() {
     const [activeComponent, setActiveComponent] = useState('');
 

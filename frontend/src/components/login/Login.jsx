@@ -10,7 +10,6 @@ function Login() {
 
     const navigate = useNavigate('');
 
-    // Async arrow function
     const handleSubmit = async (event) => {
         // Prevent browser default of sending Http request
         event.preventDefault();
@@ -28,6 +27,7 @@ function Login() {
 
             localStorage.setItem('token', token);
             localStorage.setItem('expiration', expiration);
+            // For the navbar
             window.dispatchEvent(new Event('login'));
 
             // Then navigate to user's profile

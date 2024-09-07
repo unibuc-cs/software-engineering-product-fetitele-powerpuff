@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Request component for the admin page
 function AdminRequest() {
     const [requests, setRequests] = useState([]);
     const [approveRequestError, setApproveRequestError] = useState(null);
@@ -8,7 +9,9 @@ function AdminRequest() {
     const [denyRequestError, setDenyRequestError] = useState(null);
     const [denyRequestSuccess, setDenyRequestSuccess] = useState(null);
 
+    // Get all requests
     const getAllRequests = async () => {
+        // Toggle see all requests
         if (requests.length !== 0) {
             setRequests([]);
             return;
@@ -28,6 +31,7 @@ function AdminRequest() {
         }
     }
 
+    // Get food info (calories, carbs etc) for the food in the request
     const getFoodDetails = async (foodId) => {
         try {
             const token = localStorage.getItem('token');
@@ -43,6 +47,7 @@ function AdminRequest() {
         }
     }
 
+    // Combine all request information
     const getCompleteRequests = async () => {
         try {
             const requests = await getAllRequests();
@@ -57,6 +62,8 @@ function AdminRequest() {
         }
     }
 
+    // Request is approved, food becomes visible to all users
+    // and no longer belongs to a user
     const approveRequest = async (requestId) => {
         setApproveRequestError(null);
         try {
@@ -76,6 +83,7 @@ function AdminRequest() {
         }
     }
 
+    // Deny a request, food remains private
     const deleteRequest = async (requestId) => {
         setDenyRequestError(null);
         try {

@@ -10,8 +10,10 @@ function Logout() {
     function handleClick() {
         localStorage.removeItem('token');
         localStorage.removeItem('expiration');
+        // For the navbar
         window.dispatchEvent(new Event('logout'));
 
+        // Navigate to login/ register page
         navigate('/');
     }
 

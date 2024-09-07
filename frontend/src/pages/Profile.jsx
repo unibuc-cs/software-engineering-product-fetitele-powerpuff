@@ -11,7 +11,7 @@ function Profile() {
     const [birthdate, setBirthdate] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
-    const [goal, setGoal] = useState('');
+    const [goal, setGoal] = useState('Lose');
     const [error, setError] = useState('');
     const [chartData, setChartData] = useState(null);
     const navigate = useNavigate();
@@ -112,7 +112,7 @@ function Profile() {
             setBirthdate('');
             setWeight('');
             setHeight('');
-            setGoal('');
+            setGoal('Lose');
         } 
         catch (error) {
             console.log(error);
@@ -208,7 +208,7 @@ function Profile() {
         }
     };
 
-    // Validate the form
+    // Validate the form, all fields must be set
     const validateForm = () => {
         if (!name) {
             setError('Name is required');

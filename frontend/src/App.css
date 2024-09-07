@@ -57,7 +57,6 @@ body {
 }
 
 .form-container p {
-    color: red;
     font-size: 14px;
     margin-top: 10px;
     text-align: center;
@@ -167,7 +166,7 @@ body {
     font-weight: bold;
 }
 
-.item-container form input, select, #grams, #minutes {
+.item-container form input, select, .grams, .minutes {
     width: 15%;
     padding: 10px;
     border: 1px solid #ccc;

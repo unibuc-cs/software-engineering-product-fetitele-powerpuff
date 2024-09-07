@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 
+// Users component for the admin page
 function AdminUser () {
     const [users, setUsers] = useState([]);
     const [promoteEmail, setPromoteEmail] = useState('');
@@ -15,6 +16,7 @@ function AdminUser () {
     const getUsers = async () => {
         setGetError('');
 
+        // Toggle see all users
         if (users.length !== 0){
             setUsers([]);
             return;
@@ -35,7 +37,7 @@ function AdminUser () {
         }
     }
 
-    // Promote a user to admin by email
+    // An admin can promote a user to admin by email
     const promoteUser = async (promoteEmail) => {
         setPromoteError('');
         try {

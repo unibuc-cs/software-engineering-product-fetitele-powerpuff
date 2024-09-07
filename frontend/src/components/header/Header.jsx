@@ -1,6 +1,7 @@
 import React from "react";
 import './header.css'
 
+// Basic header
 function Header({page}) {
     return (
         <header>
