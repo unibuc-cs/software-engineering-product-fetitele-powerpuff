@@ -42,6 +42,17 @@ function AdminFood () {
     const createFood = async (event) => {
         event.preventDefault();
         setCreateError('');
+
+        if (!name) {
+            setCreateError('Name must not be empty');
+            return;
+        }
+
+        if (calories <= 0 || carbohydrates < 0 || fats < 0 || proteins < 0) {
+            setCreateError('Please enter values greater or equal to 0 for all fields.');
+            return;
+        }
+
         try {
             const response = await axios.post('https://localhost:7094/api/Food', {
                 name: name,

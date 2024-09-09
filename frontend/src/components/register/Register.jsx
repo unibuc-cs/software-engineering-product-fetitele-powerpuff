@@ -14,6 +14,11 @@ function Register() {
         event.preventDefault();
         setError('');
 
+        if (!email || !password || !confirmPassword) {
+            setError('All fields are required.');
+            return;
+        }
+
         try {
             const response = await axios.post('https://localhost:7094/api/Authentication/register-user', {
                 email: email,

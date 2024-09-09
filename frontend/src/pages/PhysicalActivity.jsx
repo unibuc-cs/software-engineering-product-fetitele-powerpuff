@@ -62,6 +62,11 @@ function PhysicalActivity() {
         setNameError(null);
         const token = localStorage.getItem('token');
 
+        if (!activityName) {
+            setNameError('No activity found');
+            return;
+        }
+
         try {
             const response = await axios.get(`https://localhost:7094/api/PhysicalActivities/${activityName}`,{
                 headers: {

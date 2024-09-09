@@ -67,6 +67,12 @@ function Food() {
 
     const getByName = async () => {
         setNameError(null);
+
+        if (!foodName) {
+            setNameError('No food with this name');
+            return;
+        }
+        
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`https://localhost:7094/api/Food/${foodName}`, {
@@ -87,8 +93,13 @@ function Food() {
         setAddError(null);
         setAddSucces(null);
 
+        if(!name) {
+            setAddError('Name must not be empty');
+            return;
+        }
+
         // Validate food data
-        if (calories <= 0 || carbohydrates < 0 || fats < 0 || proteins < 0) {
+        if (calories < 0 || carbohydrates < 0 || fats < 0 || proteins < 0) {
             setAddError('Please enter values greater or equal to 0 for all fields.');
             return;
         }

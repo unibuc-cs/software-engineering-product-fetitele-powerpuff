@@ -15,6 +15,11 @@ function Login() {
         event.preventDefault();
         setError('');
 
+        if (!email || !password) {
+            setError('Both email and password are required.');
+            return;
+        }
+
         // Send a Http request to login
         try {
             const response = await axios.post('https://localhost:7094/api/Authentication/login', {

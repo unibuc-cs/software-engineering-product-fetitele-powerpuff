@@ -75,6 +75,11 @@ function AdminPhysicalActivity() {
         setCreateError('');
         setCreateSuccess('');
 
+        if (!createName || !createCalories) {
+            setCreateError('Both fields are required');
+            return;
+        }
+
         try {
             const response = await axios.post('https://localhost:7094/api/PhysicalActivities', {
                 name: createName,
@@ -200,6 +205,11 @@ function AdminPhysicalActivity() {
         event.preventDefault();
         setMuscleCreateError('');
         setMuscleCreateSuccess('');
+
+        if (!muscleCreateName) {
+            setMuscleCreateError('Name is required');
+            return;
+        }
 
         try {
             const response = await axios.post('https://localhost:7094/api/Muscles', {
