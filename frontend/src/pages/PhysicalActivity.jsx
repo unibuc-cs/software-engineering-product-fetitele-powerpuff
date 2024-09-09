@@ -147,7 +147,7 @@ function PhysicalActivity() {
         }
     }
 
-    // Add to day for the bet by muscle section
+    // Add to day for the get by muscle section
     const addActivityToDayMuscleObj = async (activityNameDay, minutes) => {
         try {
             const token = localStorage.getItem('token');
