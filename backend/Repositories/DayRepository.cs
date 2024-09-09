@@ -171,19 +171,40 @@ namespace healthy_lifestyle_web_app.Repositories
             return true;
         }
 
+        // Add a new activity to a day
+        // If activity already exists then add the minutes
         public async Task<bool> PutPhysicalActivityAsync(Day day, PhysicalActivity activity, int minutes)
         {
-            try
-            {
-                _context.DayPhysicalActivities.Add(new(day.ProfileId, day.Date, activity.Id, minutes));
-                await _context.SaveChangesAsync();
-            }
-            catch (DbException)
-            {
-                return false;
-            }
-            return true;
+            DayPhysicalActivity? dayPhysicalActivity = await _context.DayPhysicalActivities.FirstOrDefaultAsync(dpa => dpa.ProfileId == day.ProfileId
+                                                                                        && dpa.Date == day.Date && dpa.PhysicalActivityId == activity.Id);
 
+            if (dayPhysicalActivity == null)
+            {
+                try
+                {
+                    _context.DayPhysicalActivities.Add(new(day.ProfileId, day.Date, activity.Id, minutes));
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbException)
+                {
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                dayPhysicalActivity.Minutes += minutes;
+                try
+                {
+                    _context.DayPhysicalActivities.Update(dayPhysicalActivity);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbException)
+                {
+                    return false;
+                }
+                return true;
+            }
         }
 
         // Change grams/ minutes for an existing food/ activity
