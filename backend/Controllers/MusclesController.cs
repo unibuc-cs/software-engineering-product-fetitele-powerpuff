@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // Only an admin can use the methods in this controller
+// Manages retrieving, creating and deleting muscles
 
 namespace healthy_lifestyle_web_app.Controllers
 {
@@ -57,7 +58,7 @@ namespace healthy_lifestyle_web_app.Controllers
             if (await _muscleRepository.DeleteAsync(_mapper.Map<Muscle>(muscle)))
             {
                 return Ok("Muscle deleted successfully");
-            } 
+            }
             return NotFound("No muscle with this name");
         }
     }

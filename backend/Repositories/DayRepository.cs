@@ -8,7 +8,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace healthy_lifestyle_web_app.Repositories
 {
-    public class DayRepository: IDayRepository
+    public class DayRepository : IDayRepository
     {
         private readonly ApplicationContext _context;
         private readonly IWeightEvolutionRepository _weightEvolutionRepository;
@@ -17,7 +17,7 @@ namespace healthy_lifestyle_web_app.Repositories
         {
             _context = context;
             _weightEvolutionRepository = weightEvolutionRepository;
-        }   
+        }
 
         public async Task<List<Day>> GetAllAsync()
         {
@@ -27,7 +27,7 @@ namespace healthy_lifestyle_web_app.Repositories
 
         // Get by profileId
         public async Task<List<Day>> GetByUserAsync(int id)
-        { 
+        {
             return await _context.Days.Where(d => d.ProfileId == id)
                 .Include(d => d.DayPhysicalActivities)
                 .Include(d => d.DayFoods).ToListAsync();
@@ -42,7 +42,7 @@ namespace healthy_lifestyle_web_app.Repositories
 
         public async Task<Day?> GetCurrentDayAsync(int id)
         {
-            List<Day> days =  await _context.Days.Where(d => d.ProfileId == id)
+            List<Day> days = await _context.Days.Where(d => d.ProfileId == id)
                 .Include(d => d.DayPhysicalActivities).Include(d => d.DayFoods).ToListAsync();
 
             DateOnly currentDay = DateOnly.FromDateTime(DateTime.Today);
@@ -57,13 +57,15 @@ namespace healthy_lifestyle_web_app.Repositories
                 .FirstOrDefaultAsync(d => d.ProfileId == id && d.Date == date);
         }
 
+
+        // Get calories for a day
         public async Task<double> GetFoodCalories(int id, DateOnly date)
         {
             List<DayFood> dayFoods = await _context.DayFoods.Include(df => df.Food)
                 .Where(df => df.ProfileId == id && df.Date == date).ToListAsync();
 
             double calories = 0;
-            foreach(DayFood dayFood in dayFoods)
+            foreach (DayFood dayFood in dayFoods)
             {
                 calories += (dayFood.Food.Calories * dayFood.Grams / 100);
             }
@@ -85,6 +87,7 @@ namespace healthy_lifestyle_web_app.Repositories
             return calories;
         }
 
+        // Get calories for multiple days
         public async Task<List<DateCaloriesModel>> GetDaysFoodCaloriesAsync(List<Day> days)
         {
             List<DateCaloriesModel> list = new List<DateCaloriesModel>();
@@ -119,8 +122,11 @@ namespace healthy_lifestyle_web_app.Repositories
             return calories / datesCalories.Count;
         }
 
+        // Creates a day for the current date
         public async Task<bool> PostDayAsync(Entities.Profile profile)
         {
+            // Calculate the amount of calories that should be consumed in a day
+            // based on goal and weight (ignoring physical activity calories)
             Goal goal = profile.Goal;
             double we = profile.Weight;
 
@@ -129,12 +135,14 @@ namespace healthy_lifestyle_web_app.Repositories
             if (goal == Goal.Lose)
             {
                 calories = (int)(0.8 * calories);
-            } else if (goal == Goal.Gain) {
+            }
+            else if (goal == Goal.Gain)
+            {
                 calories = (int)(1.2 * calories);
             }
 
             Day day = new(profile.Id, DateOnly.FromDateTime(DateTime.Today), calories);
-            
+
             try
             {
                 _context.Days.Add(day);
@@ -148,6 +156,7 @@ namespace healthy_lifestyle_web_app.Repositories
             return true;
         }
 
+        // Add foods and physical activities to a day
         public async Task<bool> PutFoodAsync(Day day, Food food, int grams)
         {
             try
@@ -174,12 +183,14 @@ namespace healthy_lifestyle_web_app.Repositories
                 return false;
             }
             return true;
+
         }
 
+        // Change grams/ minutes for an existing food/ activity
         public async Task<bool> UpdateGramsAsync(Day day, int foodId, int grams)
         {
             DayFood? dayfood = day.DayFoods.FirstOrDefault(f => f.FoodId == foodId);
-            if(dayfood == null)
+            if (dayfood == null)
             {
                 return false;
             }
@@ -189,11 +200,11 @@ namespace healthy_lifestyle_web_app.Repositories
                 dayfood.Grams = grams;
                 await _context.SaveChangesAsync();
             }
-            catch(DbException)
+            catch (DbException)
             {
                 return false;
             }
-            
+
             return true;
         }
 
@@ -222,9 +233,9 @@ namespace healthy_lifestyle_web_app.Repositories
         public async Task<bool> DeleteFoodAsync(Day day, int foodId)
         {
             DayFood? dayFood = day.DayFoods.FirstOrDefault(d => d.FoodId == foodId);
-            if(dayFood == null)
-            {  
-                return false; 
+            if (dayFood == null)
+            {
+                return false;
             }
 
             try
@@ -232,7 +243,7 @@ namespace healthy_lifestyle_web_app.Repositories
                 day.DayFoods.Remove(dayFood);
                 await _context.SaveChangesAsync();
             }
-            catch(DbException)
+            catch (DbException)
             {
                 return false;
             }

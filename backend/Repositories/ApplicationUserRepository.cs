@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace healthy_lifestyle_web_app.Repositories
 {
-    public class ApplicationUserRepository: IApplicationUserRepository
+    public class ApplicationUserRepository : IApplicationUserRepository
     {
         private readonly ApplicationContext _applicationContext;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -38,7 +38,7 @@ namespace healthy_lifestyle_web_app.Repositories
             var foods = await _applicationContext.Foods.Where(f => f.ApplicationUserId == id).ToListAsync();
             if (foods != null && foods.Any())
             {
-                // Delete the user's foods
+                // Delete the user's foods (only those that are private to the user)
                 _applicationContext.Foods.RemoveRange(foods);
             }
 
@@ -55,11 +55,10 @@ namespace healthy_lifestyle_web_app.Repositories
                 return false;
             }
 
-            // Get the user's foods
+            // Get the user's foods and delete them before deleting the user
             var foods = await _applicationContext.Foods.Where(f => f.ApplicationUserId == user.Id).ToListAsync();
             if (foods != null && foods.Any())
             {
-                // Delete the user's foods
                 _applicationContext.Foods.RemoveRange(foods);
             }
 

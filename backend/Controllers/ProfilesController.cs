@@ -19,7 +19,7 @@ namespace healthy_lifestyle_web_app.Controllers
         private readonly IMapper _mapper;
 
         public ProfilesController(IProfileRepository profileRepository,
-                IApplicationUserRepository applicationUserRepository, IWeightEvolutionRepository weightEvolutionRepository, 
+                IApplicationUserRepository applicationUserRepository, IWeightEvolutionRepository weightEvolutionRepository,
                 CreateDaysService createDaysService, IMapper mapper)
         {
             _profileRepository = profileRepository;
@@ -63,6 +63,8 @@ namespace healthy_lifestyle_web_app.Controllers
 
         [HttpPost]
         [Authorize]
+        // Create a user's profile, also performs validation and creates a day if it 
+        // doesn't exist (such as when a user first creates a profile after registering)
         public async Task<IActionResult> Post(PostProfileDTO profileDTO)
         {
             string? email = User.Identity.Name;
@@ -177,7 +179,7 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("No user logged in");
             }
 
-            ApplicationUser? user =  await _applicationUserRepository.GetByEmailAsync(email);
+            ApplicationUser? user = await _applicationUserRepository.GetByEmailAsync(email);
             if (user == null)
             {
                 return NotFound("No user found");
@@ -343,7 +345,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return BadRequest();
         }
 
-        // A user can delete their own profile
+        // A user can delete their own profile but this also deletes the days associated with the profile
         [HttpDelete]
         [Authorize]
         public async Task<IActionResult> DeleteUserProfile()

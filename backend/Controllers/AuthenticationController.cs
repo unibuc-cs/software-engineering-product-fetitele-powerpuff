@@ -10,6 +10,8 @@ namespace healthy_lifestyle_web_app.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    // Controller for managing authentication and roles as well as the promotion of regular users to admins (by other admins)
     public class AuthenticationController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -25,14 +27,15 @@ namespace healthy_lifestyle_web_app.Controllers
         [Route("register-user")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterModel model)
         {
-            if (!ModelState.IsValid) { 
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
 
             // Verifies if there is already a user with this email
             if (await _userManager.FindByEmailAsync(model.Email) != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, 
+                return StatusCode(StatusCodes.Status500InternalServerError,
                     new Response { Status = "Error", Message = "This email is already used" });
             }
 
@@ -54,7 +57,6 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(new Response { Status = "Success", Message = "User created successfully!" });
         }
 
-        // Promotes a normal user to admin
         [HttpPut("promote/{email}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> PromoteUserToAdmin(string email)

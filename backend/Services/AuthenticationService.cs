@@ -21,12 +21,12 @@ namespace healthy_lifestyle_web_app.Services
             _configuration = configuration;
         }
 
-        // Method used to create roles
+        // Method used to create user and admin roles
         public async Task CreateRoles()
         {
             if (!await _roleManager.RoleExistsAsync(Roles.Admin))
                 await _roleManager.CreateAsync(new IdentityRole(Roles.Admin));
-            
+
             if (!await _roleManager.RoleExistsAsync(Roles.User))
                 await _roleManager.CreateAsync(new IdentityRole(Roles.User));
         }
@@ -62,7 +62,7 @@ namespace healthy_lifestyle_web_app.Services
 
         public async Task<ApplicationUser?> PromoteUserToAdmin(ApplicationUser applicationUser)
         {
-            // Check if the admin role exists
+            // Check if the admin role exists and create it if it doesn't
             if (!await _roleManager.RoleExistsAsync(Roles.Admin))
             {
                 await _roleManager.CreateAsync(new IdentityRole(Roles.Admin));

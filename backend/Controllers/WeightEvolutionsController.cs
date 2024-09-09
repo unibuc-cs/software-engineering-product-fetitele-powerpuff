@@ -10,6 +10,8 @@ namespace healthy_lifestyle_web_app.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+    // Used for creating a weight evolution graphic for a profile
     public class WeightEvolutionsController : ControllerBase
     {
         private readonly IWeightEvolutionRepository _weightEvolutionRepository;

@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace healthy_lifestyle_web_app.Repositories
 {
-    public class MuscleRepository: IMuscleRepository
+    public class MuscleRepository : IMuscleRepository
     {
         private readonly ApplicationContext _context;
+
+        // Basic get, post and delete functionalities
 
         public MuscleRepository(ApplicationContext context)
         {

@@ -11,6 +11,8 @@ namespace healthy_lifestyle_web_app.Repositories
         private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
 
+        // Basic get, post and put functionalities
+
         public FoodRepository(ApplicationContext context, IMapper mapper)
         {
             _context = context;

@@ -11,6 +11,9 @@ namespace healthy_lifestyle_web_app.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
+    // Users can create requests to make private foods public
+    // An admin can approve or deny the request
+
     public class RequestController : ControllerBase
     {
 
@@ -19,7 +22,7 @@ namespace healthy_lifestyle_web_app.Controllers
         private readonly IFoodRepository _foodRepository;
         private readonly IApplicationUserRepository _userRepository;
 
-        public RequestController(IRequestRepository requestRepository, IMapper mapper, 
+        public RequestController(IRequestRepository requestRepository, IMapper mapper,
             IFoodRepository foodRepository, IApplicationUserRepository applicationUserRepository)
         {
             _requestRepository = requestRepository;
@@ -59,19 +62,17 @@ namespace healthy_lifestyle_web_app.Controllers
 
         [HttpPost("{foodName}")]
         [Authorize]
+        // User creates a request for a food
         public async Task<IActionResult> CreateRequest(string foodName)
         {
             if (!User.IsInRole("Admin"))
-            { 
-                // Obținem identitatea utilizatorului curent
+            {
                 string userEmail = User.Identity.Name;
                 if (string.IsNullOrEmpty(userEmail))
                 {
-                    // Utilizatorul nu este autentificat, deci nu putem proceda mai departe
                     return Unauthorized("User not authenticated");
                 }
 
-                // Obținem alimentul după nume
                 Food? food = await _foodRepository.GetByNameAsync(foodName);
                 if (food == null)
                 {
@@ -84,10 +85,9 @@ namespace healthy_lifestyle_web_app.Controllers
                     return NotFound("No user with this email");
                 }
 
-                // Verificăm dacă utilizatorul curent este proprietarul alimentului
+                // Must be a food created by the user
                 if (food.ApplicationUserId != user.Id)
                 {
-                    // Utilizatorul nu este proprietarul alimentului, deci nu are permisiunea de a crea cererea
                     return BadRequest("You are not allowed to create a request for this food");
                 }
 
@@ -106,6 +106,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "admin")]
+        // Approve a request
         public async Task<IActionResult> UpdateRequest(int id)
         {
             Request? existingRequest = await _requestRepository.GetByIdAsync(id);
@@ -120,7 +121,7 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("Food not found");
             }
 
-            // Setam public = true si utilizatorul = null
+            // Food becomes visible to all users
             food.Public = true;
             food.ApplicationUserId = null;
             food.ApplicationUser = null;
@@ -141,6 +142,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "admin")]
+        // Deny a request
         public async Task<IActionResult> DeleteRequest(int id)
         {
             if (await _requestRepository.DeleteAsync(id))

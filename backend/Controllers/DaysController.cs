@@ -20,7 +20,7 @@ namespace healthy_lifestyle_web_app.Controllers
         private readonly IMapper _mapper;
 
         public DaysController(IDayRepository dayRepository, IMapper mapper,
-                           IFoodRepository foodRepository, IApplicationUserService userService, 
+                           IFoodRepository foodRepository, IApplicationUserService userService,
                            IPhysicalActivityRepository physicalActivityRepository)
         {
             _dayRepository = dayRepository;
@@ -42,7 +42,8 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize]
         public async Task<IActionResult> GetByUser()
         {
-            string? email = User.Identity.Name;  // Find the name (email) of the user that is logged in
+            // Find the name (email) of the user that is logged in
+            string? email = User.Identity.Name;
             if (email == null)
             {
                 return BadRequest("No user logged in");
@@ -98,7 +99,7 @@ namespace healthy_lifestyle_web_app.Controllers
             }
 
             Day? day = await _dayRepository.GetByDateAsync(profile.Id, date);
-            if(day == null)
+            if (day == null)
             {
                 return NotFound("Day doesn't exist");
             }
@@ -106,6 +107,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(_mapper.Map<GetDayDTO>(day));
         }
 
+        // Get the number of calories eaten in a day
         [HttpGet("food-calories")]
         [Authorize]
         public async Task<IActionResult> GetFoodCalories(DateOnly date)
@@ -127,6 +129,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(await _dayRepository.GetFoodCalories(profile.Id, date));
         }
 
+        // Get the number of calories burned in a day
         [HttpGet("activity-calories")]
         [Authorize]
         public async Task<IActionResult> GetActivityCalories(DateOnly date)
@@ -300,7 +303,7 @@ namespace healthy_lifestyle_web_app.Controllers
             }
 
             Food? food = await _foodRepository.GetByNameAsync(model.FoodName);
-            if(food == null)
+            if (food == null)
             {
                 return NotFound("Food doesn't exist");
             }
@@ -334,12 +337,12 @@ namespace healthy_lifestyle_web_app.Controllers
             }
 
             Food? food = await _foodRepository.GetByNameAsync(model.FoodName);
-            if(food == null)
+            if (food == null)
             {
                 return NotFound("Food doesn't exist");
             }
 
-            if(await _dayRepository.UpdateGramsAsync(day, food.Id, model.Grams))
+            if (await _dayRepository.UpdateGramsAsync(day, food.Id, model.Grams))
             {
                 return Ok();
             }

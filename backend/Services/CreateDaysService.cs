@@ -15,6 +15,8 @@ namespace healthy_lifestyle_web_app.Services
             _dayRepository = dayRepository;
         }
 
+        // Create a day based on the current date for every profile
+        // Runs every day at midnight
         public async Task<bool> CreateDays()
         {
             try
@@ -32,6 +34,8 @@ namespace healthy_lifestyle_web_app.Services
             }
         }
 
+        // Create a day based on the current date for a new user
+        // Otherwise it would only be created at midnight
         public async Task<bool> CreateDayForNewUser(Profile profile)
         {
             if (await _dayRepository.PostDayAsync(profile))

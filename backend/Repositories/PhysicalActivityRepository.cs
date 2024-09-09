@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace healthy_lifestyle_web_app.Repositories
 {
-    public class PhysicalActivityRepository: IPhysicalActivityRepository
+    public class PhysicalActivityRepository : IPhysicalActivityRepository
     {
         private readonly ApplicationContext _context;
         private readonly IMapper _mapper;
+
+        // Basic get, post and delete functionalities
 
         public PhysicalActivityRepository(ApplicationContext context, IMapper mapper)
         {
@@ -37,8 +39,10 @@ namespace healthy_lifestyle_web_app.Repositories
                         .FirstOrDefaultAsync(p => p.Name.ToLower() == name.ToLower());
         }
 
+        // Returns all activities that target a specific muscle
         public async Task<List<PhysicalActivity>?> GetByMuscleAsync(string muscleName)
         {
+            // Muscle name can be in lower case
             muscleName = char.ToUpper(muscleName[0]) + muscleName.Substring(1).ToLower();
             Muscle? muscle = await _context.Muscles.FirstOrDefaultAsync(m => m.Name == muscleName);
             if (muscle == null)
@@ -66,7 +70,7 @@ namespace healthy_lifestyle_web_app.Repositories
 
         public async Task<bool> DeleteAsync(PhysicalActivity physicalActivity)
         {
-            PhysicalActivity? p = await _context.PhysicalActivities.FirstOrDefaultAsync(x => 
+            PhysicalActivity? p = await _context.PhysicalActivities.FirstOrDefaultAsync(x =>
                                                         x.Name == physicalActivity.Name);
 
             if (p == null)

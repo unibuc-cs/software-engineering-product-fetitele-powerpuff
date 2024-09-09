@@ -10,6 +10,8 @@ namespace healthy_lifestyle_web_app.Repositories
     {
         private readonly ApplicationContext _context;
 
+        // Basic get, post, put and delete functionalities
+
         public ProfileRepository(ApplicationContext context)
         {
             _context = context;

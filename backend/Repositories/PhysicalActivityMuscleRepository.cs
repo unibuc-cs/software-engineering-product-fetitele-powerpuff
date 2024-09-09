@@ -5,9 +5,11 @@ using System.Globalization;
 
 namespace healthy_lifestyle_web_app.Repositories
 {
-    public class PhysicalActivityMuscleRepository: IPhysicalActivityMuscleRepository
+    public class PhysicalActivityMuscleRepository : IPhysicalActivityMuscleRepository
     {
         private readonly ApplicationContext _context;
+
+        // Add or remove a muscle from an activity's list of targeted muscles
 
         public PhysicalActivityMuscleRepository(ApplicationContext context)
         {
@@ -19,10 +21,10 @@ namespace healthy_lifestyle_web_app.Repositories
             Muscle? muscle = await _context.Muscles.FirstOrDefaultAsync(x =>
                                             x.Name == muscleName);
 
-            PhysicalActivity? physicalActivity = await _context.PhysicalActivities.FirstOrDefaultAsync(x => 
-                                            x.Name == activityName);  
+            PhysicalActivity? physicalActivity = await _context.PhysicalActivities.FirstOrDefaultAsync(x =>
+                                            x.Name == activityName);
 
-            if(muscle == null || physicalActivity == null)
+            if (muscle == null || physicalActivity == null)
             {
                 return false;
             }

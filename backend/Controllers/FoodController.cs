@@ -44,7 +44,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
             for (int i = 0; i < foods.Count; i++)
             {
-                // Send only public foods or the user's foods
+                // A user can only see public foods or foods they have created
                 if (foods[i].Public || foods[i].ApplicationUserId == user.Id)
                 {
                     foodsDTO.Add(_mapper.Map<GetFoodDTO>(foods[i]));
@@ -54,7 +54,7 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(foodsDTO);
         }
 
-        // This is the information the admin will see 
+        // This is the information the admin will see (all foods)
         [HttpGet("for-admin")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetFoodAdmin()
@@ -74,7 +74,7 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize]
         public async Task<IActionResult> GetById(int id)
         {
-            Food? food =  await _foodRepository.GetByIdAsync(id);
+            Food? food = await _foodRepository.GetByIdAsync(id);
             if (food == null)
             {
                 return NotFound("No food with this id");
@@ -105,10 +105,11 @@ namespace healthy_lifestyle_web_app.Controllers
                 return NotFound("No user found");
             }
 
-            if (!(food.Public || food.ApplicationUserId == user.Id)) {
+            if (!(food.Public || food.ApplicationUserId == user.Id))
+            {
                 return NotFound("No food with this name");
             }
-            
+
             return Ok(_mapper.Map<GetFoodDTO>(food));
         }
 
@@ -116,14 +117,16 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize]
         public async Task<IActionResult> PostFood(PostFoodDTO food)
         {
+            // Foods created by admins are public
             if (User.IsInRole("admin"))
             {
-                food.Public = true; // Alimentele adăugate de admin sunt publice pentru toți
+                food.Public = true;
                 food.ApplicationUserId = null;
             }
+            // Foods created by regular users are visible only to them (and admins)
             else
             {
-                food.Public = false; // Alimentele adăugate de utilizatori sunt private
+                food.Public = false;
                 string? email = User.Identity.Name;
 
                 if (string.IsNullOrEmpty(email))
