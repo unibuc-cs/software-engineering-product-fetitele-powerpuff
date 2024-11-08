@@ -156,6 +156,23 @@ namespace healthy_lifestyle_web_app.Repositories
             return true;
         }
 
+        // Increase water intake of a day
+        public async Task<bool> PutWaterAsync(Day day, int waterIntake)
+        {
+            try
+            {
+                day.WaterIntake += waterIntake;
+                _context.Days.Update(day);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbException)
+            {
+                return false;
+            }
+            return true;
+
+        }
+
         // Add foods and physical activities to a day
         public async Task<bool> PutFoodAsync(Day day, Food food, int grams)
         {

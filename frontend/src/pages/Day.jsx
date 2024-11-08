@@ -13,6 +13,8 @@ function Day() {
     const [minutes, setMinutes] = useState({});
     const [updateMinutesError, setUpdateMinutesError] = useState(null);
     const [dayError, setDayError] = useState(null);
+    const [water, setWater] = useState(0);
+    const [waterError, setWaterError] = useState(null);
 
     const formatDate = (date) => {
         const year = date.getFullYear();
@@ -258,6 +260,40 @@ function Day() {
         return Math.floor(dayActivities.reduce((acc, activity) => acc + activityCalories(activity, weight), 0));
     }
 
+    const addWaterIntake = async () => {
+        setWaterError(null);
+        let waterIntake = parseInt(water);
+
+        if (waterIntake <= 0) {
+            setWaterError("Please enter a positive value");
+            setTimeout(() => {
+                setWaterError(null);
+            }, 2000);
+            return;
+        }
+        
+        try {
+            const formattedDate = formatDate(date);
+            const response = await axios.put(`https://localhost:7094/api/Days/add-water`, {
+                date: formattedDate,
+                waterIntake: waterIntake,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            const newWaterIntake = completeDay.waterIntake + waterIntake;
+            setCompleteDay((day) => ({
+                ...day,
+                waterIntake: newWaterIntake,
+            }));
+            setWater(0);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     // Users can only modify the current day
     return (
         <div>
@@ -276,6 +312,19 @@ function Day() {
                     {completeDay && <h3>Fats: {sumFats(completeDay.dayFoods)}</h3>}
                     {completeDay && <h3>Proteins: {sumProteins(completeDay.dayFoods)}</h3>}
 
+                    <h2>Water</h2>
+                    <h3>{completeDay && completeDay.waterIntake} / 2000 mL</h3>
+                    {completeDay && <div id="progress-bar">
+                        <div id="progress-fill" 
+                        style={{ width: Math.min(300, (completeDay.waterIntake / 2000 * 100) * 3)}}></div>
+                    </div>}
+                    {completeDay && <input type="number" 
+                                            value={water} onChange={(event) => setWater(event.target.value)}
+                                            placeholder="Enter mLs"
+                                            className="mls"/>}
+                    {completeDay && <button onClick={addWaterIntake}>Add Water</button>}
+                    {waterError && <p className="error">{waterError}</p>}
+                    
                     <h2>Food</h2>
                     {/* Navigate to food page to search and add food */}
                     {isCurrentDate && <button onClick={() => navigate('/food')}>Add Food</button>}

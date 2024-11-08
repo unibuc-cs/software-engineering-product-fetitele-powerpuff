@@ -290,6 +290,27 @@ body {
     border-top: 1px solid #ccc;
 }
 
+#progress-bar {
+    border-radius: 10px;
+    margin: auto;
+    width: 100%;
+    max-width: 300px;
+    height: 20px;
+    background-color: #dcdcdc;
+}
+
+#progress-fill {
+    border-radius: inherit;
+    height: 100%;
+    background-color: #00c0f0;  
+    transition: width 0.3s ease;  
+}
+
+.mls {
+    margin-right: 5px;
+    height: 20px;
+}
+
 /* Admin styles */
 .admin-container {
     background-color: #ececec;

@@ -17,7 +17,7 @@ namespace healthy_lifestyle_web_app.Entities
         [JsonIgnore]
         public Profile? Profile { get; set; }
         public int Calories { get; set; }
-
+        public int WaterIntake { get; set; }
         public ICollection<DayFood> DayFoods { get; set; }
         public ICollection<DayPhysicalActivity> DayPhysicalActivities { get; set; }
 

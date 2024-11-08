@@ -279,6 +279,45 @@ namespace healthy_lifestyle_web_app.Controllers
             }
         }
 
+        // Add water intake in a day
+        [HttpPut("add-water")]
+        [Authorize]
+
+        public async Task<IActionResult> PutWater([FromBody] DayWaterModel model)
+        {
+            string? email = User.Identity.Name;
+            if (email == null)
+            {
+                return BadRequest("No user logged in");
+            }
+
+            if (model.WaterIntake <= 0)
+            {
+                return BadRequest("Invalid value, must be >0");
+            }
+
+            Entities.Profile? profile = await _userService.GetUserProfileByEmail(email);
+            if (profile == null)
+            {
+                return NotFound("Profile not found");
+            }
+
+            Day? day = await _dayRepository.GetByDateAsync(profile.Id, model.Date);
+            if (day == null)
+            {
+                return NotFound("Day doesn't exit");
+            }
+
+            if (await _dayRepository.PutWaterAsync(day, model.WaterIntake) == true)
+            {
+                return Ok("Water intake successfully added");
+            } else
+            {
+                return BadRequest("Failed to increase water intake");
+            }
+            
+        }
+
         // Add food and grams in a day
         [HttpPut("add-food")]
         [Authorize]

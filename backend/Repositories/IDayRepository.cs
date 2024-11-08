@@ -37,6 +37,9 @@ namespace healthy_lifestyle_web_app.Repositories
         // Creates a new day for a user
         public Task<bool> PostDayAsync(Profile profile);
 
+        // Add water
+        public Task<bool> PutWaterAsync(Day day, int waterIntake);
+
         // Add food
         public Task<bool> PutFoodAsync(Day day, Food food, int grams);
 
