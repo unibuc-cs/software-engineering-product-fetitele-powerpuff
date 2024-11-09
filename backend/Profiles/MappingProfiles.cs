@@ -24,6 +24,9 @@ namespace Proiect.Profiles
             CreateMap<DayPhysicalActivity, DayPhysicalActivityDTO>();
 
             CreateMap<WeightEvolution, GetWeightEvolutionDTO>();
+
+            CreateMap<Recipe, GetRecipeDTO>();
+            CreateMap<PostRecipeDTO, Recipe>();
         }
     }
 }
