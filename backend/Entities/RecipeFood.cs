@@ -14,5 +14,12 @@ namespace healthy_lifestyle_web_app.Entities
         public int FoodId { get; set; }
 
         public int Grams { get; set; }
+
+        public RecipeFood(int recipeId, int foodId, int grams)
+        {
+            RecipeId = recipeId;
+            FoodId = foodId;
+            Grams = grams;
+        }   
     }
 }
