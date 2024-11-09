@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using healthy_lifestyle_web_app.ContextModels;
 
@@ -11,9 +12,11 @@ using healthy_lifestyle_web_app.ContextModels;
 namespace healthy_lifestyle_web_app.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20241109092404_Recipe")]
+    partial class Recipe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -456,26 +459,6 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.ToTable("Recipes");
                 });
 
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.RecipeFood", b =>
-                {
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    b.Property<int>("FoodId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
-
-                    b.Property<int>("Grams")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipeId", "FoodId");
-
-                    b.HasIndex("FoodId");
-
-                    b.ToTable("RecipeFoods");
-                });
-
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Request", b =>
                 {
                     b.Property<int>("Id")
@@ -657,21 +640,6 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.RecipeFood", b =>
-                {
-                    b.HasOne("healthy_lifestyle_web_app.Entities.Food", null)
-                        .WithMany("RecipeFoods")
-                        .HasForeignKey("FoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("healthy_lifestyle_web_app.Entities.Recipe", null)
-                        .WithMany("RecipeFoods")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Request", b =>
                 {
                     b.HasOne("healthy_lifestyle_web_app.Entities.Food", "Food")
@@ -705,8 +673,6 @@ namespace healthy_lifestyle_web_app.Migrations
                 {
                     b.Navigation("DayFoods");
 
-                    b.Navigation("RecipeFoods");
-
                     b.Navigation("Request");
                 });
 
@@ -720,11 +686,6 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.Navigation("Days");
 
                     b.Navigation("WeightEvolutions");
-                });
-
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Recipe", b =>
-                {
-                    b.Navigation("RecipeFoods");
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.ApplicationUser", b =>

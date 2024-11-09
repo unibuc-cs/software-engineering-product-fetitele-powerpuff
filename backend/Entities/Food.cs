@@ -12,6 +12,7 @@
         public string? ApplicationUserId { get; set; }
         public ApplicationUser? ApplicationUser { get; set; }
         public ICollection<DayFood> DayFoods { get; set; }
+        public ICollection<RecipeFood> RecipeFoods { get; set; }
         public Request? Request { get; set; }
     }
 }
