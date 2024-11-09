@@ -241,7 +241,7 @@ namespace healthy_lifestyle_web_app.Migrations
 
                     b.HasIndex("PhysicalActivitiesId");
 
-                    b.ToTable("MusclePhysicalActivity");
+                    b.ToTable("MusclePhysicalActivity", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Day", b =>
@@ -262,7 +262,7 @@ namespace healthy_lifestyle_web_app.Migrations
 
                     b.HasKey("ProfileId", "Date");
 
-                    b.ToTable("Days");
+                    b.ToTable("Days", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.DayFood", b =>
@@ -286,7 +286,7 @@ namespace healthy_lifestyle_web_app.Migrations
 
                     b.HasIndex("FoodId");
 
-                    b.ToTable("DayFoods");
+                    b.ToTable("DayFoods", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.DayPhysicalActivity", b =>
@@ -310,7 +310,7 @@ namespace healthy_lifestyle_web_app.Migrations
 
                     b.HasIndex("PhysicalActivityId");
 
-                    b.ToTable("DayPhysicalActivities");
+                    b.ToTable("DayPhysicalActivities", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Food", b =>
@@ -350,7 +350,7 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Foods");
+                    b.ToTable("Foods", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Muscle", b =>
@@ -370,7 +370,7 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Muscles");
+                    b.ToTable("Muscles", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.PhysicalActivity", b =>
@@ -393,7 +393,7 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("PhysicalActivities");
+                    b.ToTable("PhysicalActivities", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Profile", b =>
@@ -429,7 +429,7 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Profiles");
+                    b.ToTable("Profiles", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Recipe", b =>
@@ -453,7 +453,7 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Recipes");
+                    b.ToTable("Recipes", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.RecipeFood", b =>
@@ -473,7 +473,7 @@ namespace healthy_lifestyle_web_app.Migrations
 
                     b.HasIndex("FoodId");
 
-                    b.ToTable("RecipeFoods");
+                    b.ToTable("RecipeFoods", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Request", b =>
@@ -492,7 +492,7 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.HasIndex("FoodId")
                         .IsUnique();
 
-                    b.ToTable("Requests");
+                    b.ToTable("Requests", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.WeightEvolution", b =>
@@ -516,7 +516,7 @@ namespace healthy_lifestyle_web_app.Migrations
 
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("WeightEvolutions");
+                    b.ToTable("WeightEvolutions", (string)null);
                 });
 
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.ApplicationUser", b =>

@@ -31,5 +31,28 @@ namespace healthy_lifestyle_web_app.Repositories
                 return false;
             }
         }
+
+        public async Task<bool> DeleteRecipeByNameAsync(string recipeName)
+        {
+            var recipe = await _context.Recipes
+                .FirstOrDefaultAsync(r => r.Name == recipeName);
+
+            if (recipe == null)
+            {
+                return false;  
+            }
+
+            
+            var recipeFoods = await _context.RecipeFoods
+                .Where(rf => rf.RecipeId == recipe.Id)
+                .ToListAsync();
+            _context.RecipeFoods.RemoveRange(recipeFoods); 
+
+            
+            _context.Recipes.Remove(recipe);
+
+            await _context.SaveChangesAsync();
+            return true; 
+        }
     }
 }

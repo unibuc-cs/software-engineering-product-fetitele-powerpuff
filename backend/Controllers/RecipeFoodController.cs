@@ -17,17 +17,41 @@ namespace healthy_lifestyle_web_app.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> AddFoodToRecipe(string recipeName, string foodName, int grams)
+        public async Task<IActionResult> AddOrUpdateFoodToRecipe(string recipeName, string foodName, int grams)
         {
             if (grams <= 0)
             {
-                return BadRequest("Error adding food to recipe: grams must be > 0");
+                return BadRequest("Error: grams must be greater than zero.");
             }
-            if (await _recipeFoodRepository.AddFoodToRecipe(recipeName, foodName, grams))
+
+          
+            var result = await _recipeFoodRepository.AddOrUpdateFoodInRecipe(recipeName, foodName, grams);
+
+            if (result)
             {
-                return Ok("Successfully added food to recipe");
+                return Ok("Food added/updated successfully.");
             }
-            return BadRequest("Error adding food to recipe");
+
+            return BadRequest("Error adding/updating food to recipe.");
         }
+
+
+
+        [HttpDelete]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> RemoveFoodFromRecipe(string recipeName, string foodName)
+        {
+            var isRemoved = await _recipeFoodRepository.RemoveFoodFromRecipe(recipeName, foodName);
+
+            if (isRemoved)
+            {
+                return Ok("Successfully removed food from recipe.");
+            }
+
+            return BadRequest("Error removing food from recipe: food may not exist in the recipe.");
+        }
+
+
+
     }
 }
