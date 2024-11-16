@@ -15,7 +15,7 @@ namespace healthy_lifestyle_web_app.Controllers
             _recipeFoodRepository = recipeFoodRepository;
         }
 
-        [HttpPost]
+        [HttpPost("{recipeName}/{foodName}/{grams}")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> AddFoodToRecipe(string recipeName, string foodName, int grams)
         {

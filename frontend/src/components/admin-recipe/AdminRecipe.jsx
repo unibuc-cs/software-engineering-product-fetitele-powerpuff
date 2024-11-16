@@ -8,6 +8,12 @@ function AdminRecipe() {
     const [createError, setCreateError] = useState('');
     const [createSuccess, setCreateSuccess] = useState('');
 
+    const [recipeName, setRecipeName] = useState('');
+    const [foodName, setFoodName] = useState('');
+    const [grams, setGrams] = useState('');
+    const [addFoodError, setAddFoodError] = useState('');
+    const [addFoodSuccess, setAddFoodSuccess] = useState('');
+
     // Create recipe
     const createRecipe = async (event) => {
         event.preventDefault();
@@ -43,6 +49,39 @@ function AdminRecipe() {
         }
     }
 
+    // Add food to recipe
+    const addFoodToRecipe = async (event) => {
+        event.preventDefault();
+        setAddFoodError('');
+
+        if (!recipeName || !foodName || !grams) {
+            setAddFoodError('All fields must be filled');
+            return;
+        }
+
+        try {
+            const response = await axios.post(`https://localhost:7094/api/RecipeFood/${recipeName}/${foodName}/${grams}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            setAddFoodSuccess(response.data);
+            setTimeout(() => {
+                setAddFoodSuccess('');
+            }, 3000);
+            setRecipeName('');
+            setFoodName('');
+            setGrams('');
+        }
+        catch (error) {
+            console.log(error);
+            if (error.response) {
+                console.log("Error adding food to recipe: ", error.response.data);
+                setAddFoodError(error.response.data);
+            }
+        }
+    }
+
     return (
         <div className='edit-container'>
             <h1>Edit Recipes</h1>
@@ -62,6 +101,27 @@ function AdminRecipe() {
                 </form>
                 {createError && <p className='error'>{createError}</p>}
                 {createSuccess && <p className='success'>{createSuccess}</p>}
+            </div>
+
+            <div id='add-food-to-recipe-admin' className='form-container'>
+                <h3>Add Food to Recipe</h3>
+                <form onSubmit={addFoodToRecipe}>
+                    <div>
+                        <label htmlFor='recipe-name'>Recipe Name</label>
+                        <input placeholder='Recipe Name' type='text' id='recipe-name' value={recipeName} onChange={(e) => setRecipeName(e.target.value)} />
+                    </div>
+                    <div>
+                        <label htmlFor='food-name'>Food Name</label>
+                        <input placeholder='Food Name' type='text' id='food-name' value={foodName} onChange={(e) => setFoodName(e.target.value)} />
+                    </div>
+                    <div>
+                        <label htmlFor='grams'>Grams</label>
+                        <input placeholder='Grams' type='number' id='grams' value={grams} onChange={(e) => setGrams(e.target.value)} />
+                    </div>
+                    <button type='submit'>Add Food to Recipe</button>
+                </form>
+                {addFoodError && <p className='error'>{addFoodError}</p>}
+                {addFoodSuccess && <p className='success'>{addFoodSuccess}</p>}
             </div>
         </div>
     )
