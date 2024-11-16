@@ -45,5 +45,23 @@ namespace healthy_lifestyle_web_app.Controllers
             }
             return BadRequest("Error adding recipe: recipe already in the database");
         }
+
+
+        [HttpDelete("{recipeName}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteRecipe(string recipeName)
+        {
+            var result = await _recipeRepository.DeleteRecipeByNameAsync(recipeName);
+
+            if (result)
+            {
+                return Ok("Recipe deleted successfully.");
+            }
+            return BadRequest("Error deleting recipe: Recipe may not exist.");
+
+
+
+        }
+
     }
 }

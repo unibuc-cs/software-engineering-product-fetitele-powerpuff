@@ -6,5 +6,7 @@ namespace healthy_lifestyle_web_app.Repositories
     {
         public Task<List<Recipe>> GetAllAsync();
         public Task<bool> PostAsync(Recipe recipe);
+        public Task<bool> DeleteRecipeByNameAsync(string recipeName);
+
     }
 }

@@ -2,6 +2,7 @@
 {
     public interface IRecipeFoodRepository
     {
-        public Task<bool> AddFoodToRecipe(string recipeName, string foodName, int grams);
+        public Task<bool> AddOrUpdateFoodInRecipe(string recipeName, string foodName, int grams);
+        public Task<bool> RemoveFoodFromRecipe(string recipeName, string foodName); 
     }
 }
