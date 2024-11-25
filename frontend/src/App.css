@@ -370,19 +370,16 @@ body {
 
 .edit-container div {
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .edit-container input[type="email"], input[type="text"] {
-    width: 60%;
+    width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-}
-
-.edit-container input[type="text"] {
-    width: 40%;
 }
 
 .edit-container button {
