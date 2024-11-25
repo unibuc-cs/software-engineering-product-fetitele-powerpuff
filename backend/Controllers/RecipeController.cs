@@ -58,9 +58,6 @@ namespace healthy_lifestyle_web_app.Controllers
                 return Ok("Recipe deleted successfully.");
             }
             return BadRequest("Error deleting recipe: Recipe may not exist.");
-
-
-
         }
 
     }
