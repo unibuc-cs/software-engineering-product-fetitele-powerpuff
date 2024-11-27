@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using healthy_lifestyle_web_app.Entities;
 
 namespace healthy_lifestyle_web_app.Entities
 {
@@ -12,6 +13,7 @@ namespace healthy_lifestyle_web_app.Entities
         [Key]
         [Column(Order = 1)]
         public int FoodId { get; set; }
+        public Food Food { get; set; }
 
         public int Grams { get; set; }
 
@@ -23,3 +25,4 @@ namespace healthy_lifestyle_web_app.Entities
         }   
     }
 }
+
