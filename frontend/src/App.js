@@ -10,6 +10,7 @@ import AuthGuard from './components/AuthGuard';
 import AdminAuthGuard from './components/AdminAuthGuard';
 import Logout from './components/logout/Logout';
 import Navbar from './components/navbar/Navbar';
+import ReteteSummary from './pages/Retete'
 
 function App() {
   return (
@@ -29,7 +30,9 @@ function App() {
                      element={<AuthGuard><PhysicalActivity /></AuthGuard>} />
               <Route exact path="/admin" 
                      element={<AdminAuthGuard><Admin /></AdminAuthGuard>} />
-              </Routes>
+              <Route path='/retete' element={<AuthGuard><ReteteSummary/></AuthGuard>} />
+       </Routes>
+              
     </Router>
   );
 }
