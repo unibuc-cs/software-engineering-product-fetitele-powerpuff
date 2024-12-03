@@ -60,5 +60,61 @@ namespace healthy_lifestyle_web_app.Controllers
             return BadRequest("Error deleting recipe: Recipe may not exist.");
         }
 
+        [HttpGet("filter")]
+        [Authorize]
+        public async Task<IActionResult> FilterRecipes([FromQuery] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Name parameter is required.");
+            }
+
+            // Filtrarea rețetelor
+            var matchingRecipes = await _recipeRepository.FilterRecipesByNameAsync(name);
+           
+
+            if (!matchingRecipes.Any())
+            {
+                return NotFound("No recipes found matching the given name.");
+            }
+
+            var recipeDTOs = matchingRecipes.Select(r => _mapper.Map<GetRecipeDTO>(r)).ToList();
+            return Ok(recipeDTOs);
+        }
+
+
+        [HttpGet("filter-by-nutrients")]
+        [Authorize]
+        public async Task<IActionResult> FilterRecipesByNutrients(
+    [FromQuery] int? minCalories,
+    [FromQuery] int? maxCalories,
+    [FromQuery] int? minProteins,
+    [FromQuery] int? maxProteins,
+    [FromQuery] int? minCarbs,
+    [FromQuery] int? maxCarbs,
+    [FromQuery] int? minFats,
+    [FromQuery] int? maxFats)
+        {
+            if (minCalories == null && maxCalories == null && minProteins == null && maxProteins == null &&
+                minCarbs == null && maxCarbs == null && minFats == null && maxFats == null)
+            {
+                return BadRequest("At least one nutritional parameter must be provided.");
+            }
+
+            var filteredRecipes = await _recipeRepository.FilterRecipesByNutrientsAsync(
+                minCalories, maxCalories, minProteins, maxProteins,
+                minCarbs, maxCarbs, minFats, maxFats
+            );
+
+            if (!filteredRecipes.Any())
+            {
+                return NotFound("No recipes found matching the given nutritional criteria.");
+            }
+
+            var recipeDTOs = filteredRecipes.Select(r => _mapper.Map<GetRecipeDTO>(r)).ToList();
+            return Ok(recipeDTOs);
+        }
+
+
     }
 }

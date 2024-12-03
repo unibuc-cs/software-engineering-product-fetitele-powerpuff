@@ -54,5 +54,90 @@ namespace healthy_lifestyle_web_app.Repositories
             await _context.SaveChangesAsync();
             return true; 
         }
+
+       
+        public async Task<List<Recipe>> FilterRecipesByNameAsync(string name)
+        {
+            return await _context.Recipes
+                .Include(r => r.RecipeFoods)
+                .Where(r => r.Name.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+        }
+
+        public async Task<List<Recipe>> FilterRecipesByNutrientsAsync(
+      int? minCalories, int? maxCalories,
+      int? minProteins, int? maxProteins,
+      int? minCarbs, int? maxCarbs,
+      int? minFats, int? maxFats)
+        {
+            
+            var query = _context.Recipes
+                .Include(r => r.RecipeFoods) 
+                .ThenInclude(rf => rf.Food) 
+                .AsQueryable();
+
+        
+
+            if (minCalories.HasValue)
+            {
+                query = query.Where(r => r.RecipeFoods
+                    .Sum(rf => rf.Grams * rf.Food.Calories / 100.0) >= minCalories.Value);
+            }
+
+            if (maxCalories.HasValue)
+            {
+                query = query.Where(r => r.RecipeFoods
+                    .Sum(rf => rf.Grams * rf.Food.Calories / 100.0) <= maxCalories.Value);
+            }
+
+            if (minProteins.HasValue)
+            {
+                query = query.Where(r => r.RecipeFoods
+                    .Sum(rf => rf.Grams * rf.Food.Proteins / 100.0) >= minProteins.Value);
+            }
+
+            if (maxProteins.HasValue)
+            {
+                query = query.Where(r => r.RecipeFoods
+                    .Sum(rf => rf.Grams * rf.Food.Proteins / 100.0) <= maxProteins.Value);
+            }
+
+            if (minCarbs.HasValue)
+            {
+                query = query.Where(r => r.RecipeFoods
+                    .Sum(rf => rf.Grams * rf.Food.Carbohydrates / 100.0) >= minCarbs.Value);
+            }
+
+            if (maxCarbs.HasValue)
+            {
+                query = query.Where(r => r.RecipeFoods
+                    .Sum(rf => rf.Grams * rf.Food.Carbohydrates / 100.0) <= maxCarbs.Value);
+            }
+
+            if (minFats.HasValue)
+            {
+                query = query.Where(r => r.RecipeFoods
+                    .Sum(rf => rf.Grams * rf.Food.Fats / 100.0) >= minFats.Value);
+            }
+
+            if (maxFats.HasValue)
+            {
+                query = query.Where(r => r.RecipeFoods
+                    .Sum(rf => rf.Grams * rf.Food.Fats / 100.0) <= maxFats.Value);
+            }
+
+            
+            var filteredRecipes = await query.Select(r => new Recipe
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Description = r.Description
+            }).ToListAsync();
+
+            return filteredRecipes;
+        }
+
+
+
     }
 }
