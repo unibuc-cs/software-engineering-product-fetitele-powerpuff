@@ -3,8 +3,9 @@ import axios from 'axios';
 import { RetetaDisplay } from '../components/retete/RetetaDisplay';
 export default function ReteteSummary(){
     const [reteteArray, setReteteArray] = useState([]);
-
-    useEffect(() => {
+    const [errorFetch,setErrorFetch] = useState(false);
+    
+        useEffect(() => {
         async function get_recipes() {
             try {
                 const token = localStorage.getItem('token');
@@ -13,11 +14,11 @@ export default function ReteteSummary(){
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
+                
                 setReteteArray(response.data);
              
             } catch (error) {
-                console.log(error);
+                setErrorFetch(true)
             }
         }
 
@@ -27,6 +28,7 @@ export default function ReteteSummary(){
     //to do pentru mai tarziu : daca tokenul expira, nu mai face query
     return (
         <div>
+            {errorFetch && <p>Nu s-au gasit nici o reteta, incearca sa te logezi din nou</p>}
             {reteteArray.map(reteta=><div key={crypto.randomUUID()}><RetetaDisplay reteta={reteta}></RetetaDisplay></div>)}
         </div>
     );

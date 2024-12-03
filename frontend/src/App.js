@@ -11,7 +11,7 @@ import AdminAuthGuard from './components/AdminAuthGuard';
 import Logout from './components/logout/Logout';
 import Navbar from './components/navbar/Navbar';
 import ReteteSummary from './pages/Retete'
-
+import RetetaDetail from './pages/RetetaDetail';
 function App() {
   return (
     <Router>
@@ -31,6 +31,7 @@ function App() {
               <Route exact path="/admin" 
                      element={<AdminAuthGuard><Admin /></AdminAuthGuard>} />
               <Route path='/retete' element={<AuthGuard><ReteteSummary/></AuthGuard>} />
+              <Route path='/RetetaDetail' element={<AuthGuard><RetetaDetail/></AuthGuard>}/>
        </Routes>
               
     </Router>
