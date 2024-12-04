@@ -59,8 +59,8 @@ namespace healthy_lifestyle_web_app.Repositories
         public async Task<List<Recipe>> FilterRecipesByNameAsync(string name)
         {
             return await _context.Recipes
-                .Include(r => r.RecipeFoods) 
-                .Where(r => r.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+                .Include(r => r.RecipeFoods)
+                .Where(r => r.Name.ToLower().Contains(name.ToLower()))
                 .ToListAsync();
         }
 
@@ -127,7 +127,12 @@ namespace healthy_lifestyle_web_app.Repositories
             }
 
             
-            var filteredRecipes = await query.ToListAsync();
+            var filteredRecipes = await query.Select(r => new Recipe
+            {
+                Id = r.Id,
+                Name = r.Name,
+                Description = r.Description
+            }).ToListAsync();
 
             return filteredRecipes;
         }
