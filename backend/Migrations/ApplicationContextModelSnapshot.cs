@@ -244,34 +244,6 @@ namespace healthy_lifestyle_web_app.Migrations
                     b.ToTable("MusclePhysicalActivity");
                 });
 
-            modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Article", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Title")
-                        .IsUnique();
-
-                    b.ToTable("Articles");
-                });
-
             modelBuilder.Entity("healthy_lifestyle_web_app.Entities.Day", b =>
                 {
                     b.Property<int>("ProfileId")

@@ -114,7 +114,6 @@ builder.Services.AddScoped<IWeightEvolutionRepository, WeightEvolutionRepository
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 builder.Services.AddScoped<IRecipeRepository, RecipeRepository>();
 builder.Services.AddScoped<IRecipeFoodRepository, RecipeFoodRepository>();
-builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 builder.Services.AddScoped<CreateDaysService>();
 
 // Add Hangfire services
