@@ -27,6 +27,9 @@ function AdminRecipe() {
     const [deleteRecipeError, setDeleteRecipeError] = useState('');
     const [deleteRecipeSuccess, setDeleteRecipeSuccess] = useState('');
 
+    // Get recipes
+    const [recipes, setRecipes] = useState([]);
+
     // Create recipe
     const createRecipe = async (event) => {
         event.preventDefault();
@@ -183,6 +186,44 @@ function AdminRecipe() {
         }
     }
 
+    const getRecipes = async (event) => {
+        if (recipes.length !== 0) {
+            setRecipes([]);
+            return;
+        }
+
+        try {
+            const response = await axios.get('https://localhost:7094/api/Recipe/for-admin', {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            for (let i = 0; i < response.data.length; i++) {
+                for (let j = 0; j < response.data[i].recipeFoods.length; j++) {
+                    let foodId = response.data[i].recipeFoods[j].foodId;
+                    try {
+                        const foodResponse = await axios.get(`https://localhost:7094/api/Food/by-id/${foodId}`, {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem('token')}`
+                            }
+                        });
+
+                        response.data[i].recipeFoods[j].food = foodResponse.data.name;
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            }
+
+            setRecipes(response.data);
+        } 
+        catch (error) {
+            setRecipes([]);
+            console.log(error);
+        }
+    }
+
     return (
         <div className='edit-container'>
             <h1>Edit Recipes</h1>
@@ -255,6 +296,25 @@ function AdminRecipe() {
                 </form>
                 {deleteRecipeError && <p className='error'>{deleteRecipeError}</p>}
                 {deleteRecipeSuccess && <p className='success'>{deleteRecipeSuccess}</p>}
+            </div>
+
+            <button onClick={getRecipes}>Get Recipes</button>
+            <div id="admin-recipes">
+                {recipes && recipes.map(recipe => {
+                    return (
+                        <div key={recipe.id}>
+                            <h3>Name: {recipe.name}</h3>
+                            <p>Id: {recipe.id}</p>
+                            <p>Description: {recipe.description}</p>
+                            <p>Foods</p>
+                            {recipe.recipeFoods && recipe.recipeFoods.map(recipeFood => {
+                                return (
+                                    <p key={recipeFood.foodId}>{recipeFood.food}</p>
+                                );
+                            })}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     )

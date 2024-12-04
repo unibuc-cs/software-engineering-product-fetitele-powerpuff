@@ -34,6 +34,14 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(recipeDTOs);
         }
 
+        [HttpGet("for-admin")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetRecipesAdmin()
+        {
+            List<Recipe> recipes = await _recipeRepository.GetAllAsync();
+            return Ok(recipes);
+        }
+
         // Add a new recipe
         [HttpPost]
         [Authorize(Roles = "admin")]

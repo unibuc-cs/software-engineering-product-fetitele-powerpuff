@@ -407,7 +407,7 @@ body {
 
 #admin-users div, #admin-foods div, 
 #admin-physical-activities .admin-activity-item, #admin-muscles div, 
-#admin-requests div {
+#admin-requests div, #admin-recipes div {
     background-color: #f8f9fa;
     padding: 15px;
     border-radius: 8px;
@@ -415,13 +415,15 @@ body {
     margin-bottom: 10px;
 }
 
-#admin-users h3, #admin-muscles h3, #admin-requests h3, #admin-foods h3, .admin-activity-item h3 {
+#admin-users h3, #admin-muscles h3, #admin-requests h3, #admin-foods h3, .admin-activity-item h3, 
+#admin-recipes h3 {
     font-size: 16px;
     color: #343a40;
     margin-bottom: 5px;
 }
 
-#admin-users p, #admin-muscles p, #admin-requests p, #admin-foods p, .admin-activity-item p {
+#admin-users p, #admin-muscles p, #admin-requests p, #admin-foods p, .admin-activity-item p,
+#admin-recipes h3 {
     font-size: 16px;
     color: #343a40;
     margin: 5px 0;
