@@ -27,6 +27,10 @@ namespace Proiect.Profiles
 
             CreateMap<Recipe, GetRecipeDTO>();
             CreateMap<PostRecipeDTO, Recipe>();
+
+
+            CreateMap<CreateArticleDTO, Article>();
+
         }
     }
 }
