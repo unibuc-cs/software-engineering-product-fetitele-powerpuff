@@ -70,6 +70,9 @@ function Food() {
 
         if (!foodName) {
             setNameError('No food with this name');
+            setTimeout(() => {
+                setNameError(null);
+            }, 3000);
             return;
         }
         
@@ -83,6 +86,9 @@ function Food() {
             setFood(response.data);
         } catch (error) {
             setNameError('No food with this name');
+            setTimeout(() => {
+                setNameError(null);
+            }, 3000);
             setFood(null);
             console.log(error);
         }
@@ -95,12 +101,18 @@ function Food() {
 
         if(!name) {
             setAddError('Name must not be empty');
+            setTimeout(() => {
+                setAddError(null);
+            }, 3000);
             return;
         }
 
         // Validate food data
         if (calories < 0 || carbohydrates < 0 || fats < 0 || proteins < 0) {
             setAddError('Please enter values greater or equal to 0 for all fields.');
+            setTimeout(() => {
+                setAddError(null);
+            }, 3000);
             return;
         }
 
@@ -127,8 +139,14 @@ function Food() {
             setProteins(0);
             setFats(0);
             setAddSucces('Food added successfully');
+            setTimeout(() => {
+                setAddSucces(null);
+            }, 3000);
         } catch (error) {
             setAddError('Could not add food, please try again later');
+            setTimeout(() => {
+                setAddError(null);
+            }, 3000);
             console.log(error);
         }
     };
@@ -137,6 +155,9 @@ function Food() {
     const addFoodToDay = async (foodNameDay, grams) => {
         if (grams <= 0) {
             setAddToDayError('Please enter a value greater than 0 for grams.');
+            setTimeout(() => {
+                setAddToDayError(null);
+            }, 3000);
             return;
         }
 
@@ -201,6 +222,9 @@ function Food() {
         } 
         catch (error) {
             setRequestError(error.response.data);
+            setTimeout(() => {
+                setRequestError(null);
+            }, 3000);
             console.log(error);
         }
     }
@@ -219,7 +243,7 @@ function Food() {
             <Header page='food'/>
             <div className="item-container">
                 <h2>See All</h2>
-                <button onClick={getAllFoods}>See All</button>
+                <button className="small-button" onClick={getAllFoods}>See All</button>
 
                 <div>
                     {foods.map(food => {
@@ -236,7 +260,7 @@ function Food() {
                                 value={gramsObj[food.name]} 
                                 onChange={(event) => handleGramsObj(food.name, event.target.value)} 
                             />
-                            <button className="add-item-day" 
+                            <button className="add-item-day"
                                 onClick={() => addFoodToDayObj(food.name, gramsObj[food.name])}>Add to Day</button>
                         </div>
                         );
@@ -248,7 +272,7 @@ function Food() {
                 <h2>Search Food</h2>
                 <input className="search-item-input" type="text" placeholder="Search food" 
                     value={foodName} onChange={(event) => {setFoodName(event.target.value)}} />
-                <button className="search-item-button" onClick={getByName}>Search</button>
+                <button className="search-item-button small-button" onClick={getByName}>Search</button>
 
                 {food && <FoodItem 
                     key={food.name}

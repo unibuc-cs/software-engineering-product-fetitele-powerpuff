@@ -327,7 +327,7 @@ function Day() {
                     
                     <h2>Food</h2>
                     {/* Navigate to food page to search and add food */}
-                    {isCurrentDate && <button onClick={() => navigate('/food')}>Add Food</button>}
+                    {isCurrentDate && <button className="small-button" onClick={() => navigate('/food')}>Add Food</button>}
                     <ul>
                         {completeDay && completeDay.dayFoods.map((food, index) => {
                             return (
@@ -354,7 +354,7 @@ function Day() {
 
                     <h2>Physical Activities</h2>
                     {/* Navigate to physical activities page to search and add to day */}
-                    {isCurrentDate && <button onClick={() => navigate('/physical-activity')}>Add Physical Activity</button>}
+                    {isCurrentDate && <button className="small-button" onClick={() => navigate('/physical-activity')}>Add Physical Activity</button>}
                     <ul>
                         {completeDay && completeDay.dayPhysicalActivities.map((activity, index) => {
                             return (

@@ -141,7 +141,9 @@ body {
 }
 
 .search-item-input {
-    width: 90%;
+    display: block;
+    margin: auto;
+    width: 50%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -166,12 +168,13 @@ body {
     font-weight: bold;
 }
 
-.item-container form input, select, .grams, .minutes {
+.item-container form input, select, .grams, .minutes, .mls {
     width: 15%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    margin-bottom: 15px;
 }
 
 #goal {
@@ -308,7 +311,6 @@ body {
 
 .mls {
     margin-right: 5px;
-    height: 20px;
 }
 
 /* Admin styles */
@@ -373,7 +375,7 @@ body {
     width: 100%;
 }
 
-.edit-container input[type="email"], input[type="text"] {
+.edit-container input[type="email"], .edit-container input[type="text"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -444,4 +446,8 @@ body {
 
 .error {
     color: red;
+}
+
+.small-button {
+    margin-bottom: 15px;
 }

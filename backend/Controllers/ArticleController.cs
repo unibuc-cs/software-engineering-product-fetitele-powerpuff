@@ -23,7 +23,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> PostArticle([FromBody] CreateArticleDTO articleDTO)
         {
 
@@ -48,7 +48,7 @@ namespace healthy_lifestyle_web_app.Controllers
 
 
         [HttpDelete("{title}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteArticleByTitle(string title)
         {
 

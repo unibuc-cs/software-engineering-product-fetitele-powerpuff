@@ -64,6 +64,9 @@ function PhysicalActivity() {
 
         if (!activityName) {
             setNameError('No activity found');
+            setTimeout(() => {
+                setNameError(null);
+            }, 3000);
             return;
         }
 
@@ -78,6 +81,9 @@ function PhysicalActivity() {
         } catch (error) {
             setActivity(null);
             setNameError('No activity with this name');
+            setTimeout(() => {
+                setNameError(null);
+            }, 3000);
             console.log(error);
         }
     };
@@ -98,6 +104,9 @@ function PhysicalActivity() {
         } catch (error) {
             setActivitiesByMuscle([]);
             setMuscleError('No activities targeting this muscle');
+            setTimeout(() => {
+                setMuscleError(null);
+            }, 3000);
             console.log(error);
         }
     };
@@ -107,6 +116,9 @@ function PhysicalActivity() {
         setAddToDayError(null);
         if (minutes <= 0) {
             setAddToDayError('Minutes must be greater than 0');
+            setTimeout(() => {
+                setAddToDayError(null);
+            }, 3000);
             return;
         }
         try {
@@ -129,6 +141,10 @@ function PhysicalActivity() {
 
     // Add to day for the get all activities section
     const addActivityToDayObj = async (activityNameDay, minutes) => {
+        if (minutes <= 0) {
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             await axios.put('https://localhost:7094/api/Days/add-activity', {
@@ -149,6 +165,10 @@ function PhysicalActivity() {
 
     // Add to day for the get by muscle section
     const addActivityToDayMuscleObj = async (activityNameDay, minutes) => {
+        if (minutes <= 0) {
+            return;
+        }
+        
         try {
             const token = localStorage.getItem('token');
             await axios.put('https://localhost:7094/api/Days/add-activity', {
@@ -189,7 +209,7 @@ function PhysicalActivity() {
             <Header page='physical-activity'/>
             <div className="item-container">
                 <h3>See All</h3>
-                <button onClick={getAllActivites}>See All</button>
+                <button className="small-button" onClick={getAllActivites}>See All</button>
 
                 <div>
                     {physicalActivities && physicalActivities.map(physicalActivity => {
@@ -217,7 +237,7 @@ function PhysicalActivity() {
                 <h2>Search Activity To Add To Day</h2>                
                 <input className="search-item-input" type="text" placeholder="Activity Name" 
                     value={activityName} onChange={(event) => {setActivityName(event.target.value)}} />
-                <button className="search-item-button" onClick={getByName}>Search</button>
+                <button className="search-item-button small-button" onClick={getByName}>Search</button>
 
                 {activity && <PhysicalActivityItem key={activity.name} name={activity.name} muscles={activity.muscles} />}
                 
@@ -232,7 +252,7 @@ function PhysicalActivity() {
 
                 <input className="search-item-input" type="text" placeholder="Search by Muscle Name"
                     value={muscleName} onChange={(event) => {setMuscleName(event.target.value)}} />
-                <button className="search-item-button" onClick={getByMuscle}>Search</button>
+                <button className="search-item-button small-button" onClick={getByMuscle}>Search</button>
 
                 {activitiesByMuscle && activitiesByMuscle.map(activity => {
                     return (
