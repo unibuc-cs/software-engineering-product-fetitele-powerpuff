@@ -4,6 +4,7 @@ using healthy_lifestyle_web_app.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace healthy_lifestyle_web_app.Controllers
 {
@@ -20,21 +21,21 @@ namespace healthy_lifestyle_web_app.Controllers
             _mapper = mapper;
         }
 
-        // POST pentru a adăuga un articol nou
+       
         [HttpPost]
+        [Authorize(Roles = "Admin")]  
         public async Task<IActionResult> PostArticle([FromBody] CreateArticleDTO articleDTO)
         {
-            // Verifică dacă există deja un articol cu același titlu
+            
             var existingArticle = await _articleRepository.GetByTitleAsync(articleDTO.Title);
             if (existingArticle != null)
             {
                 return BadRequest("An article with this title already exists.");
             }
 
-            // Creează articolul pe baza DTO-ului
             var article = _mapper.Map<Article>(articleDTO);
 
-            // Adaugă articolul în baza de date
+           
             bool result = await _articleRepository.AddArticleAsync(article);
 
             if (result)
@@ -43,5 +44,30 @@ namespace healthy_lifestyle_web_app.Controllers
             }
             return BadRequest("Failed to add the article.");
         }
+
+
+
+        [HttpDelete("{title}")]
+        [Authorize(Roles = "Admin")] 
+        public async Task<IActionResult> DeleteArticleByTitle(string title)
+        {
+           
+            var article = await _articleRepository.GetByTitleAsync(title);
+
+            if (article == null)
+            {
+                return NotFound("Article not found.");
+            }
+
+            bool result = await _articleRepository.DeleteArticleAsync(article);
+
+            if (result)
+            {
+                return Ok("Article deleted successfully.");
+            }
+
+            return BadRequest("Failed to delete the article.");
+        }
+
     }
 }
