@@ -35,6 +35,9 @@ function AdminFood () {
             setFoods([]);
             console.log(error);
             setGetError('No foods found');
+            setTimeout(() => {
+                setGetError('');
+            }, 3000);
         }
     }
 
@@ -43,13 +46,19 @@ function AdminFood () {
         event.preventDefault();
         setCreateError('');
 
-        if (!name) {
-            setCreateError('Name must not be empty');
+        if (!name || !calories || !carbohydrates || !fats || !proteins) {
+            setCreateError('All fields must be set');
+            setTimeout(() => {
+                setCreateError('');
+            }, 3000);
             return;
         }
 
         if (calories <= 0 || carbohydrates < 0 || fats < 0 || proteins < 0) {
-            setCreateError('Please enter values greater or equal to 0 for all fields.');
+            setCreateError('Please enter values greater or equal to 0 for calories and greater than 0 for the rest.');
+            setTimeout(() => {
+                setCreateError('');
+            }, 5000);
             return;
         }
 
@@ -80,6 +89,9 @@ function AdminFood () {
             if (error.response) {
                 console.log("Error creating food: ", error.response.data);
                 setCreateError(error.response.data);
+                setTimeout(() => {
+                    setCreateError('');
+                }, 3000);
             }
         }
     }
@@ -101,15 +113,15 @@ function AdminFood () {
                     </div>
                     <div>
                         <label htmlFor="food-carbohydrates">Carbohydrates</label>
-                        <input placeholder='0' type="number" id="food-carbohydrates" value={carbohydrates} onChange={e => setCarbohydrates(e.target.value)} />
+                        <input placeholder='Carbohydrates' type="number" id="food-carbohydrates" value={carbohydrates} onChange={e => setCarbohydrates(e.target.value)} />
                     </div>
                     <div>
                         <label htmlFor="food-proteins">Proteins</label>
-                        <input placeholder='0' type="number" id="food-proteins" value={proteins} onChange={e => setProteins(e.target.value)} />
+                        <input placeholder='Proteins' type="number" id="food-proteins" value={proteins} onChange={e => setProteins(e.target.value)} />
                     </div>
                     <div>
                         <label htmlFor="food-fats">Fats</label>
-                        <input placeholder='0' type="number" id="food-fats" value={fats} onChange={e => setFats(e.target.value)} />
+                        <input placeholder='Fats' type="number" id="food-fats" value={fats} onChange={e => setFats(e.target.value)} />
                     </div>
                     <button type="submit">Create Food</button>
                     {createError && <p className='error'>{createError}</p>}
