@@ -94,14 +94,14 @@ namespace healthy_lifestyle_web_app.Controllers
         [HttpGet("filter-by-nutrients")]
         [Authorize]
         public async Task<IActionResult> FilterRecipesByNutrients(
-    [FromQuery] int? minCalories,
-    [FromQuery] int? maxCalories,
-    [FromQuery] int? minProteins,
-    [FromQuery] int? maxProteins,
-    [FromQuery] int? minCarbs,
-    [FromQuery] int? maxCarbs,
-    [FromQuery] int? minFats,
-    [FromQuery] int? maxFats)
+            [FromQuery] int? minCalories,
+            [FromQuery] int? maxCalories,
+            [FromQuery] int? minProteins,
+            [FromQuery] int? maxProteins,
+            [FromQuery] int? minCarbs,
+            [FromQuery] int? maxCarbs,
+            [FromQuery] int? minFats,
+            [FromQuery] int? maxFats)
         {
             if (minCalories == null && maxCalories == null && minProteins == null && maxProteins == null &&
                 minCarbs == null && maxCarbs == null && minFats == null && maxFats == null)

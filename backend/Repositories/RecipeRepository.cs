@@ -65,10 +65,10 @@ namespace healthy_lifestyle_web_app.Repositories
         }
 
         public async Task<List<Recipe>> FilterRecipesByNutrientsAsync(
-      int? minCalories, int? maxCalories,
-      int? minProteins, int? maxProteins,
-      int? minCarbs, int? maxCarbs,
-      int? minFats, int? maxFats)
+              int? minCalories, int? maxCalories,
+              int? minProteins, int? maxProteins,
+              int? minCarbs, int? maxCarbs,
+              int? minFats, int? maxFats)
         {
             
             var query = _context.Recipes
@@ -131,7 +131,12 @@ namespace healthy_lifestyle_web_app.Repositories
             {
                 Id = r.Id,
                 Name = r.Name,
-                Description = r.Description
+                Description = r.Description,
+                RecipeFoods = r.RecipeFoods.Select(rf => new RecipeFood(
+                    rf.RecipeId,
+                    rf.FoodId,
+                    rf.Grams 
+                )).ToList()
             }).ToListAsync();
 
             return filteredRecipes;

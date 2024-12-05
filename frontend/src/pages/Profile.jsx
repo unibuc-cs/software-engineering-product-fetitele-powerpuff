@@ -326,7 +326,7 @@ function Profile() {
                 <p>Weight: {profileInfo.weight}</p>
                 <p>Goal: {profileInfo.goal}</p>
                 <button onClick={() => setEditProfile(true)}>Edit Profile</button>
-                <button onClick={() => deleteProfile()}>Delete Profile</button>
+                <button className="small-button" onClick={() => deleteProfile()}>Delete Profile</button>
                 <h4>Weight Evolution</h4>
                 <div className="chart-container">
                     {chartData && <Chart type="line" data={chartData} options={chartOptions} />}

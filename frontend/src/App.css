@@ -168,7 +168,7 @@ body {
     font-weight: bold;
 }
 
-.item-container form input, select, .grams, .minutes, .mls {
+.item-container form input, select, .grams, .minutes, .mls, .min-max {
     width: 15%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -440,6 +440,12 @@ body {
 
 #requests-button {
     margin-top: 20px;
+}
+
+/* Recipe page style */
+.recipe-container h2 {
+    margin-top: 15px;
+    margin-bottom: 20px;
 }
 
 .success {
