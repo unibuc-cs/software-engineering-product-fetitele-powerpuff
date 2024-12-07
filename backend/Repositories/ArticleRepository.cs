@@ -18,6 +18,21 @@ namespace healthy_lifestyle_web_app.Repositories
             return await _context.Articles.ToListAsync();
         }
 
+        public async Task<List<Article>> FilterArticlesAsync(string name)
+        {
+            return await _context.Articles
+                .Where(a => a.Title.ToLower().Contains(name.ToLower()) || a.Author.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+        }
+
+        public async Task<List<Recipe>> FilterRecipesByNameAsync(string name)
+        {
+            return await _context.Recipes
+                .Include(r => r.RecipeFoods)
+                .Where(r => r.Name.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+        }
+
         public async Task<bool> AddArticleAsync(Article article)
         {
             try

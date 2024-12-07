@@ -34,6 +34,24 @@ namespace healthy_lifestyle_web_app.Controllers
             return Ok(articleDTOs);
         }
 
+        [HttpGet("filter")]
+        [Authorize]
+        public async Task<IActionResult> FilterArticles([FromQuery] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Name parameter is required.");
+            }
+
+            var articles = await _articleRepository.FilterArticlesAsync(name);
+            if (!articles.Any())
+            {
+                return NotFound("No articles found matching the given input.");
+            }
+            var articleDTOs = articles.Select(a => _mapper.Map<ArticleDTO>(a)).ToList();
+            return Ok(articleDTOs);
+        }
+
         [HttpPost]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> PostArticle([FromBody] ArticleDTO articleDTO)
