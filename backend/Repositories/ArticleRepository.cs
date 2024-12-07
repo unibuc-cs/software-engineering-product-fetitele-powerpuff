@@ -13,6 +13,11 @@ namespace healthy_lifestyle_web_app.Repositories
             _context = context;
         }
 
+        public async Task<List<Article>> GetAllAsync()
+        {
+            return await _context.Articles.ToListAsync();
+        }
+
         public async Task<bool> AddArticleAsync(Article article)
         {
             try

@@ -21,10 +21,22 @@ namespace healthy_lifestyle_web_app.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetArticles()
+        {
+            List<Article> articles = await _articleRepository.GetAllAsync();
+            List<ArticleDTO> articleDTOs = new List<ArticleDTO>();
+            foreach (var article in articles)
+            {
+                articleDTOs.Add(_mapper.Map<ArticleDTO>(article));
+            }
+            return Ok(articleDTOs);
+        }
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> PostArticle([FromBody] CreateArticleDTO articleDTO)
+        public async Task<IActionResult> PostArticle([FromBody] ArticleDTO articleDTO)
         {
 
             var existingArticle = await _articleRepository.GetByTitleAsync(articleDTO.Title);
