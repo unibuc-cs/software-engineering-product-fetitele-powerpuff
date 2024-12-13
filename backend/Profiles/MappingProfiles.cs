@@ -29,8 +29,7 @@ namespace Proiect.Profiles
             CreateMap<PostRecipeDTO, Recipe>();
 
 
-            CreateMap<CreateArticleDTO, Article>();
-
+            CreateMap<ArticleDTO, Article>().ReverseMap();
         }
     }
 }

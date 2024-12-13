@@ -14,7 +14,4 @@ namespace healthy_lifestyle_web_app.Repositories
             int? minCarbs, int? maxCarbs,
             int? minFats, int? maxFats);
     }
-
 }
-
-
