@@ -43,6 +43,9 @@ namespace healthy_lifestyle_web_app.ContextModels
             modelBuilder.Entity<Article>()
            .HasIndex(a => a.Title)
            .IsUnique();
+            modelBuilder.Entity<Tutorial>()
+            .HasIndex(a => a.Title)
+            .IsUnique();
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
@@ -58,7 +61,7 @@ namespace healthy_lifestyle_web_app.ContextModels
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeFood> RecipeFoods { get; set; }
         public DbSet<Article> Articles { get; set; }
-
+        public DbSet<Tutorial> Tutorials { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
     }
 }

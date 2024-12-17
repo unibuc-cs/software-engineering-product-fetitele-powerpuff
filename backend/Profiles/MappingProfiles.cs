@@ -30,6 +30,7 @@ namespace Proiect.Profiles
 
 
             CreateMap<ArticleDTO, Article>().ReverseMap();
+            CreateMap<TutorialDTO, Tutorial>().ReverseMap();
         }
     }
 }
