@@ -6,6 +6,7 @@ import AdminPhysicalActivity from "../components/admin-physical-activity/AdminPh
 import AdminRequest from "../components/admin-request/AdminRequest.jsx";
 import AdminRecipe from "../components/admin-recipe/AdminRecipe.jsx";
 import AdminArticle from "../components/admin-article/AdminArticle.jsx";
+import AdminTutorial from '../components/admin-tutorial/AdminTutorial.jsx';
 
 // Admin page for managing users, foods, activities and requests
 
@@ -40,12 +41,17 @@ function Admin() {
                     className={activeComponent === 'article' ? 'active' : ''}
                     onClick={() => setActiveComponent('article')}>Edit Articles</button>
 
+                <button
+                    className={activeComponent === 'tutorial' ? 'active' : ''}
+                    onClick={() => setActiveComponent('tutorial')}>Edit Tutorials</button>
+
                 {activeComponent === 'users' && <AdminUser />}
                 {activeComponent === 'food' && <AdminFood />}
                 {activeComponent === 'physicalActivities' && <AdminPhysicalActivity />}
                 {activeComponent === 'requests' && <AdminRequest />}
                 {activeComponent === 'recipes' && <AdminRecipe />}
                 {activeComponent === 'article' && <AdminArticle />}
+                {activeComponent === 'tutorial' && <AdminTutorial />}
             </div>
         </div>
     );
