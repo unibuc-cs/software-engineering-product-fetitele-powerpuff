@@ -14,6 +14,7 @@ import ReteteSummary from './pages/Retete'
 import RetetaDetail from './pages/RetetaDetail';
 import Articles from './pages/Articles';
 import ArticleDetail from './pages/ArticleDetail';
+import Tutorials from './pages/Tutorials';
 function App() {
   return (
     <Router>
@@ -36,6 +37,7 @@ function App() {
               <Route path='/RetetaDetail' element={<AuthGuard><RetetaDetail/></AuthGuard>}/>
               <Route path='/articles' element={<AuthGuard><Articles/></AuthGuard>}/>
               <Route path='/article-detail' element={<AuthGuard><ArticleDetail/></AuthGuard>}/>
+              <Route path='/tutorials' element={<AuthGuard><Tutorials/></AuthGuard>}/>
        </Routes>
               
     </Router>

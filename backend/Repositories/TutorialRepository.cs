@@ -19,6 +19,13 @@ namespace healthy_lifestyle_web_app.Repositories
             return await _context.Tutorials.ToListAsync();
         }
 
+        public async Task<List<Tutorial>> FilterTutorialsAsync(string name)
+        {
+            return await _context.Tutorials
+                .Where(t => t.Title.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+        }
+
         public async Task<bool> PostAsync(Tutorial tutorial)
         {
             try
