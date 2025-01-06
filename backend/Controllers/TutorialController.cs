@@ -20,11 +20,29 @@ namespace healthy_lifestyle_web_app.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("for-admin")]
-        [Authorize(Roles = "admin")]
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetTutorials()
         {
             return Ok(await _tutorialRepository.GetAllAsync());
+        }
+
+        [HttpGet("filter")]
+        [Authorize]
+        public async Task<IActionResult> FilterTutorilals([FromQuery] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Name parameter is required.");
+            }
+
+            var tutorials = await _tutorialRepository.FilterTutorialsAsync(name);
+            if (!tutorials.Any())
+            {
+                return NotFound("No tutorials found matching the given input.");
+            }
+            var tutorialDTOs = tutorials.Select(t => _mapper.Map<TutorialDTO>(t)).ToList();
+            return Ok(tutorialDTOs);
         }
 
         [HttpPost]
