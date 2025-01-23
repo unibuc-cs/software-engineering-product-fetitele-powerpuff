@@ -15,6 +15,7 @@ import RetetaDetail from './pages/RetetaDetail';
 import Articles from './pages/Articles';
 import ArticleDetail from './pages/ArticleDetail';
 import Tutorials from './pages/Tutorials';
+import TutorialDetail from './pages/TutorialDetail';
 function App() {
   return (
     <Router>
@@ -38,6 +39,7 @@ function App() {
               <Route path='/articles' element={<AuthGuard><Articles/></AuthGuard>}/>
               <Route path='/article-detail' element={<AuthGuard><ArticleDetail/></AuthGuard>}/>
               <Route path='/tutorials' element={<AuthGuard><Tutorials/></AuthGuard>}/>
+              <Route path='/tutorial-detail' element={<AuthGuard><TutorialDetail/></AuthGuard>}/>
        </Routes>
               
     </Router>
