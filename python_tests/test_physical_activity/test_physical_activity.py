@@ -1,9 +1,4 @@
-from urllib.parse import quote
 import warnings
-import pytest
-import requests
-import json
-
 from urllib3.exceptions import InsecureRequestWarning
 
 activity = {

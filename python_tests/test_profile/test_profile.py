@@ -1,9 +1,4 @@
-from urllib.parse import quote
 import warnings
-import pytest
-import requests
-import json
-
 from urllib3.exceptions import InsecureRequestWarning
 
 
@@ -94,7 +89,7 @@ def test_post_user_profile_twice(api_client, setup_and_teardown):
         if user_token is not None:
             post_response = api_client.post_user_profile(user_token, profile)
             assert post_response.status_code == 200
-            
+
             post_response = api_client.post_user_profile(user_token, profile)
             assert post_response.status_code == 400
 
