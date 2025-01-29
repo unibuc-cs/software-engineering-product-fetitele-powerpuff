@@ -28,11 +28,59 @@ class APIClient:
     def post_user_profile(self, token, profile):
         return requests.post(self.base_url + 'Profiles', data=json.dumps(profile), headers=self.generate_headers(token), verify=False)
     
-    def add_activity_to_day(self, day_activity, token):
-        return requests.put(self.base_url + 'Days/add-activity', data=json.dumps(day_activity), headers=self.generate_headers(token), verify=False)
+    def get_days(self, token):
+        return requests.get(self.base_url + 'Days', headers=self.generate_headers(token), verify=False)
+    
+    def get_user_days(self, token):
+        return requests.get(self.base_url + 'Days/by-user', headers=self.generate_headers(token), verify=False)
+    
+    def get_current_day(self, token):
+        return requests.get(self.base_url + 'Days/current-day', headers=self.generate_headers(token), verify=False)
+    
+    def get_day_by_date(self, token, date):
+        return requests.get(self.base_url + 'Days/by-date', params={'date': date}, headers=self.generate_headers(token), verify=False)
+    
+    def get_day_by_date(self, token, date):
+        return requests.get(self.base_url + 'Days/by-date', params={'date': date}, headers=self.generate_headers(token), verify=False)
+    
+    def get_day_food_calories(self, token, date):
+        return requests.get(self.base_url + 'Days/food-calories', params={'date': date}, headers=self.generate_headers(token), verify=False)
 
-    def get_current_day(self, formatted_date, token):
-        return requests.get(self.base_url + 'Days/by-date', params={'date': formatted_date}, headers=self.generate_headers(token), verify=False)
+    def get_day_activity_calories(self, token, date):
+        return requests.get(self.base_url + 'Days/activity-calories', params={'date': date}, headers=self.generate_headers(token), verify=False)
+    
+    def get_day_food_calories_after_date(self, token, date):
+        return requests.get(self.base_url + 'Days/food-calories-after-date', params={'date': date}, headers=self.generate_headers(token), verify=False)
+    
+    def get_day_activity_calories_after_date(self, token, date):
+        return requests.get(self.base_url + 'Days/activity-calories-after-date', params={'date': date}, headers=self.generate_headers(token), verify=False)
+    
+    def get_day_average_food_calories(self, token, date):
+        return requests.get(self.base_url + 'Days/average-food-calories', params={'date': date}, headers=self.generate_headers(token), verify=False)
+    
+    def get_day_average_activity_calories(self, token, date):
+        return requests.get(self.base_url + 'Days/average-activity-calories', params={'date': date}, headers=self.generate_headers(token), verify=False)
+
+    def put_water_to_day(self, token, water):
+        return requests.put(self.base_url + 'Days/add-water', data=json.dumps(water), headers=self.generate_headers(token), verify=False)
+    
+    def put_food_to_day(self, token, day_food):
+        return requests.put(self.base_url + 'Days/add-food', data=json.dumps(day_food), headers=self.generate_headers(token), verify=False)
+
+    def put_activity_to_day(self, token, day_activity):
+        return requests.put(self.base_url + 'Days/add-activity', data=json.dumps(day_activity), headers=self.generate_headers(token), verify=False)
+    
+    def put_grams(self, token, day_food):
+        return requests.put(self.base_url + 'Days/change-grams', data=json.dumps(day_food), headers=self.generate_headers(token), verify=False)
+
+    def put_minutes(self, token, day_activity):
+        return requests.put(self.base_url + 'Days/change-minutes', data=json.dumps(day_activity), headers=self.generate_headers(token), verify=False)
+    
+    def delete_food_from_day(self, token, date, food_name):
+        return requests.delete(self.base_url + 'Days/delete-food/' + date + '/' + food_name, headers=self.generate_headers(token), verify=False)
+    
+    def delete_activity_from_day(self, token, date, activity_name):
+        return requests.delete(self.base_url + 'Days/delete-activity/' + date + '/' + activity_name, headers=self.generate_headers(token), verify=False)
     
     
     def get_all_users(self, token):
@@ -67,6 +115,12 @@ class APIClient:
 
     def get_food_name(self, token, name):
         return requests.get(self.base_url + 'Food/' + name, headers=self.generate_headers(token), verify=False)
+    
+    def post_food(self, token, food):
+        return requests.post(self.base_url + 'Food', data=json.dumps(food), headers=self.generate_headers(token), verify=False)
+    
+    def delete_food(self, token, food_name):
+        return requests.delete(self.base_url + 'Food/' + food_name, headers=self.generate_headers(token), verify=False)
     
 
     def get_physical_activity(self, token):
@@ -151,6 +205,23 @@ class APIClient:
     
     def delete_tutorial(self, token, title):
         return requests.delete(self.base_url + 'Tutorial/' + title, headers=self.generate_headers(token), verify=False)
+
+
+    def get_requests(self, token):
+        return requests.get(self.base_url + 'Request', headers=self.generate_headers(token), verify=False)
+    
+    def get_request(self, token, id):
+        return requests.get(self.base_url + 'Request/' + id, headers=self.generate_headers(token), verify=False)
+    
+    def post_request(self, token, food_name):
+        return requests.post(self.base_url + 'Request/' + food_name, headers=self.generate_headers(token), verify=False)
+    
+    def put_request(self, token, id):
+        return requests.put(self.base_url + 'Request/' + id, headers=self.generate_headers(token), verify=False)
+    
+    def delete_request(self, token, id):
+        return requests.delete(self.base_url + 'Request/' + id, headers=self.generate_headers(token), verify=False)
+    
 
 
 @pytest.fixture(scope="session")

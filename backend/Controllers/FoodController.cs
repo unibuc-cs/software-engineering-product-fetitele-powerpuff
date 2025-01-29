@@ -149,5 +149,26 @@ namespace healthy_lifestyle_web_app.Controllers
             }
             return BadRequest("Food already in the database");
         }
+
+        [HttpDelete("{name}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteByName(string name)
+        {
+            Food? food = await _foodRepository.GetByNameAsync(name);
+
+            if (food == null)
+            {
+                return NotFound("No food with this name");
+            }
+
+            if(await _foodRepository.DeleteAsync(food))
+            {
+                return Ok("Food deleted successfully");
+            } else
+            {
+                return BadRequest("Failed to delete food");
+            }
+            
+        }
     }
 }
