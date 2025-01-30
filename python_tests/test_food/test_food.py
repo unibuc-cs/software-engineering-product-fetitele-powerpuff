@@ -9,6 +9,22 @@ food = {
     "fats": 7
 }
 
+food_invalid_calories = {
+    "name": "pythonFood2",
+    "calories": -1,
+    "carbohydrates": 14,
+    "proteins": 11,
+    "fats": 7
+}
+
+food_invalid_carbs = {
+    "name": "pythonFood3",
+    "calories": 100,
+    "carbohydrates": -1,
+    "proteins": 11,
+    "fats": 7
+}
+
 
 def test_get_food(api_client, setup_and_teardown):
     user_token, admin_token, user, admin = setup_and_teardown
@@ -40,6 +56,12 @@ def test_post_food(api_client, setup_and_teardown):
             assert post_response.status_code == 200
 
             post_response = api_client.post_food(admin_token, food)
+            assert post_response.status_code == 400
+
+            post_response = api_client.post_food(admin_token, food_invalid_calories)
+            assert post_response.status_code == 400
+
+            post_response = api_client.post_food(admin_token, food_invalid_carbs)
             assert post_response.status_code == 400
 
 

@@ -65,7 +65,7 @@ namespace healthy_lifestyle_web_app.Controllers
         // User creates a request for a food
         public async Task<IActionResult> CreateRequest(string foodName)
         {
-            if (!User.IsInRole("Admin"))
+            if (!User.IsInRole("admin"))
             {
                 string userEmail = User.Identity.Name;
                 if (string.IsNullOrEmpty(userEmail))
@@ -100,7 +100,7 @@ namespace healthy_lifestyle_web_app.Controllers
             }
             else
             {
-                return Forbid("Only normal users can create requests.");
+                return BadRequest("Only normal users can create requests.");
             }
         }
 

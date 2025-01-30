@@ -4,6 +4,7 @@ using healthy_lifestyle_web_app.Repositories;
 using AutoMapper;
 using healthy_lifestyle_web_app.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace healthy_lifestyle_web_app.Controllers
 {
@@ -117,6 +118,10 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize]
         public async Task<IActionResult> PostFood(PostFoodDTO food)
         {
+            if (food.Calories <= 0 || food.Carbohydrates < 0 || food.Proteins < 0 || food.Fats < 0)
+            {
+                return BadRequest("Calories must be > 0, carbs, proteins and fats must be >= 0");
+            }
             // Foods created by admins are public
             if (User.IsInRole("admin"))
             {

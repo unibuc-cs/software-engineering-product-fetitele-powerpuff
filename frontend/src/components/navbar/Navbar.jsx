@@ -34,7 +34,7 @@ function Navbar() {
                 <li><Link to="/day">My Day</Link></li>
                 <li><Link to="/food">Food</Link></li>
                 <li><Link to="/physical-activity">Physical Activities</Link></li>
-                <li><Link to="/retete">Retete</Link></li>
+                <li><Link to="/retete">Recipes</Link></li>
                 <li><Link to="/articles">Articles</Link></li>
                 <li><Link to="/tutorials">Tutorials</Link></li>
             </ul>

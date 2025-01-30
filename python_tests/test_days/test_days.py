@@ -54,6 +54,12 @@ day_food_invalid = {
     "grams": 50
 }
 
+day_food_invalid_grams = {
+    "date": formatted_date,
+    "foodName": food["name"],
+    "grams": -50
+}
+
 day_food_invalid_date = {
     "date": invalid_date,
     "foodName": food["name"],
@@ -76,6 +82,12 @@ day_activity_invalid = {
     "date": formatted_date,
     "activityName": 'wrong_name',
     "minutes": 20
+}
+
+day_activity_invalid_minutes = {
+    "date": formatted_date,
+    "activityName": activity["name"],
+    "minutes": -20
 }
 
 day_activity_invalid_date = {
@@ -198,6 +210,12 @@ def test_add_food_to_day(api_client, setup_and_teardown):
             put_response = api_client.put_food_to_day(user_token, day_food_invalid)
             assert put_response.status_code == 404
 
+            put_response = api_client.put_food_to_day(user_token, day_food_invalid_grams)
+            assert put_response.status_code == 400
+
+            put_response = api_client.put_food_to_day(user_token, day_food)
+            assert put_response.status_code == 200
+
             put_response = api_client.put_food_to_day(user_token, day_food)
             assert put_response.status_code == 200
 
@@ -209,7 +227,7 @@ def test_add_food_to_day(api_client, setup_and_teardown):
             assert len(day_foods) == 1
 
             day_food_data = day_foods[0]
-            assert day_food_data.get('grams') == day_food['grams']
+            assert day_food_data.get('grams') == day_food['grams'] * 2
 
             put_response = api_client.put_grams(user_token, day_food_different_grams)
             assert put_response.status_code == 200
@@ -240,14 +258,17 @@ def test_add_activity_to_day(api_client, setup_and_teardown):
             post_response = api_client.post_physical_activity(admin_token, activity)
             assert post_response.status_code == 200
 
-            put_response = api_client.put_activity_to_day(user_token, day_activity)
-            assert put_response.status_code == 200
-
             put_response = api_client.put_activity_to_day(user_token, day_activity_invalid_date)
             assert put_response.status_code == 404
 
             put_response = api_client.put_activity_to_day(user_token, day_activity_invalid)
             assert put_response.status_code == 404
+
+            put_response = api_client.put_activity_to_day(user_token, day_activity_invalid_minutes)
+            assert put_response.status_code == 400
+
+            put_response = api_client.put_activity_to_day(user_token, day_activity)
+            assert put_response.status_code == 200
 
             put_response = api_client.put_activity_to_day(user_token, day_activity)
             assert put_response.status_code == 200

@@ -4,6 +4,7 @@ using healthy_lifestyle_web_app.Entities;
 using healthy_lifestyle_web_app.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using System.Diagnostics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace healthy_lifestyle_web_app.Repositories
@@ -173,19 +174,39 @@ namespace healthy_lifestyle_web_app.Repositories
 
         }
 
-        // Add foods and physical activities to a day
+        // Add food to day, if food already exists add the grams
         public async Task<bool> PutFoodAsync(Day day, Food food, int grams)
         {
-            try
+            DayFood? dayFood = await _context.DayFoods.FirstOrDefaultAsync(df => df.ProfileId == day.ProfileId
+                                                                                        && df.Date == day.Date && df.FoodId == food.Id);
+
+            if (dayFood == null)
             {
-                _context.DayFoods.Add(new(day.ProfileId, day.Date, food.Id, grams));
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.DayFoods.Add(new(day.ProfileId, day.Date, food.Id, grams));
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbException)
+                {
+                    return false;
+                }
+                return true;
             }
-            catch (DbException)
+            else
             {
-                return false;
+                dayFood.Grams += grams;
+                try
+                {
+                    _context.DayFoods.Update(dayFood);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbException)
+                {
+                    return false;
+                }
+                return true;
             }
-            return true;
         }
 
         // Add a new activity to a day

@@ -29,11 +29,17 @@ namespace healthy_lifestyle_web_app.Repositories
                 return false;
             }
 
-            muscle.PhysicalActivities.Add(physicalActivity);
-            physicalActivity.Muscles.Add(muscle);
-            await _context.SaveChangesAsync();
+            try
+            {
+                muscle.PhysicalActivities.Add(physicalActivity);
+                physicalActivity.Muscles.Add(muscle);
+                await _context.SaveChangesAsync();
 
-            return true;
+                return true;
+            } catch (DbUpdateException)
+            {
+                return false;
+            }
         }
 
         public async Task<bool> DeleteMuscleFromPhysicalActivity(string muscleName, string activityName)

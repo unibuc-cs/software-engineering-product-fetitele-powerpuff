@@ -34,6 +34,9 @@ def test_post_muscle(api_client, setup_and_teardown):
             post_response = api_client.post_muscle(admin_token, muscle)
             assert post_response.status_code == 200
 
+            post_response = api_client.post_muscle(admin_token, muscle)
+            assert post_response.status_code == 400
+
         post_response = api_client.post_muscle(None, muscle)
         assert post_response.status_code == 401
 
@@ -60,6 +63,15 @@ def test_put_physical_activity(api_client, setup_and_teardown):
             put_response = api_client.put_physical_activity_muscle(admin_token, activity["name"], muscle["name"])
             assert put_response.status_code == 200
 
+            put_response = api_client.put_physical_activity_muscle(admin_token, activity["name"], muscle["name"])
+            assert put_response.status_code == 400
+
+            put_response = api_client.put_physical_activity_muscle(admin_token, 'wrong_name', muscle["name"])
+            assert put_response.status_code == 400
+
+            put_response = api_client.put_physical_activity_muscle(admin_token, activity["name"], 'wrong_name')
+            assert put_response.status_code == 400
+
         put_response = api_client.put_physical_activity_muscle(None, activity["name"], muscle["name"])
         assert put_response.status_code == 401
 
@@ -73,6 +85,12 @@ def test_delete_physical_activity(api_client, setup_and_teardown):
             delete_response = api_client.delete_physical_activity_muscle(admin_token, 
                                                                             activity["name"], muscle["name"])
             assert delete_response.status_code == 200
+
+            delete_response = api_client.delete_physical_activity_muscle(admin_token, 'wrong_name', muscle["name"])
+            assert delete_response.status_code == 404
+
+            delete_response = api_client.delete_physical_activity_muscle(admin_token, activity["name"], 'wrong_name')
+            assert delete_response.status_code == 404
 
         delete_response = api_client.delete_physical_activity_muscle(None, activity["name"], muscle["name"])
         assert delete_response.status_code == 401
@@ -99,6 +117,9 @@ def test_delete_muscle(api_client, setup_and_teardown):
         if admin_token is not None:
             delete_response = api_client.delete_muscle(admin_token, muscle["name"])
             assert delete_response.status_code == 200
+
+            delete_response = api_client.delete_muscle(admin_token, muscle["name"])
+            assert delete_response.status_code == 404
 
         delete_response = api_client.delete_muscle(None, muscle["name"])
         assert delete_response.status_code == 401

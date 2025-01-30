@@ -25,7 +25,7 @@ namespace healthy_lifestyle_web_app.Controllers
             {
                 return Ok("Successfully added muscle to physical activity");
             }
-            return NotFound("No muscle or physical activity with this name");
+            return BadRequest("Failed to pair activity and muscle. They may be already paired or one might not exist");
         }
 
         [HttpDelete("{muscleName}/{activityName}")]

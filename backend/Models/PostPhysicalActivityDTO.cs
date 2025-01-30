@@ -3,6 +3,6 @@
     public class PostPhysicalActivityDTO
     {
         public string Name { get; set; }
-        public int calories { get; set; }
+        public int Calories { get; set; }
     }
 }

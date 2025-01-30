@@ -11,6 +11,8 @@ function Header({page}) {
             {page === 'food' && <h2>Food</h2>}
             {page === 'physical-activity' && <h2>Physical Activities</h2>}
             {page === 'recipe' && <h2>Recipes</h2>}
+            {page === 'articles' && <h2>Articles</h2>}
+            {page === 'tutorials' && <h2>Tutorials</h2>}
             {page === 'admin' && <h2>Admin Page</h2>}
             {page === 'logout' && <h2>Logout</h2>}
         </header>

@@ -106,7 +106,7 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> PostPhysicalActivity(PostPhysicalActivityDTO physicalActivity)
         {
-            if (physicalActivity.calories < 0)
+            if (physicalActivity.Calories < 0)
             {
                 return BadRequest("Invalid calories");
             }
@@ -122,7 +122,7 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeletePhysicalActivity(String name)
         {
-            PhysicalActivity physicalActivity = await _physicalActivityRepository.GetByNameAsync(name);
+            PhysicalActivity? physicalActivity = await _physicalActivityRepository.GetByNameAsync(name);
             if (physicalActivity == null)
             {
                 return NotFound("No physical activity with this name");

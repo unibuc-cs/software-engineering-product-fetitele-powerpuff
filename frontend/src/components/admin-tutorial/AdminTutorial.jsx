@@ -29,7 +29,7 @@ function TutorialArticle() {
         }
 
         try {
-            const response = await axios.get('https://localhost:7094/api/Tutorial/for-admin', {
+            const response = await axios.get('https://localhost:7094/api/Tutorial', {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }

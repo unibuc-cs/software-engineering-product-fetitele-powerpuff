@@ -323,6 +323,11 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize]
         public async Task<IActionResult> PutFood([FromBody] DayFoodModel model)
         {
+            if (model.Grams <= 0)
+            {
+                return BadRequest("Grams must have a positive non-zero value");
+            }
+
             string? email = User.Identity.Name;
             if (email == null)
             {
@@ -357,6 +362,11 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize]
         public async Task<IActionResult> PutGrams([FromBody] DayFoodModel model)
         {
+            if (model.Grams <= 0)
+            {
+                return BadRequest("Grams must have a positive non-zero value");
+            }
+
             string? email = User.Identity.Name;
             if (email == null)
             {
@@ -393,6 +403,11 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize]
         public async Task<IActionResult> PutPhysicalActivity([FromBody] DayPhysicalActivityModel model)
         {
+            if (model.Minutes <= 0)
+            {
+                return BadRequest("Minutes must have a positive non-zero value");
+            }
+
             string? email = User.Identity.Name;
             if (email == null)
             {
@@ -427,6 +442,11 @@ namespace healthy_lifestyle_web_app.Controllers
         [Authorize]
         public async Task<IActionResult> PutMinutes([FromBody] DayPhysicalActivityModel model)
         {
+            if (model.Minutes <= 0)
+            {
+                return BadRequest("Minutes must have a positive non-zero value");
+            }
+
             string? email = User.Identity.Name;
             if (email == null)
             {
