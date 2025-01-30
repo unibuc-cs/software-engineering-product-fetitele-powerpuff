@@ -10,5 +10,6 @@ namespace healthy_lifestyle_web_app.Repositories
         public Task<Food?> GetByNameAsync(string name);
         public Task<bool> PostAsync(Food food);
         public Task<bool> UpdateAsync(Food food);
+        public Task<bool> DeleteAsync(Food food);
     }
 }

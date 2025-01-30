@@ -64,5 +64,19 @@ namespace healthy_lifestyle_web_app.Repositories
                 return false;
             }
         }
+
+        public async Task<bool> DeleteAsync(Food food)
+        {
+            try
+            {
+                _context.Foods.Remove(food);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
+        }
     }
 }
